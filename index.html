@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halo | Open Source COPPA Compliance Tool & Ethical Design Linter</title>
+  <meta name="description" content="Automate your children's app compliance. Free open-source scanner for COPPA 2.0, dark patterns, and privacy risks. Ready for the April 2026 deadline.">
+  <meta name="keywords" content="COPPA compliance tool, COPPA 2.0 scanner, children's app compliance, ethical design linter, COPPA audit, children's privacy scanner, dark pattern detector">
+  <link rel="canonical" href="https://runhalo.dev">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Halo — Open Source COPPA Compliance Scanner">
+  <meta property="og:description" content="Scan your children's app for COPPA 2.0 violations, dark patterns, and privacy risks. Free. Open source. Ready for April 2026.">
+  <meta property="og:url" content="https://runhalo.dev">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://runhalo.dev/og-image.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Halo — COPPA Compliance Scanner">
+  <meta name="twitter:description" content="Free open-source scanner for COPPA 2.0 violations. April 2026 deadline is real.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            halo: {
+              bg: '#0a0a0f',
+              surface: '#12121a',
+              border: '#1e1e2e',
+              accent: '#6366f1',
+              'accent-light': '#818cf8',
+              green: '#22c55e',
+              'green-dim': '#166534',
+              red: '#ef4444',
+              'red-dim': '#7f1d1d',
+              yellow: '#eab308',
+              'yellow-dim': '#713f12',
+              muted: '#6b7280',
+              subtle: '#374151',
+            }
+          },
+          animation: {
+            'cursor-blink': 'blink 1.2s step-end infinite',
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+          },
+          keyframes: {
+            blink: { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0 } },
+            fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+            slideUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Schema Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Halo",
+    "alternateName": "runhalo",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform (Node.js)",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Open source core — free forever"
+    },
+    "description": "Open-source COPPA compliance scanner and ethical design linter for children's digital products.",
+    "url": "https://runhalo.dev",
+    "downloadUrl": "https://www.npmjs.com/package/runhalo",
+    "softwareVersion": "0.1.0",
+    "author": {
+      "@type": "Organization",
+      "name": "Mindful Media",
+      "url": "https://mindfulmedia.org"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "When is the COPPA 2.0 compliance deadline?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "April 22, 2026. The FTC's COPPA 2.0 Final Rule (published April 22, 2025) includes a 12-month grace period ending April 22, 2026."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Halo free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The core scanner is open source and free forever. Run it with npx runhalo scan in any Node.js project."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does Halo scan for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "COPPA 2.0 violations (PII collection, consent flows, data retention), dark patterns (manipulative UI), unauthorized tracking SDKs, and biometric data leakage."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0a0a0f; }
+
+    /* Terminal scan animation */
+    .terminal-line {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    .terminal-line.visible {
+      animation: termLine 0.3s ease-out forwards;
+    }
+    @keyframes termLine {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Glow effects */
+    .glow-accent { box-shadow: 0 0 40px rgba(99, 102, 241, 0.15); }
+    .glow-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.1); }
+
+    /* Countdown pulse */
+    .countdown-pulse {
+      animation: countPulse 2s ease-in-out infinite;
+    }
+    @keyframes countPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Checkbox custom */
+    .checklist-item input[type="checkbox"]:checked + span {
+      color: #ef4444;
+      font-weight: 600;
+    }
+
+    /* Copy tooltip */
+    .copy-tooltip {
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .copy-tooltip.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="font-sans text-gray-300 antialiased">
+
+  <!-- ═══════════════════════════════════════════ NAV ═══════════════════════════════════════════ -->
+  <nav class="fixed top-0 w-full z-50 bg-halo-bg/80 backdrop-blur-lg border-b border-halo-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-halo-accent to-purple-500 flex items-center justify-center">
+          <span class="text-white font-bold text-sm">H</span>
+        </div>
+        <span class="font-semibold text-white text-lg">Halo</span>
+      </a>
+      <div class="hidden sm:flex items-center gap-6 text-sm">
+        <a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a>
+        <a href="#scan-results" class="text-gray-400 hover:text-white transition-colors">Results</a>
+        <a href="#compliance" class="text-gray-400 hover:text-white transition-colors">COPPA 2.0</a>
+        <a href="#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a>
+        <a href="https://github.com/mindful-media/runhalo" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition-colors">GitHub</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="#get-started" class="bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════ HERO ═══════════════════════════════════════════ -->
+  <section class="relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
+    <!-- Background gradient -->
+    <div class="absolute inset-0 bg-gradient-to-b from-halo-accent/5 via-transparent to-transparent pointer-events-none"></div>
+
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6">
+      <!-- Deadline badge -->
+      <div class="flex justify-center mb-8">
+        <div class="countdown-pulse inline-flex items-center gap-2 bg-halo-red-dim/50 border border-red-500/30 rounded-full px-4 py-1.5 text-sm">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+          <span class="text-red-400 font-medium">COPPA 2.0 enforcement begins April 22, 2026</span>
+        </div>
+      </div>
+
+      <div class="text-center max-w-4xl mx-auto">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 tracking-tight">
+          The Open Source <span class="text-transparent bg-clip-text bg-gradient-to-r from-halo-accent to-purple-400">COPPA Compliance Tool</span> & Ethical Design Linter
+        </h1>
+
+        <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+          Ready for COPPA 2.0? Scan your app for privacy violations and dark patterns before the April 22, 2026 deadline.
+        </p>
+
+        <!-- Terminal CTA -->
+        <div class="flex flex-col items-center gap-4">
+          <div id="hero-terminal" class="relative group glow-accent bg-halo-surface border border-halo-border rounded-xl p-1 max-w-md w-full">
+            <div class="flex items-center gap-2 px-3 py-2 border-b border-halo-border">
+              <div class="flex gap-1.5">
+                <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500/70"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500/70"></div>
+              </div>
+              <span class="text-xs text-gray-500 font-mono ml-2">terminal</span>
+            </div>
+            <button onclick="copyCommand()" class="w-full text-left px-4 py-3 flex items-center justify-between hover:bg-white/5 rounded-b-lg transition-colors">
+              <code class="font-mono text-base sm:text-lg">
+                <span class="text-halo-green">$</span>
+                <span class="text-white ml-2">npx runhalo scan .</span>
+                <span class="inline-block w-2 h-5 bg-halo-accent ml-1 animate-cursor-blink align-middle"></span>
+              </code>
+              <span id="copy-icon" class="text-gray-500 group-hover:text-gray-300 transition-colors text-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              </span>
+            </button>
+            <div id="copy-tooltip" class="copy-tooltip absolute -top-8 left-1/2 -translate-x-1/2 bg-halo-green text-white text-xs font-medium px-2 py-1 rounded">
+              Copied!
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 text-sm">
+            <a href="https://github.com/mindful-media/runhalo" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              View on GitHub
+            </a>
+            <span class="text-gray-600">|</span>
+            <span class="text-gray-500">Free &amp; Open Source</span>
+            <span class="text-gray-600">|</span>
+            <span class="text-gray-500">20 COPPA rules</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terminal animation preview -->
+      <div class="mt-16 max-w-3xl mx-auto glow-accent">
+        <div class="bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
+          <div class="flex items-center gap-2 px-4 py-3 border-b border-halo-border bg-halo-bg/50">
+            <div class="flex gap-1.5">
+              <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500/70"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500/70"></div>
+            </div>
+            <span class="text-xs text-gray-500 font-mono ml-2">npx runhalo scan .</span>
+          </div>
+          <div id="terminal-output" class="p-4 sm:p-6 font-mono text-sm leading-relaxed space-y-1 min-h-[260px]">
+            <div class="terminal-line" data-delay="200">
+              <span class="text-halo-accent font-semibold">halo</span> <span class="text-gray-500">v0.1.0</span> <span class="text-gray-600">— COPPA Compliance Scanner</span>
+            </div>
+            <div class="terminal-line" data-delay="500">
+              <span class="text-gray-500">Scanning 847 files...</span>
+            </div>
+            <div class="terminal-line mt-3" data-delay="1200">&nbsp;</div>
+            <div class="terminal-line" data-delay="1400">
+              <span class="text-red-400 font-semibold">HIGH</span> <span class="text-gray-400">coppa-audio-007</span> <span class="text-gray-600">src/lib/audio-recorder.js:26</span>
+            </div>
+            <div class="terminal-line" data-delay="1600">
+              <span class="text-gray-500 ml-4">Unauthorized Audio Recording: getUserMedia({audio: true})</span>
+            </div>
+            <div class="terminal-line" data-delay="1800">
+              <span class="text-gray-600 ml-4">Penalty: $54,540 per violation per child</span>
+            </div>
+            <div class="terminal-line mt-2" data-delay="2200">
+              <span class="text-yellow-400 font-semibold">MED </span> <span class="text-gray-400">coppa-ext-017</span> <span class="text-gray-600">src/components/header.jsx:70</span>
+            </div>
+            <div class="terminal-line" data-delay="2400">
+              <span class="text-gray-500 ml-4">Unwarned External Links: Missing "You are leaving..." modal</span>
+            </div>
+            <div class="terminal-line mt-2" data-delay="2800">
+              <span class="text-yellow-400 font-semibold">MED </span> <span class="text-gray-400">coppa-ui-008</span> <span class="text-gray-600">src/pages/signup.tsx:42</span>
+            </div>
+            <div class="terminal-line" data-delay="3000">
+              <span class="text-gray-500 ml-4">Missing Privacy Policy on Registration Form</span>
+            </div>
+            <div class="terminal-line mt-3" data-delay="3600">
+              <span class="text-gray-600">───────────────────────────────────────────</span>
+            </div>
+            <div class="terminal-line" data-delay="3800">
+              <span class="text-white font-semibold">3 violations</span> <span class="text-gray-500">found across</span> <span class="text-white">847 files</span>
+            </div>
+            <div class="terminal-line" data-delay="4000">
+              <span class="text-red-400">1 high</span> <span class="text-gray-600">·</span> <span class="text-yellow-400">2 medium</span> <span class="text-gray-600">·</span> <span class="text-green-400">0 low</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ FEATURES ═══════════════════════════════════════════ -->
+  <section id="features" class="py-20 sm:py-28">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">One command. Full compliance scan.</h2>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto">Legacy compliance tools scan for cookies. Halo scans for <em>liability</em>.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- COPPA Scanner -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
+          <div class="w-12 h-12 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">COPPA Scanner</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Detect illegal SDKs, unauthorized data collection, missing consent flows, and biometric data leakage. 20 rules covering the full COPPA 2.0 Final Rule.</p>
+        </div>
+
+        <!-- Ethical Design Linter -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors relative">
+          <div class="absolute top-4 right-4">
+            <span class="text-xs bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-full px-2 py-0.5">Coming Soon</span>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Ethical Design Linter</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Catch dark patterns, manipulative UI, infinite scroll, streak pressure, and attention-hijacking mechanics. Go beyond compliance to conscience.</p>
+        </div>
+
+        <!-- CI/CD Integration -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
+          <div class="w-12 h-12 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">CI/CD Integration</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Add <code class="text-halo-accent text-xs bg-halo-accent/10 px-1.5 py-0.5 rounded">runhalo scan</code> to your GitHub Actions. Continuous compliance on every PR. Catch violations before they ship.</p>
+        </div>
+      </div>
+
+      <!-- Positioning -->
+      <div class="mt-12 text-center">
+        <p class="text-gray-500 text-sm">Safe Harbor certification costs $15k+. <span class="text-gray-300">Halo is free.</span> Run it before you pay for the audit — fix the obvious issues first.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ SCAN RESULTS ═══════════════════════════════════════════ -->
+  <section id="scan-results" class="py-20 sm:py-28 bg-gradient-to-b from-transparent via-halo-accent/3 to-transparent">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">We scanned 3 real children's apps.</h2>
+        <p class="text-gray-400 text-lg">Here's what we found.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Scratch GUI -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="text-lg font-semibold text-white">Scratch</h3>
+                <p class="text-xs text-gray-500">MIT &middot; Ages 8-16</p>
+              </div>
+              <span class="text-2xl font-bold text-red-400">3</span>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-start gap-2">
+                <span class="text-xs font-semibold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded mt-0.5 shrink-0">HIGH</span>
+                <p class="text-sm text-gray-400">Unauthorized audio recording: <code class="text-xs text-gray-300">getUserMedia({audio: true})</code></p>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-xs font-semibold text-yellow-400 bg-yellow-500/10 px-1.5 py-0.5 rounded mt-0.5 shrink-0">MED</span>
+                <p class="text-sm text-gray-400">2 unwarned external links in child-facing views</p>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-3 bg-halo-bg/50 border-t border-halo-border">
+            <span class="text-xs text-gray-500">Captures microphone input without COPPA-compliant parental consent</span>
+          </div>
+        </div>
+
+        <!-- ScratchJr -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="text-lg font-semibold text-white">ScratchJr</h3>
+                <p class="text-xs text-gray-500">Tufts/MIT &middot; Ages 5-7</p>
+              </div>
+              <span class="text-2xl font-bold text-red-400">1</span>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-start gap-2">
+                <span class="text-xs font-semibold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded mt-0.5 shrink-0">HIGH</span>
+                <p class="text-sm text-gray-400">Direct microphone access: <code class="text-xs text-gray-300">new AudioRecord(MIC)</code></p>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-3 bg-halo-bg/50 border-t border-halo-border">
+            <span class="text-xs text-gray-500">Direct mic access in an app for 5-7 year olds. No parental consent mechanism detected.</span>
+          </div>
+        </div>
+
+        <!-- ClassroomIO -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="text-lg font-semibold text-white">ClassroomIO</h3>
+                <p class="text-xs text-gray-500">Open Source LMS</p>
+              </div>
+              <span class="text-2xl font-bold text-yellow-400">14</span>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-start gap-2">
+                <span class="text-xs font-semibold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded mt-0.5 shrink-0">HIGH</span>
+                <p class="text-sm text-gray-400">7 audio/tracking issues including UGC without PII filtering</p>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-xs font-semibold text-yellow-400 bg-yellow-500/10 px-1.5 py-0.5 rounded mt-0.5 shrink-0">MED</span>
+                <p class="text-sm text-gray-400">7 unwarned external links to social media</p>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-3 bg-halo-bg/50 border-t border-halo-border">
+            <span class="text-xs text-gray-500">Missing privacy policy link on signup form</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats bar -->
+      <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-halo-surface border border-halo-border rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-white">18</div>
+          <div class="text-xs text-gray-500 mt-1">Violations Found</div>
+        </div>
+        <div class="bg-halo-surface border border-halo-border rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-halo-green">11.1%</div>
+          <div class="text-xs text-gray-500 mt-1">False Positive Rate</div>
+        </div>
+        <div class="bg-halo-surface border border-halo-border rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-white">97</div>
+          <div class="text-xs text-gray-500 mt-1">Tests Passing</div>
+        </div>
+        <div class="bg-halo-surface border border-halo-border rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-halo-accent">20</div>
+          <div class="text-xs text-gray-500 mt-1">COPPA Rules</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ COST OF NON-COMPLIANCE ═══════════════════════════════════════════ -->
+  <section id="compliance" class="py-20 sm:py-28">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="bg-gradient-to-br from-red-500/10 via-halo-surface to-halo-surface border border-red-500/20 rounded-2xl p-8 sm:p-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
+          The $54,540-Per-Child Risk<br>You Didn't Know You Had.
+        </h2>
+
+        <div class="space-y-4 text-gray-400 leading-relaxed mb-8">
+          <p>
+            COPPA 2.0 enforcement begins <span class="text-white font-semibold">April 22, 2026</span>. Penalties are assessed per child, per day. A platform with 10,000 underage users that collected data without consent for 30 days faces a theoretical maximum of <span class="text-red-400 font-semibold">$16.3 billion</span>.
+          </p>
+          <p>
+            The FTC isn't waiting. Disney settled for $10M in December 2025. IXL Learning and PowerSchool face active litigation right now.
+          </p>
+          <p class="text-white font-medium">Don't wait for a Civil Investigative Demand.</p>
+        </div>
+
+        <!-- COPPA 2.0 Changes Table -->
+        <h3 class="text-lg font-semibold text-white mb-4">What Changed in COPPA 2.0</h3>
+        <div class="overflow-x-auto -mx-2">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-halo-border">
+                <th class="text-left py-3 px-2 text-gray-500 font-medium">Category</th>
+                <th class="text-left py-3 px-2 text-gray-500 font-medium">Old Rule</th>
+                <th class="text-left py-3 px-2 text-gray-500 font-medium">New Rule</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-400">
+              <tr class="border-b border-halo-border/50">
+                <td class="py-3 px-2 text-gray-300">Personal Info</td>
+                <td class="py-3 px-2">Name, email, identifiers</td>
+                <td class="py-3 px-2"><span class="text-red-400">Now includes biometrics</span> (voice, face, gait)</td>
+              </tr>
+              <tr class="border-b border-halo-border/50">
+                <td class="py-3 px-2 text-gray-300">Audience</td>
+                <td class="py-3 px-2">"Child-Directed" only</td>
+                <td class="py-3 px-2"><span class="text-red-400">New "Mixed Audience"</span> — if kids <em>can</em> access it, you're liable</td>
+              </tr>
+              <tr class="border-b border-halo-border/50">
+                <td class="py-3 px-2 text-gray-300">Data Retention</td>
+                <td class="py-3 px-2">"Reasonably necessary"</td>
+                <td class="py-3 px-2"><span class="text-red-400">Strict necessity</span> with explicit timeframes</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-2 text-gray-300">Safe Harbor</td>
+                <td class="py-3 px-2">Self-regulatory programs</td>
+                <td class="py-3 px-2"><span class="text-red-400">Tighter oversight</span>, public membership disclosure</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ CHECKLIST ═══════════════════════════════════════════ -->
+  <section class="py-20 sm:py-28 bg-gradient-to-b from-transparent via-halo-accent/3 to-transparent">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Are You at Risk?</h2>
+        <p class="text-gray-400">Check the boxes that apply to your product.</p>
+      </div>
+
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-6 sm:p-8">
+        <div id="checklist" class="space-y-4">
+          <label class="checklist-item flex items-start gap-3 cursor-pointer group">
+            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-600 bg-halo-bg text-halo-accent focus:ring-halo-accent cursor-pointer" onchange="updateChecklist()">
+            <span class="text-gray-300 group-hover:text-white transition-colors">Do you collect voice, face, or gait data? <span class="text-gray-500 text-sm">(New biometric rules)</span></span>
+          </label>
+          <label class="checklist-item flex items-start gap-3 cursor-pointer group">
+            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-600 bg-halo-bg text-halo-accent focus:ring-halo-accent cursor-pointer" onchange="updateChecklist()">
+            <span class="text-gray-300 group-hover:text-white transition-colors">Do you have colorful characters or simple games? <span class="text-gray-500 text-sm">(Mixed Audience risk)</span></span>
+          </label>
+          <label class="checklist-item flex items-start gap-3 cursor-pointer group">
+            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-600 bg-halo-bg text-halo-accent focus:ring-halo-accent cursor-pointer" onchange="updateChecklist()">
+            <span class="text-gray-300 group-hover:text-white transition-colors">Do you retain user data indefinitely "for analytics"? <span class="text-gray-500 text-sm">(Retention violation)</span></span>
+          </label>
+          <label class="checklist-item flex items-start gap-3 cursor-pointer group">
+            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-600 bg-halo-bg text-halo-accent focus:ring-halo-accent cursor-pointer" onchange="updateChecklist()">
+            <span class="text-gray-300 group-hover:text-white transition-colors">Do you use third-party ad SDKs? <span class="text-gray-500 text-sm">(Strict liability for trackers)</span></span>
+          </label>
+        </div>
+
+        <!-- CTA appears when any checkbox is checked -->
+        <div id="checklist-cta" class="mt-6 pt-6 border-t border-halo-border hidden">
+          <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-center">
+            <p class="text-red-400 font-semibold mb-3">You may be at risk. Scan your codebase now.</p>
+            <button onclick="copyCommand()" class="bg-halo-accent hover:bg-halo-accent-light text-white font-medium px-6 py-2.5 rounded-lg transition-colors font-mono text-sm">
+              npx runhalo scan .
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ GET STARTED ═══════════════════════════════════════════ -->
+  <section id="get-started" class="py-20 sm:py-28">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Get Started in 30 Seconds</h2>
+        <p class="text-gray-400">No signup. No config. Just scan.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-full bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-4">
+            <span class="text-halo-accent font-bold">1</span>
+          </div>
+          <h3 class="text-white font-semibold mb-2">Run the scan</h3>
+          <code class="text-sm text-gray-400 font-mono">npx runhalo scan .</code>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-full bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-4">
+            <span class="text-halo-accent font-bold">2</span>
+          </div>
+          <h3 class="text-white font-semibold mb-2">Review violations</h3>
+          <p class="text-sm text-gray-400">Each finding includes the rule, penalty, and fix suggestion</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-full bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-4">
+            <span class="text-halo-accent font-bold">3</span>
+          </div>
+          <h3 class="text-white font-semibold mb-2">Ship compliant</h3>
+          <p class="text-sm text-gray-400">Add to CI/CD for continuous compliance on every PR</p>
+        </div>
+      </div>
+
+      <!-- Pricing teaser -->
+      <div class="mt-16 bg-halo-surface border border-halo-border rounded-xl p-8 text-center">
+        <h3 class="text-xl font-semibold text-white mb-2">Open source core — free forever.</h3>
+        <p class="text-gray-400 mb-6">CLI, 20 COPPA rules, VS Code extension, JSON/SARIF output, .haloignore</p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button onclick="copyCommand()" class="bg-halo-accent hover:bg-halo-accent-light text-white font-medium px-6 py-3 rounded-lg transition-colors font-mono">
+            npx runhalo scan .
+          </button>
+          <a href="https://github.com/mindful-media/runhalo" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            Star on GitHub
+          </a>
+        </div>
+        <p class="text-gray-600 text-sm mt-4">Pro features coming soon — CI/CD dashboard, compliance reports, scan history</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ ETHICAL DESIGN TEASER ═══════════════════════════════════════════ -->
+  <section class="py-20 sm:py-28 bg-gradient-to-b from-transparent via-purple-500/3 to-transparent">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+      <span class="text-xs font-semibold text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-full px-3 py-1">Coming Soon</span>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mt-6 mb-4">Design Conscience</h2>
+      <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-8">
+        COPPA compliance is the floor, not the ceiling. Halo's ethical design linter catches dark patterns, manipulative mechanics, and attention-hijacking — the things regulation hasn't caught up with yet.
+      </p>
+      <div class="grid sm:grid-cols-5 gap-3 max-w-xl mx-auto text-sm">
+        <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No infinite scroll</div>
+        <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No streak pressure</div>
+        <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No variable rewards</div>
+        <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No manipulative notifs</div>
+        <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No artificial scarcity</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ FAQ ═══════════════════════════════════════════ -->
+  <section id="faq" class="py-20 sm:py-28">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12">FAQ</h2>
+
+      <div class="space-y-4">
+        <details class="bg-halo-surface border border-halo-border rounded-xl group" open>
+          <summary class="px-6 py-4 cursor-pointer flex items-center justify-between text-white font-medium hover:bg-surface-hover/30 rounded-xl transition-colors">
+            When is the COPPA 2.0 compliance deadline?
+            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
+            April 22, 2026. The FTC's COPPA 2.0 Final Rule (published April 22, 2025) includes a 12-month grace period ending April 22, 2026. After that date, enforcement begins with penalties up to $54,540 per violation per child per day.
+          </div>
+        </details>
+
+        <details class="bg-halo-surface border border-halo-border rounded-xl group">
+          <summary class="px-6 py-4 cursor-pointer flex items-center justify-between text-white font-medium hover:bg-surface-hover/30 rounded-xl transition-colors">
+            Is Halo free?
+            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
+            Yes. The core scanner is open source and free forever. Run it with <code class="text-halo-accent bg-halo-accent/10 px-1 py-0.5 rounded text-xs">npx runhalo scan .</code> in any Node.js project. Pro features (CI/CD dashboard, compliance reports, scan history) are coming soon.
+          </div>
+        </details>
+
+        <details class="bg-halo-surface border border-halo-border rounded-xl group">
+          <summary class="px-6 py-4 cursor-pointer flex items-center justify-between text-white font-medium hover:bg-surface-hover/30 rounded-xl transition-colors">
+            What does Halo scan for?
+            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
+            COPPA 2.0 violations including PII collection without consent, missing consent flows, data retention issues, unauthorized tracking SDKs, biometric data leakage (voice, face, gait), unwarned external links, and missing privacy policies. 20 rules covering the full COPPA 2.0 Final Rule.
+          </div>
+        </details>
+
+        <details class="bg-halo-surface border border-halo-border rounded-xl group">
+          <summary class="px-6 py-4 cursor-pointer flex items-center justify-between text-white font-medium hover:bg-surface-hover/30 rounded-xl transition-colors">
+            Does Halo work with my framework?
+            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
+            Halo scans source code files directly — it works with React, Vue, Angular, Svelte, plain HTML/JS, and any other web framework. It also scans Java (Android) and Swift (iOS) files. If it's text, Halo can scan it.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ FOOTER ═══════════════════════════════════════════ -->
+  <footer class="py-12 border-t border-halo-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded bg-gradient-to-br from-halo-accent to-purple-500 flex items-center justify-center">
+            <span class="text-white font-bold text-xs">H</span>
+          </div>
+          <span class="text-gray-500 text-sm">Halo by <a href="https://mindfulmedia.org" class="text-gray-400 hover:text-white transition-colors">Mindful Media</a></span>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-gray-500">
+          <a href="https://github.com/mindful-media/runhalo" target="_blank" rel="noopener" class="hover:text-white transition-colors">GitHub</a>
+          <a href="/docs" class="hover:text-white transition-colors">Docs</a>
+          <a href="https://www.npmjs.com/package/runhalo" target="_blank" rel="noopener" class="hover:text-white transition-colors">npm</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════ SCRIPTS ═══════════════════════════════════════════ -->
+  <script>
+    // Copy command to clipboard
+    function copyCommand() {
+      navigator.clipboard.writeText('npx runhalo scan .').then(() => {
+        const tooltip = document.getElementById('copy-tooltip');
+        tooltip.classList.add('show');
+        setTimeout(() => tooltip.classList.remove('show'), 1500);
+      });
+    }
+
+    // Interactive checklist
+    function updateChecklist() {
+      const checked = document.querySelectorAll('#checklist input[type="checkbox"]:checked').length;
+      const cta = document.getElementById('checklist-cta');
+      if (checked > 0) {
+        cta.classList.remove('hidden');
+      } else {
+        cta.classList.add('hidden');
+      }
+    }
+
+    // Terminal animation on scroll
+    function animateTerminal() {
+      const terminalOutput = document.getElementById('terminal-output');
+      if (!terminalOutput) return;
+
+      const rect = terminalOutput.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.8) {
+        const lines = terminalOutput.querySelectorAll('.terminal-line:not(.visible)');
+        lines.forEach((line) => {
+          const delay = parseInt(line.getAttribute('data-delay') || '0');
+          setTimeout(() => line.classList.add('visible'), delay);
+        });
+        // Remove scroll listener after animation triggers
+        window.removeEventListener('scroll', animateTerminal);
+      }
+    }
+
+    // Init
+    window.addEventListener('scroll', animateTerminal);
+    // Also trigger on load in case terminal is already visible
+    window.addEventListener('load', () => {
+      setTimeout(animateTerminal, 300);
+    });
+  </script>
+
+</body>
+</html>
