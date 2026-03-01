@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy | Halo</title>
+  <meta name="description" content="Privacy Policy for Halo, the open-source COPPA compliance scanner by Mindful Media.">
+  <link rel="canonical" href="https://runhalo.dev/privacy.html">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            halo: {
+              bg: '#0a0a0f',
+              surface: '#12121a',
+              border: '#1e1e2e',
+              accent: '#6366f1',
+              'accent-light': '#818cf8',
+              muted: '#6b7280',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-sans text-gray-300 antialiased" style="background: #0a0a0f;">
+
+  <!-- Nav -->
+  <nav class="fixed top-0 w-full z-50 bg-halo-bg/80 backdrop-blur-lg border-b border-halo-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-halo-accent to-purple-500 flex items-center justify-center">
+          <span class="text-white font-bold text-sm">H</span>
+        </div>
+        <span class="font-semibold text-white text-lg">Halo</span>
+      </a>
+      <a href="/" class="text-gray-400 hover:text-white text-sm transition-colors">&larr; Back to Home</a>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 pt-32 pb-20">
+    <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">Privacy Policy</h1>
+    <p class="text-gray-500 text-sm mb-12">Effective: February 28, 2026</p>
+
+    <div class="space-y-10 text-gray-300 leading-relaxed">
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-3">1. Information We Collect</h2>
+        <p>We collect minimal information, only when you choose to provide it:</p>
+        <ul class="list-disc list-inside mt-3 space-y-2 text-gray-400">
+          <li><strong class="text-gray-300">Email address</strong> — provided voluntarily via website signup forms or the CLI first-run prompt</li>
+          <li><strong class="text-gray-300">Company name and role</strong> — optionally provided via website forms</li>
+          <li><strong class="text-gray-300">CLI metadata</strong> — when you opt in via the CLI prompt, we collect: CLI version, Node.js version, and operating system platform</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-3">2. Information We Do NOT Collect</h2>
+        <div class="bg-green-500/5 border border-green-500/20 rounded-lg p-4">
+          <p class="text-green-400/90 font-medium mb-2">Halo is designed with privacy by default:</p>
+          <ul class="list-disc list-inside space-y-1 text-gray-400">
+            <li><strong class="text-gray-300">Source code</strong> is never sent to our servers. All scanning happens locally on your machine.</li>
+            <li><strong class="text-gray-300">Scan results</strong> (violations, scores, reports) stay entirely local.</li>
+            <li><strong class="text-gray-300">File paths</strong> and directory structures are never transmitted.</li>
+            <li><strong class="text-gray-300">Violation details</strong>, code snippets, and compliance scores are never collected.</li>
+            <li>We use <strong class="text-gray-300">no cookies</strong> for tracking on our website.</li>
+            <li>We use <strong class="text-gray-300">no analytics</strong> or tracking pixels.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-3">3. How We Use Your Information</h2>
+        <ul class="list-disc list-inside mt-3 space-y-1 text-gray-400">
+          <li>Send product updates and announcements (if you opted in)</li>
+          <li>Understand CLI adoption through aggregate, anonymized metrics</li>
+          <li>Manage the Halo Pro waitlist</li>
+          <li>Respond to inquiries or support requests</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-3">4. Data Storage</h2>
+        <p>Data is stored using <a href="https://supabase.com" class="text-halo-accent hover:text-white transition-colors" target="_blank">Supabase</a>, which provides encryption at rest and in transit. Data is stored in the United States.</p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-3">5. Third-Party Services</h2>
+        <p>We use the following third-party services:</p>
+        <ul class="list-disc list-inside mt-3 space-y-1 text-gray-400">
+          <li><strong class="text-gray-300">Supabase</strong> — database and authentication</li>
+          <li><strong class="text-gray-300">Cloudflare Pages</strong> — website hosting</li>
+          <li><strong class="text-gray-300">npm</strong> — package distribution</li>
+        </ul>
+        <p class="mt-3">We do not use advertising networks, tracking pixels, or behavioral analytics services.</p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-3">6. Data Retention</h2>
+        <ul class="list-disc list-inside mt-3 space-y-1 text-gray-400">
+          <li>Email and contact data is retained until you request deletion or unsubscribe</li>
+          <li>CLI telemetry data is retained for up to 12 months</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-3">7. Your Rights</h2>
+        <p>You have the right to:</p>
+        <ul class="list-disc list-inside mt-3 space-y-1 text-gray-400">
+          <li><strong class="text-gray-300">Unsubscribe</strong> from communications at any time</li>
+          <li><strong class="text-gray-300">Request deletion</strong> of your data by emailing us</li>
+          <li><strong class="text-gray-300">Skip data collection</strong> entirely by pressing Enter at the CLI prompt or not submitting website forms</li>
+        </ul>
+        <p class="mt-3">To request data deletion, email <a href="mailto:hello@mindfulmedia.org" class="text-halo-accent hover:text-white transition-colors">hello@mindfulmedia.org</a>.</p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-3">8. Children's Privacy</h2>
+        <p>Halo is a developer tool intended for use by software professionals. It is not directed at children under 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal information, please contact us and we will delete it promptly.</p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-3">9. Changes to This Policy</h2>
+        <p>We may update this Privacy Policy from time to time. Material changes will be communicated via the website or email (if you have opted in). The effective date at the top of this page indicates when the policy was last revised.</p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-3">10. Contact</h2>
+        <p>For questions about this Privacy Policy or your data, contact us at:</p>
+        <p class="mt-2 text-gray-400">
+          Mindful Media<br>
+          <a href="mailto:hello@mindfulmedia.org" class="text-halo-accent hover:text-white transition-colors">hello@mindfulmedia.org</a>
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-12 border-t border-halo-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <span class="text-gray-500 text-sm">Halo by <a href="https://mindfulmedia.org" class="text-gray-400 hover:text-white transition-colors">Mindful Media</a></span>
+        <div class="flex items-center gap-6 text-sm text-gray-500">
+          <a href="/" class="hover:text-white transition-colors">Home</a>
+          <a href="/terms.html" class="hover:text-white transition-colors">Terms</a>
+          <a href="/privacy.html" class="text-white">Privacy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
