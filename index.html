@@ -189,6 +189,7 @@
         <a href="#scan-results" class="text-gray-400 hover:text-white transition-colors">Results</a>
         <a href="#compliance" class="text-gray-400 hover:text-white transition-colors">COPPA 2.0</a>
         <a href="#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a>
+        <a href="#pro" class="text-gray-400 hover:text-white transition-colors">Pro</a>
       </div>
       <div class="flex items-center gap-3">
         <a href="#get-started" class="bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
@@ -254,6 +255,13 @@
             <span class="text-gray-600">|</span>
             <a href="https://github.com/runhalo/halo" target="_blank" class="text-gray-400 hover:text-white transition-colors">View on GitHub</a>
           </div>
+
+          <!-- Email signup -->
+          <form id="hero-signup" onsubmit="handleSignup(event, 'hero-signup')" class="mt-6 flex flex-col sm:flex-row items-center gap-2 max-w-md w-full">
+            <input type="email" name="email" required placeholder="you@company.com" class="w-full sm:flex-1 bg-halo-surface border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
+            <button type="submit" class="w-full sm:w-auto bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap">Get Updates</button>
+          </form>
+          <p class="text-xs text-gray-600 mt-2">Be first to know when Pro launches. No spam.</p>
         </div>
       </div>
 
@@ -608,7 +616,26 @@
             <a href="https://github.com/runhalo/halo" target="_blank" class="hover:text-white transition-colors">View on GitHub</a>
           </span>
         </div>
-        <p class="text-gray-600 text-sm mt-4">Pro features coming soon — CI/CD dashboard, compliance reports, scan history</p>
+        <!-- Bottom signup form -->
+        <div id="bottom-signup-wrap" class="mt-8 pt-6 border-t border-halo-border max-w-md mx-auto">
+          <p class="text-gray-400 text-sm mb-4">Get notified when Pro launches — CI/CD dashboard, compliance reports, scan history.</p>
+          <form id="bottom-signup" onsubmit="handleSignup(event, 'bottom-signup')" class="space-y-3">
+            <input type="email" name="email" required placeholder="you@company.com" class="w-full bg-halo-bg border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
+            <div class="flex gap-3">
+              <input type="text" name="company" placeholder="Company (optional)" class="flex-1 bg-halo-bg border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
+              <select name="role" class="bg-halo-bg border border-halo-border rounded-lg px-3 py-2.5 text-sm text-gray-400 focus:outline-none focus:border-halo-accent/50 transition-colors appearance-none cursor-pointer">
+                <option value="">Role</option>
+                <option value="developer">Developer</option>
+                <option value="engineering_lead">Engineering Lead</option>
+                <option value="product">Product</option>
+                <option value="compliance_legal">Compliance/Legal</option>
+                <option value="cto_vp">CTO/VP Eng</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">Notify Me</button>
+          </form>
+        </div>
       </div>
     </div>
   </section>
@@ -627,6 +654,72 @@
         <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No variable rewards</div>
         <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No manipulative notifs</div>
         <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No artificial scarcity</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ PRO WAITLIST ═══════════════════════════════════════════ -->
+  <section id="pro" class="py-20 sm:py-28">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="bg-gradient-to-br from-halo-accent/10 via-purple-500/5 to-halo-surface border border-halo-accent/20 rounded-2xl p-8 sm:p-12">
+        <div class="text-center mb-10">
+          <span class="text-xs font-semibold text-halo-accent bg-halo-accent/10 border border-halo-accent/20 rounded-full px-3 py-1">Coming Q2 2026</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mt-6 mb-4">Halo Pro</h2>
+          <p class="text-gray-400 text-lg max-w-2xl mx-auto">Everything in the open source scanner, plus the tools your team needs to stay compliant at scale.</p>
+        </div>
+
+        <!-- Pro features grid -->
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-10">
+          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
+            <div class="text-halo-accent text-lg mb-2">📊</div>
+            <h4 class="text-white text-sm font-semibold mb-1">CI/CD Dashboard</h4>
+            <p class="text-gray-500 text-xs">Scan history, trend charts, team-wide visibility across all repos.</p>
+          </div>
+          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
+            <div class="text-halo-accent text-lg mb-2">📋</div>
+            <h4 class="text-white text-sm font-semibold mb-1">Compliance Reports</h4>
+            <p class="text-gray-500 text-xs">PDF/HTML reports for legal teams. Exportable audit trail for regulators.</p>
+          </div>
+          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
+            <div class="text-halo-accent text-lg mb-2">👥</div>
+            <h4 class="text-white text-sm font-semibold mb-1">Team Workspace</h4>
+            <p class="text-gray-500 text-xs">Centralized config, shared ignore rules, role-based access.</p>
+          </div>
+          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
+            <div class="text-halo-accent text-lg mb-2">🔔</div>
+            <h4 class="text-white text-sm font-semibold mb-1">Slack & Teams Alerts</h4>
+            <p class="text-gray-500 text-xs">Real-time alerts when new violations appear in PRs or main branch.</p>
+          </div>
+          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
+            <div class="text-halo-accent text-lg mb-2">🔧</div>
+            <h4 class="text-white text-sm font-semibold mb-1">Auto-Fix Suggestions</h4>
+            <p class="text-gray-500 text-xs">AI-generated consent flows, age gates, and privacy policy scaffolds.</p>
+          </div>
+          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
+            <div class="text-halo-accent text-lg mb-2">🛡️</div>
+            <h4 class="text-white text-sm font-semibold mb-1">AADCA Rules</h4>
+            <p class="text-gray-500 text-xs">California Age-Appropriate Design Code Act scanning. Beyond federal COPPA.</p>
+          </div>
+        </div>
+
+        <!-- Waitlist form -->
+        <div class="max-w-md mx-auto">
+          <form id="pro-waitlist" onsubmit="handleProWaitlist(event)" class="space-y-3">
+            <input type="email" name="email" required placeholder="you@company.com" class="w-full bg-halo-bg border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
+            <div class="flex gap-3">
+              <input type="text" name="company" placeholder="Company" class="flex-1 bg-halo-bg border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
+              <select name="team_size" class="bg-halo-bg border border-halo-border rounded-lg px-3 py-2.5 text-sm text-gray-400 focus:outline-none focus:border-halo-accent/50 transition-colors appearance-none cursor-pointer">
+                <option value="">Team size</option>
+                <option value="1-5">1-5</option>
+                <option value="6-20">6-20</option>
+                <option value="21-100">21-100</option>
+                <option value="100+">100+</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full bg-gradient-to-r from-halo-accent to-purple-500 hover:from-halo-accent-light hover:to-purple-400 text-white font-medium px-6 py-3 rounded-lg transition-all">Join the Waitlist</button>
+          </form>
+          <p class="text-xs text-gray-600 text-center mt-3">No spam. We'll email you when Pro launches. Unsubscribe anytime.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -738,6 +831,112 @@
         });
         // Remove scroll listener after animation triggers
         window.removeEventListener('scroll', animateTerminal);
+      }
+    }
+
+    // ═══════════════ EMAIL CAPTURE ═══════════════
+
+    const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
+
+    function getUtmParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        utm_source: params.get('utm_source') || null,
+        utm_medium: params.get('utm_medium') || null,
+        utm_campaign: params.get('utm_campaign') || null,
+      };
+    }
+
+    async function submitLead(data) {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/halo_leads`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error(`${res.status}`);
+    }
+
+    function showFormSuccess(form, msg) {
+      const btn = form.querySelector('button[type="submit"]');
+      const originalText = btn.textContent;
+      btn.textContent = msg || "You're in! ✓";
+      btn.classList.remove('bg-halo-accent', 'hover:bg-halo-accent-light', 'bg-gradient-to-r', 'from-halo-accent', 'to-purple-500', 'hover:from-halo-accent-light', 'hover:to-purple-400');
+      btn.classList.add('bg-halo-green');
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.classList.remove('bg-halo-green');
+        btn.classList.add('bg-halo-accent', 'hover:bg-halo-accent-light');
+        btn.disabled = false;
+      }, 4000);
+    }
+
+    function showFormError(form) {
+      const btn = form.querySelector('button[type="submit"]');
+      const originalText = btn.textContent;
+      btn.textContent = 'Something went wrong. Try again.';
+      btn.classList.remove('bg-halo-accent', 'hover:bg-halo-accent-light');
+      btn.classList.add('bg-halo-red');
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.classList.remove('bg-halo-red');
+        btn.classList.add('bg-halo-accent', 'hover:bg-halo-accent-light');
+      }, 3000);
+    }
+
+    async function handleSignup(event, formId) {
+      event.preventDefault();
+      const form = document.getElementById(formId);
+      const formData = new FormData(form);
+      const utm = getUtmParams();
+
+      try {
+        await submitLead({
+          email: formData.get('email'),
+          company: formData.get('company') || null,
+          role: formData.get('role') || null,
+          source: 'website',
+          utm_source: utm.utm_source,
+          utm_medium: utm.utm_medium,
+          utm_campaign: utm.utm_campaign,
+          consent_given: true,
+          consent_text: 'Opted in via runhalo.dev signup form',
+        });
+        showFormSuccess(form, "You're in! We'll keep you posted.");
+        form.reset();
+      } catch (err) {
+        showFormError(form);
+      }
+    }
+
+    async function handleProWaitlist(event) {
+      event.preventDefault();
+      const form = document.getElementById('pro-waitlist');
+      const formData = new FormData(form);
+      const utm = getUtmParams();
+
+      try {
+        await submitLead({
+          email: formData.get('email'),
+          company: formData.get('company') || null,
+          team_size: formData.get('team_size') || null,
+          source: 'pro_waitlist',
+          utm_source: utm.utm_source,
+          utm_medium: utm.utm_medium,
+          utm_campaign: utm.utm_campaign,
+          consent_given: true,
+          consent_text: 'Opted in via Halo Pro waitlist on runhalo.dev',
+        });
+        showFormSuccess(form, "You're on the list! We'll notify you when Pro launches.");
+        form.reset();
+      } catch (err) {
+        showFormError(form);
       }
     }
 
