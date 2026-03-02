@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan Your Repo | Halo COPPA Scanner</title>
+  <meta name="description" content="Paste a GitHub URL and get your COPPA compliance score in 30 seconds. No signup required.">
+
+  <meta property="og:title" content="Halo — Free COPPA Compliance Scanner">
+  <meta property="og:description" content="Scan any GitHub repo for COPPA 2.0 violations. Get your score in 30 seconds. No signup required.">
+  <meta property="og:url" content="https://runhalo.dev/app/">
+  <meta property="og:type" content="website">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            halo: {
+              bg: '#0a0a0f',
+              surface: '#12121a',
+              border: '#1e1e2e',
+              accent: '#6366f1',
+              'accent-light': '#818cf8',
+              green: '#22c55e',
+              'green-dim': '#166534',
+              red: '#ef4444',
+              'red-dim': '#7f1d1d',
+              yellow: '#eab308',
+              'yellow-dim': '#713f12',
+              muted: '#6b7280',
+              subtle: '#374151',
+            }
+          },
+          animation: {
+            'cursor-blink': 'blink 1.2s step-end infinite',
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+            'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            blink: { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0 } },
+            fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+            slideUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body { background: #0a0a0f; }
+    .glow-border:focus-within {
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5), 0 0 20px rgba(99, 102, 241, 0.15);
+    }
+    @keyframes terminalType {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    .terminal-line {
+      overflow: hidden;
+      white-space: nowrap;
+      animation: terminalType 0.5s steps(40) forwards;
+    }
+    .scan-progress {
+      background: linear-gradient(90deg, #6366f1 0%, #818cf8 50%, #6366f1 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+<body class="font-sans text-white min-h-screen">
+
+  <!-- Nav -->
+  <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 text-white hover:text-halo-accent-light transition-colors">
+        <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
+          <circle cx="12" cy="12" r="4" fill="currentColor" />
+        </svg>
+        <span class="font-bold text-lg">Halo</span>
+      </a>
+      <div class="flex items-center gap-4 text-sm">
+        <a href="/" class="text-halo-muted hover:text-white transition-colors">Home</a>
+        <a href="https://github.com/runhalo/halo" target="_blank" class="text-halo-muted hover:text-white transition-colors">GitHub</a>
+        <a href="/app/login.html" class="text-halo-accent hover:text-halo-accent-light transition-colors">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-3xl mx-auto px-6 pt-20 pb-32">
+
+    <!-- Hero -->
+    <div id="hero-section" class="text-center animate-fade-in">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-halo-accent/10 border border-halo-accent/20 text-halo-accent-light text-xs font-medium mb-6">
+        <span class="w-2 h-2 rounded-full bg-halo-green animate-pulse"></span>
+        COPPA 2.0 enforcement: April 22, 2026
+      </div>
+
+      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
+        Scan Your Repo for<br>
+        <span class="text-halo-accent">COPPA Compliance</span>
+      </h1>
+
+      <p class="text-halo-muted text-lg mb-10 max-w-xl mx-auto">
+        Paste a GitHub URL. Get your compliance score in 30 seconds. No signup required.
+      </p>
+
+      <!-- Scan Input -->
+      <div class="glow-border flex items-center bg-halo-surface border border-halo-border rounded-xl p-2 max-w-2xl mx-auto transition-all">
+        <div class="flex items-center gap-2 pl-3 text-halo-muted">
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+          </svg>
+        </div>
+        <input
+          id="repo-input"
+          type="text"
+          placeholder="https://github.com/owner/repo"
+          class="flex-1 bg-transparent text-white placeholder-halo-subtle px-3 py-3 text-base outline-none font-mono"
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <button
+          id="scan-btn"
+          onclick="startScan()"
+          class="bg-halo-accent hover:bg-halo-accent-light text-white font-semibold px-6 py-3 rounded-lg transition-all flex items-center gap-2 whitespace-nowrap"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          Scan Now
+        </button>
+      </div>
+
+      <!-- Example repos -->
+      <p class="text-halo-subtle text-xs mt-4">
+        Try:
+        <button onclick="setRepo('https://github.com/HabitRPG/habitica')" class="text-halo-muted hover:text-halo-accent-light transition-colors underline underline-offset-2">habitica</button>,
+        <button onclick="setRepo('https://github.com/moodle/moodle')" class="text-halo-muted hover:text-halo-accent-light transition-colors underline underline-offset-2">moodle</button>,
+        <button onclick="setRepo('https://github.com/scratchfoundation/scratch-gui')" class="text-halo-muted hover:text-halo-accent-light transition-colors underline underline-offset-2">scratch-gui</button>
+      </p>
+    </div>
+
+    <!-- Loading State (hidden by default) -->
+    <div id="loading-section" class="hidden text-center animate-fade-in">
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-8 max-w-2xl mx-auto">
+        <!-- Terminal-style progress -->
+        <div class="text-left font-mono text-sm space-y-2 mb-6">
+          <div id="terminal-output" class="space-y-1">
+            <!-- Lines added dynamically -->
+          </div>
+          <div class="flex items-center gap-2 text-halo-accent">
+            <span class="animate-cursor-blink">_</span>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="w-full bg-halo-border rounded-full h-2 overflow-hidden">
+          <div id="progress-bar" class="scan-progress h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+        <p id="progress-text" class="text-halo-muted text-xs mt-2">Initializing scan...</p>
+      </div>
+    </div>
+
+    <!-- Error State (hidden by default) -->
+    <div id="error-section" class="hidden text-center animate-fade-in">
+      <div class="bg-halo-red-dim/30 border border-halo-red/30 rounded-xl p-6 max-w-2xl mx-auto">
+        <div class="flex items-center justify-center gap-2 text-halo-red mb-3">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+          </svg>
+          <span class="font-semibold">Scan Failed</span>
+        </div>
+        <p id="error-message" class="text-halo-muted text-sm mb-4"></p>
+        <button onclick="resetToInput()" class="text-halo-accent hover:text-halo-accent-light text-sm underline underline-offset-2">Try again</button>
+      </div>
+    </div>
+
+    <!-- What We Scan For -->
+    <section class="mt-24 animate-slide-up" style="animation-delay: 0.2s;">
+      <h2 class="text-2xl font-bold text-center mb-10">What Halo Scans For</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+          <div class="w-8 h-8 rounded-lg bg-halo-red-dim/50 flex items-center justify-center mb-3">
+            <svg class="w-4 h-4 text-halo-red" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-sm mb-1">Data Collection</h3>
+          <p class="text-halo-muted text-xs leading-relaxed">PII in URLs, tracking pixels, ad SDKs without child-directed flags, analytics with PII mapping</p>
+        </div>
+
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+          <div class="w-8 h-8 rounded-lg bg-halo-yellow-dim/50 flex items-center justify-center mb-3">
+            <svg class="w-4 h-4 text-halo-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-sm mb-1">Biometrics & Privacy</h3>
+          <p class="text-halo-muted text-xs leading-relaxed">Camera, mic, fingerprint APIs, geolocation, cookie/storage without consent, default public profiles</p>
+        </div>
+
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+          <div class="w-8 h-8 rounded-lg bg-halo-accent/20 flex items-center justify-center mb-3">
+            <svg class="w-4 h-4 text-halo-accent-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-sm mb-1">Security & Design</h3>
+          <p class="text-halo-muted text-xs leading-relaxed">XSS/innerHTML risks, weak passwords, unmoderated chat, external links, UGC without PII filters</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust Signals -->
+    <section class="mt-16 text-center">
+      <div class="flex flex-wrap justify-center gap-6 text-halo-muted text-xs">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-halo-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+          20 COPPA 2.0 rules
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-halo-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+          Open source (Apache 2.0)
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-halo-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+          Zero false positives in validation
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-halo-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+          10+ languages supported
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-halo-border py-8">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
+      <span>&copy; 2026 Mindful Media. All rights reserved.</span>
+      <div class="flex gap-4">
+        <a href="/privacy.html" class="hover:text-white transition-colors">Privacy</a>
+        <a href="/terms.html" class="hover:text-white transition-colors">Terms</a>
+        <a href="https://github.com/runhalo/halo" class="hover:text-white transition-colors">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ==================== Config ====================
+    const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
+    const SCAN_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/scan-repo`;
+
+    // ==================== Session Token ====================
+    function getSessionToken() {
+      let token = getCookie('halo_session');
+      if (!token) {
+        token = crypto.randomUUID();
+        setCookie('halo_session', token, 365);
+      }
+      return token;
+    }
+
+    function getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    }
+
+    function setCookie(name, value, days) {
+      const d = new Date();
+      d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+      document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/;SameSite=Lax`;
+    }
+
+    // ==================== UI Helpers ====================
+    function setRepo(url) {
+      document.getElementById('repo-input').value = url;
+      document.getElementById('repo-input').focus();
+    }
+
+    function resetToInput() {
+      document.getElementById('hero-section').classList.remove('hidden');
+      document.getElementById('loading-section').classList.add('hidden');
+      document.getElementById('error-section').classList.add('hidden');
+      document.getElementById('repo-input').focus();
+    }
+
+    function showError(message) {
+      document.getElementById('hero-section').classList.add('hidden');
+      document.getElementById('loading-section').classList.add('hidden');
+      document.getElementById('error-section').classList.remove('hidden');
+      document.getElementById('error-message').textContent = message;
+    }
+
+    function showLoading() {
+      document.getElementById('hero-section').classList.add('hidden');
+      document.getElementById('error-section').classList.add('hidden');
+      document.getElementById('loading-section').classList.remove('hidden');
+      document.getElementById('terminal-output').innerHTML = '';
+    }
+
+    // Terminal-style progress messages
+    const PROGRESS_MESSAGES = [
+      { text: '$ halo scan --remote', delay: 0, progress: 5 },
+      { text: 'Connecting to GitHub API...', delay: 800, progress: 10 },
+      { text: 'Fetching repository file tree...', delay: 1500, progress: 20 },
+      { text: 'Filtering scannable files...', delay: 2500, progress: 30 },
+      { text: 'Running 20 COPPA 2.0 compliance rules...', delay: 3500, progress: 50 },
+      { text: 'Analyzing data collection patterns...', delay: 5000, progress: 60 },
+      { text: 'Checking biometric & privacy APIs...', delay: 6500, progress: 70 },
+      { text: 'Scanning for XSS & security risks...', delay: 8000, progress: 80 },
+      { text: 'Calculating compliance score...', delay: 9500, progress: 90 },
+    ];
+
+    let progressTimers = [];
+
+    function addTerminalLine(text, color = 'text-halo-muted') {
+      const output = document.getElementById('terminal-output');
+      const line = document.createElement('div');
+      line.className = `terminal-line ${color}`;
+      line.textContent = text;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function startProgressAnimation() {
+      progressTimers = [];
+      for (const msg of PROGRESS_MESSAGES) {
+        const timer = setTimeout(() => {
+          const color = msg.text.startsWith('$') ? 'text-halo-green' : 'text-halo-muted';
+          addTerminalLine(msg.text, color);
+          document.getElementById('progress-bar').style.width = msg.progress + '%';
+          document.getElementById('progress-text').textContent = msg.text.replace('$ ', '');
+        }, msg.delay);
+        progressTimers.push(timer);
+      }
+    }
+
+    function clearProgressAnimation() {
+      for (const timer of progressTimers) {
+        clearTimeout(timer);
+      }
+      progressTimers = [];
+    }
+
+    // ==================== Scan ====================
+    async function startScan() {
+      const input = document.getElementById('repo-input');
+      const repoUrl = input.value.trim();
+
+      // Validate input
+      if (!repoUrl) {
+        input.focus();
+        input.classList.add('ring-2', 'ring-halo-red');
+        setTimeout(() => input.classList.remove('ring-2', 'ring-halo-red'), 2000);
+        return;
+      }
+
+      // Basic GitHub URL validation
+      if (!repoUrl.match(/github\.com\/[^\/]+\/[^\/]+/)) {
+        showError('Please enter a valid GitHub repository URL (e.g., https://github.com/owner/repo)');
+        return;
+      }
+
+      // Normalize URL
+      const normalizedUrl = repoUrl.startsWith('http') ? repoUrl : `https://${repoUrl}`;
+
+      // Show loading
+      showLoading();
+      startProgressAnimation();
+
+      try {
+        const sessionToken = getSessionToken();
+
+        const response = await fetch(SCAN_FUNCTION_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            repo_url: normalizedUrl,
+            session_token: sessionToken,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          clearProgressAnimation();
+          showError(data.error || 'An unexpected error occurred. Please try again.');
+          return;
+        }
+
+        // Success — show completion in terminal
+        clearProgressAnimation();
+        document.getElementById('progress-bar').style.width = '100%';
+        addTerminalLine(`Scan complete: ${data.total_violations} violation(s) found`, 'text-halo-green');
+        addTerminalLine(`Score: ${data.score}/100 (${data.grade})`, 'text-halo-accent-light');
+        document.getElementById('progress-text').textContent = 'Scan complete! Redirecting...';
+
+        // Redirect to results page after brief pause
+        setTimeout(() => {
+          window.location.href = `/app/results.html?id=${data.scan_id}`;
+        }, 1200);
+
+      } catch (err) {
+        clearProgressAnimation();
+        console.error('Scan error:', err);
+        showError('Network error. Please check your connection and try again.');
+      }
+    }
+
+    // ==================== Init ====================
+    // Enter key triggers scan
+    document.getElementById('repo-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') startScan();
+    });
+
+    // Check for pre-filled URL from query param
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('url')) {
+      document.getElementById('repo-input').value = params.get('url');
+    }
+
+    // Initialize session token
+    getSessionToken();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Halo</title>
+  <meta name="description" content="Manage your COPPA compliance scans, view detailed results, and track your compliance posture.">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            halo: {
+              bg: '#0a0a0f',
+              surface: '#12121a',
+              border: '#1e1e2e',
+              accent: '#6366f1',
+              'accent-light': '#818cf8',
+              green: '#22c55e',
+              'green-dim': '#166534',
+              red: '#ef4444',
+              'red-dim': '#7f1d1d',
+              yellow: '#eab308',
+              'yellow-dim': '#713f12',
+              orange: '#f97316',
+              muted: '#6b7280',
+              subtle: '#374151',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+            slideUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>body { background: #0a0a0f; }</style>
+</head>
+<body class="font-sans text-white min-h-screen">
+
+  <!-- Nav -->
+  <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/app/" class="flex items-center gap-2 text-white hover:text-halo-accent-light transition-colors">
+        <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
+          <circle cx="12" cy="12" r="4" fill="currentColor" />
+        </svg>
+        <span class="font-bold text-lg">Halo</span>
+        <span class="text-halo-muted text-sm font-normal ml-1">Dashboard</span>
+      </a>
+      <div class="flex items-center gap-4 text-sm">
+        <a href="/app/" class="text-halo-muted hover:text-white transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          New Scan
+        </a>
+        <button onclick="signOut()" class="text-halo-muted hover:text-halo-red transition-colors">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Loading -->
+  <div id="loading-state" class="max-w-6xl mx-auto px-6 pt-12">
+    <div class="animate-pulse space-y-4">
+      <div class="h-6 bg-halo-surface rounded w-48"></div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="h-24 bg-halo-surface rounded-lg"></div>
+        <div class="h-24 bg-halo-surface rounded-lg"></div>
+        <div class="h-24 bg-halo-surface rounded-lg"></div>
+      </div>
+      <div class="h-64 bg-halo-surface rounded-lg"></div>
+    </div>
+  </div>
+
+  <!-- Dashboard Content -->
+  <main id="dashboard-content" class="hidden max-w-6xl mx-auto px-6 pt-8 pb-24">
+
+    <!-- Welcome + Stats -->
+    <div class="mb-8 animate-fade-in">
+      <h1 class="text-2xl font-bold mb-1">
+        Welcome back<span id="user-email-display" class="text-halo-muted font-normal"></span>
+      </h1>
+      <p class="text-halo-muted text-sm">Your COPPA compliance dashboard</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 animate-slide-up" style="animation-delay: 0.1s;">
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+        <p class="text-halo-muted text-xs mb-1">Total Scans</p>
+        <p id="stat-total-scans" class="text-2xl font-bold">--</p>
+      </div>
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+        <p class="text-halo-muted text-xs mb-1">Avg Score</p>
+        <p id="stat-avg-score" class="text-2xl font-bold">--</p>
+      </div>
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+        <p class="text-halo-muted text-xs mb-1">Total Violations</p>
+        <p id="stat-total-violations" class="text-2xl font-bold">--</p>
+      </div>
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+        <p class="text-halo-muted text-xs mb-1">Account Tier</p>
+        <p id="stat-tier" class="text-2xl font-bold">Free</p>
+      </div>
+    </div>
+
+    <!-- Scan History Table -->
+    <section class="animate-slide-up" style="animation-delay: 0.2s;">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold">Scan History</h2>
+        <a href="/app/" class="text-halo-accent hover:text-halo-accent-light text-sm flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M12 4v16m8-8H4" />
+          </svg>
+          New Scan
+        </a>
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="hidden text-center py-16 bg-halo-surface border border-halo-border rounded-xl">
+        <svg class="w-12 h-12 text-halo-subtle mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <p class="text-halo-muted text-sm mb-2">No scans yet</p>
+        <a href="/app/" class="text-halo-accent hover:text-halo-accent-light text-sm">Run your first scan</a>
+      </div>
+
+      <!-- Scan Table -->
+      <div id="scan-table" class="hidden bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-halo-border text-halo-muted text-xs">
+                <th class="text-left px-4 py-3 font-medium">Repository</th>
+                <th class="text-center px-4 py-3 font-medium">Score</th>
+                <th class="text-center px-4 py-3 font-medium">Grade</th>
+                <th class="text-center px-4 py-3 font-medium">Violations</th>
+                <th class="text-center px-4 py-3 font-medium">Source</th>
+                <th class="text-left px-4 py-3 font-medium">Date</th>
+                <th class="text-right px-4 py-3 font-medium">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="scan-table-body">
+              <!-- Filled dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Account Section -->
+    <section class="mt-12 animate-slide-up" style="animation-delay: 0.3s;">
+      <h2 class="text-lg font-bold mb-4">Account</h2>
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <p class="text-sm text-halo-muted">Email: <span id="account-email" class="text-white">--</span></p>
+            <p class="text-sm text-halo-muted mt-1">Tier: <span id="account-tier" class="text-white">Free</span></p>
+            <p id="scan-limit-text" class="text-xs text-halo-subtle mt-2"></p>
+          </div>
+          <div class="flex gap-3">
+            <a href="/#pricing" id="upgrade-btn" class="inline-flex items-center gap-2 px-4 py-2 bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium rounded-lg transition-all">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+              Upgrade to Pro
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-halo-border py-8">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
+      <span>&copy; 2026 Mindful Media. All rights reserved.</span>
+      <div class="flex gap-4">
+        <a href="/privacy.html" class="hover:text-white transition-colors">Privacy</a>
+        <a href="/terms.html" class="hover:text-white transition-colors">Terms</a>
+        <a href="https://github.com/runhalo/halo" class="hover:text-white transition-colors">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+    // ==================== Config ====================
+    const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const GRADE_COLORS = {
+      A: 'text-green-400 bg-green-500/10',
+      B: 'text-blue-400 bg-blue-500/10',
+      C: 'text-yellow-400 bg-yellow-500/10',
+      D: 'text-orange-400 bg-orange-500/10',
+      F: 'text-red-400 bg-red-500/10',
+    };
+
+    const SOURCE_LABELS = {
+      web: 'Web',
+      cli: 'CLI',
+      api: 'API',
+    };
+
+    // ==================== Init ====================
+    async function init() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+
+      if (!session) {
+        window.location.href = '/app/login.html?redirect=dashboard';
+        return;
+      }
+
+      const user = session.user;
+
+      // Show user info
+      document.getElementById('user-email-display').textContent = `, ${user.email}`;
+      document.getElementById('account-email').textContent = user.email;
+
+      // Check license/tier
+      await checkTier(user.email);
+
+      // Load scan history
+      await loadScans(user.id);
+
+      // Show dashboard
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('dashboard-content').classList.remove('hidden');
+    }
+
+    async function checkTier(email) {
+      try {
+        const { data: licenses } = await supabaseClient
+          .from('halo_licenses')
+          .select('tier, status')
+          .eq('email', email)
+          .in('status', ['active', 'trialing'])
+          .limit(1);
+
+        if (licenses && licenses.length > 0) {
+          const license = licenses[0];
+          const tierLabel = license.tier.charAt(0).toUpperCase() + license.tier.slice(1);
+          document.getElementById('stat-tier').textContent = tierLabel;
+          document.getElementById('account-tier').textContent = `${tierLabel} (${license.status})`;
+
+          if (license.tier === 'pro' || license.tier === 'enterprise') {
+            document.getElementById('upgrade-btn').classList.add('hidden');
+            document.getElementById('scan-limit-text').textContent = 'Unlimited scans';
+          }
+        } else {
+          document.getElementById('scan-limit-text').textContent = '5 scans per day on Free tier';
+        }
+      } catch (err) {
+        console.warn('License check error:', err);
+      }
+    }
+
+    async function loadScans(userId) {
+      try {
+        const { data: scans, error } = await supabaseClient
+          .from('halo_scans')
+          .select('id, repo_owner, repo_name, repo_url, score, grade, total_violations, total_files, scan_source, share_token, created_at')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false })
+          .limit(50);
+
+        if (error) throw error;
+
+        if (!scans || scans.length === 0) {
+          document.getElementById('empty-state').classList.remove('hidden');
+          document.getElementById('stat-total-scans').textContent = '0';
+          document.getElementById('stat-avg-score').textContent = '--';
+          document.getElementById('stat-total-violations').textContent = '0';
+          return;
+        }
+
+        // Stats
+        document.getElementById('stat-total-scans').textContent = scans.length;
+        const avgScore = Math.round(scans.reduce((sum, s) => sum + s.score, 0) / scans.length);
+        document.getElementById('stat-avg-score').textContent = `${avgScore}/100`;
+        const totalViolations = scans.reduce((sum, s) => sum + s.total_violations, 0);
+        document.getElementById('stat-total-violations').textContent = totalViolations.toLocaleString();
+
+        // Render table
+        document.getElementById('scan-table').classList.remove('hidden');
+        const tbody = document.getElementById('scan-table-body');
+        tbody.innerHTML = scans.map(scan => renderScanRow(scan)).join('');
+
+      } catch (err) {
+        console.error('Load scans error:', err);
+      }
+    }
+
+    function renderScanRow(scan) {
+      const gradeClass = GRADE_COLORS[scan.grade] || GRADE_COLORS.F;
+      const sourceLabel = SOURCE_LABELS[scan.scan_source] || scan.scan_source;
+      const date = new Date(scan.created_at).toLocaleDateString('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+
+      return `
+        <tr class="border-b border-halo-border/50 hover:bg-halo-border/20 transition-colors">
+          <td class="px-4 py-3">
+            <div>
+              <span class="text-halo-subtle text-xs">${scan.repo_owner}/</span><span class="font-medium">${scan.repo_name}</span>
+            </div>
+          </td>
+          <td class="px-4 py-3 text-center font-mono font-bold">${scan.score}</td>
+          <td class="px-4 py-3 text-center">
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${gradeClass}">${scan.grade}</span>
+          </td>
+          <td class="px-4 py-3 text-center text-halo-muted">${scan.total_violations}</td>
+          <td class="px-4 py-3 text-center">
+            <span class="text-xs text-halo-subtle">${sourceLabel}</span>
+          </td>
+          <td class="px-4 py-3 text-halo-muted text-xs">${date}</td>
+          <td class="px-4 py-3 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <a href="/app/results.html?id=${scan.id}" class="text-halo-accent hover:text-halo-accent-light text-xs">View</a>
+              <button onclick="copyShareUrl('${scan.share_token}')" class="text-halo-muted hover:text-white text-xs" title="Copy share link">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+
+    // ==================== Actions ====================
+    function copyShareUrl(shareToken) {
+      const url = `${window.location.origin}/app/score.html?t=${shareToken}`;
+      navigator.clipboard.writeText(url).then(() => {
+        // Brief visual feedback
+        const btn = event.currentTarget;
+        btn.classList.add('text-halo-green');
+        setTimeout(() => btn.classList.remove('text-halo-green'), 1500);
+      });
+    }
+
+    async function signOut() {
+      await supabaseClient.auth.signOut();
+      window.location.href = '/app/';
+    }
+
+    // ==================== Start ====================
+    init();
+  </script>
+
+</body>
+</html>

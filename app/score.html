@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COPPA Compliance Score | Halo</title>
+  <meta name="description" content="COPPA compliance scorecard powered by Halo. See how this repository scores against 20 COPPA 2.0 rules.">
+
+  <!-- OG tags (static for MVP — dynamic generation post-MVP) -->
+  <meta property="og:title" content="COPPA Compliance Scorecard — Halo">
+  <meta property="og:description" content="See this repository's COPPA 2.0 compliance score. Scan your own repo free at runhalo.dev">
+  <meta property="og:url" content="https://runhalo.dev/app/score.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://runhalo.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="COPPA Compliance Scorecard — Halo">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            halo: {
+              bg: '#0a0a0f',
+              surface: '#12121a',
+              border: '#1e1e2e',
+              accent: '#6366f1',
+              'accent-light': '#818cf8',
+              green: '#22c55e',
+              'green-dim': '#166534',
+              red: '#ef4444',
+              'red-dim': '#7f1d1d',
+              yellow: '#eab308',
+              'yellow-dim': '#713f12',
+              orange: '#f97316',
+              muted: '#6b7280',
+              subtle: '#374151',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+            slideUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body { background: #0a0a0f; }
+    .score-ring { transition: stroke-dashoffset 1.5s ease-out; }
+  </style>
+</head>
+<body class="font-sans text-white min-h-screen">
+
+  <!-- Nav -->
+  <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 text-white hover:text-halo-accent-light transition-colors">
+        <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
+          <circle cx="12" cy="12" r="4" fill="currentColor" />
+        </svg>
+        <span class="font-bold text-lg">Halo</span>
+      </a>
+      <a href="/app/" class="bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
+        Scan Your Repo
+      </a>
+    </div>
+  </nav>
+
+  <!-- Loading -->
+  <div id="loading-state" class="max-w-2xl mx-auto px-6 pt-20 text-center">
+    <div class="animate-pulse">
+      <div class="w-36 h-36 rounded-full bg-halo-surface border border-halo-border mx-auto mb-6"></div>
+      <div class="h-4 bg-halo-surface rounded w-48 mx-auto mb-3"></div>
+      <div class="h-3 bg-halo-surface rounded w-32 mx-auto"></div>
+    </div>
+  </div>
+
+  <!-- Scorecard Content -->
+  <main id="scorecard-content" class="hidden max-w-2xl mx-auto px-6 pt-12 pb-24">
+
+    <!-- "Powered by" badge -->
+    <div class="text-center mb-6 animate-fade-in">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-halo-accent/10 border border-halo-accent/20 text-halo-accent-light text-xs">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
+          <circle cx="12" cy="12" r="4" fill="currentColor" />
+        </svg>
+        COPPA Compliance Scorecard by Halo
+      </span>
+    </div>
+
+    <!-- Repo Name -->
+    <div class="text-center mb-8 animate-fade-in">
+      <p class="text-halo-muted text-sm mb-1">Repository</p>
+      <h1 class="text-2xl font-bold">
+        <span id="sc-repo-owner" class="text-halo-muted"></span>/<span id="sc-repo-name"></span>
+      </h1>
+    </div>
+
+    <!-- Score Circle -->
+    <div class="flex justify-center mb-8 animate-fade-in">
+      <div class="relative w-44 h-44">
+        <svg class="w-44 h-44 -rotate-90" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#1e1e2e" stroke-width="5" />
+          <circle
+            id="sc-score-circle"
+            cx="50" cy="50" r="45"
+            fill="none"
+            stroke="#6366f1"
+            stroke-width="5"
+            stroke-linecap="round"
+            stroke-dasharray="283"
+            stroke-dashoffset="283"
+            class="score-ring"
+          />
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <span id="sc-score" class="text-5xl font-extrabold">--</span>
+          <span id="sc-grade" class="text-sm font-bold px-3 py-0.5 rounded-full mt-2"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="text-center mb-8 animate-slide-up" style="animation-delay: 0.1s;">
+      <p class="text-halo-muted text-sm">
+        <span id="sc-violations" class="text-white font-semibold">--</span> violation(s) across
+        <span id="sc-files" class="text-white font-semibold">--</span> files
+      </p>
+      <p class="text-halo-subtle text-xs mt-1">
+        Scanned on <span id="sc-date">--</span>
+      </p>
+    </div>
+
+    <!-- Severity badges -->
+    <div id="sc-severity-badges" class="flex justify-center gap-3 mb-10 animate-slide-up" style="animation-delay: 0.15s;">
+      <!-- Filled dynamically -->
+    </div>
+
+    <!-- Rules triggered -->
+    <div class="bg-halo-surface border border-halo-border rounded-xl p-6 mb-8 animate-slide-up" style="animation-delay: 0.2s;">
+      <h2 class="text-sm font-semibold mb-3">Rules Triggered</h2>
+      <div id="sc-rules" class="flex flex-wrap gap-2">
+        <!-- Filled dynamically -->
+      </div>
+    </div>
+
+    <!-- CTA: Scan Your Repo -->
+    <div class="bg-gradient-to-br from-halo-accent/10 to-halo-surface border border-halo-accent/30 rounded-xl p-8 text-center animate-slide-up" style="animation-delay: 0.25s;">
+      <h3 class="text-xl font-bold mb-2">How Does Your Repo Score?</h3>
+      <p class="text-halo-muted text-sm mb-6">
+        Scan any GitHub repository for COPPA 2.0 compliance. Free, no signup required.
+      </p>
+      <a href="/app/" class="inline-flex items-center gap-2 bg-halo-accent hover:bg-halo-accent-light text-white font-semibold px-6 py-3 rounded-lg transition-all">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        Scan Your Repo
+      </a>
+    </div>
+
+    <!-- Badge Embed -->
+    <div class="mt-8 text-center animate-slide-up" style="animation-delay: 0.3s;">
+      <p class="text-halo-muted text-xs mb-2">Add this badge to your README:</p>
+      <div class="bg-halo-surface border border-halo-border rounded-lg p-3">
+        <code id="badge-code" class="text-xs text-halo-accent-light font-mono break-all select-all"></code>
+      </div>
+      <button onclick="copyBadgeCode()" class="text-halo-accent hover:text-halo-accent-light text-xs mt-2 underline underline-offset-2">Copy badge code</button>
+    </div>
+
+  </main>
+
+  <!-- Error State -->
+  <div id="error-state" class="hidden max-w-2xl mx-auto px-6 pt-20 text-center">
+    <div class="bg-halo-red-dim/30 border border-halo-red/30 rounded-xl p-6">
+      <p class="text-halo-red font-semibold mb-2">Scorecard Not Found</p>
+      <p class="text-halo-muted text-sm mb-4">This scorecard may have been removed or the URL is invalid.</p>
+      <a href="/app/" class="text-halo-accent hover:text-halo-accent-light text-sm underline underline-offset-2">Scan a repo instead</a>
+    </div>
+  </div>
+
+  <footer class="border-t border-halo-border py-8">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
+      <span>&copy; 2026 Mindful Media. All rights reserved.</span>
+      <div class="flex gap-4">
+        <a href="/privacy.html" class="hover:text-white transition-colors">Privacy</a>
+        <a href="/terms.html" class="hover:text-white transition-colors">Terms</a>
+        <a href="https://github.com/runhalo/halo" class="hover:text-white transition-colors">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+    const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const GRADE_COLORS = {
+      A: { text: 'text-green-400', bg: 'bg-green-500/10', stroke: '#22c55e' },
+      B: { text: 'text-blue-400', bg: 'bg-blue-500/10', stroke: '#3b82f6' },
+      C: { text: 'text-yellow-400', bg: 'bg-yellow-500/10', stroke: '#eab308' },
+      D: { text: 'text-orange-400', bg: 'bg-orange-500/10', stroke: '#f97316' },
+      F: { text: 'text-red-400', bg: 'bg-red-500/10', stroke: '#ef4444' },
+    };
+
+    const SEVERITY_CONFIG = {
+      critical: { bg: 'bg-red-500/10', text: 'text-red-400' },
+      high: { bg: 'bg-orange-500/10', text: 'text-orange-400' },
+      medium: { bg: 'bg-yellow-500/10', text: 'text-yellow-400' },
+      low: { bg: 'bg-blue-500/10', text: 'text-blue-400' },
+    };
+
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      const shareToken = params.get('t');
+
+      if (!shareToken) {
+        showError();
+        return;
+      }
+
+      try {
+        // Use RPC to get safe public fields only
+        const { data, error } = await supabaseClient.rpc('get_scan_by_share_token', {
+          p_share_token: shareToken,
+        });
+
+        if (error || !data || data.length === 0) {
+          showError();
+          return;
+        }
+
+        const scan = data[0];
+        renderScorecard(scan, shareToken);
+
+      } catch (err) {
+        console.error('Load error:', err);
+        showError();
+      }
+    }
+
+    function renderScorecard(scan, shareToken) {
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('scorecard-content').classList.remove('hidden');
+
+      // Update page title
+      document.title = `${scan.repo_owner}/${scan.repo_name} — COPPA Score: ${scan.score}/100 (${scan.grade}) | Halo`;
+
+      // Repo info
+      document.getElementById('sc-repo-owner').textContent = scan.repo_owner;
+      document.getElementById('sc-repo-name').textContent = scan.repo_name;
+
+      // Score circle
+      const gradeConfig = GRADE_COLORS[scan.grade] || GRADE_COLORS.F;
+      const circle = document.getElementById('sc-score-circle');
+      const circumference = 283;
+      const offset = circumference - (scan.score / 100) * circumference;
+      circle.style.stroke = gradeConfig.stroke;
+      setTimeout(() => { circle.style.strokeDashoffset = offset; }, 100);
+
+      document.getElementById('sc-score').textContent = scan.score;
+      const gradeEl = document.getElementById('sc-grade');
+      gradeEl.textContent = `Grade: ${scan.grade}`;
+      gradeEl.className = `text-sm font-bold px-3 py-0.5 rounded-full mt-2 ${gradeConfig.bg} ${gradeConfig.text}`;
+
+      // Stats
+      document.getElementById('sc-violations').textContent = scan.total_violations;
+      document.getElementById('sc-files').textContent = scan.total_files;
+      document.getElementById('sc-date').textContent = new Date(scan.created_at).toLocaleDateString('en-US', {
+        month: 'long', day: 'numeric', year: 'numeric',
+      });
+
+      // Severity badges
+      const badges = document.getElementById('sc-severity-badges');
+      const severities = scan.by_severity || {};
+      badges.innerHTML = Object.entries(severities)
+        .filter(([_, count]) => count > 0)
+        .map(([sev, count]) => {
+          const cfg = SEVERITY_CONFIG[sev] || SEVERITY_CONFIG.low;
+          return `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${cfg.bg} ${cfg.text}">${count} ${sev}</span>`;
+        })
+        .join('');
+
+      // Rules triggered
+      const rulesContainer = document.getElementById('sc-rules');
+      const rules = scan.rules_triggered || [];
+      if (rules.length === 0) {
+        rulesContainer.innerHTML = '<span class="text-halo-green text-xs">No rules triggered — excellent compliance!</span>';
+      } else {
+        rulesContainer.innerHTML = rules.map(r =>
+          `<span class="px-2 py-1 bg-halo-border/50 rounded text-xs font-mono text-halo-muted">${r}</span>`
+        ).join('');
+      }
+
+      // Badge code
+      const badgeUrl = `https://runhalo.dev/app/score.html?t=${shareToken}`;
+      const badgeCode = `[![Halo COPPA Score: ${scan.score}/100](https://img.shields.io/badge/Halo_COPPA-${scan.score}%2F100_${scan.grade}-${gradeConfig.stroke.replace('#', '')}?style=flat-square)](${badgeUrl})`;
+      document.getElementById('badge-code').textContent = badgeCode;
+    }
+
+    function copyBadgeCode() {
+      const code = document.getElementById('badge-code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        event.target.textContent = 'Copied!';
+        setTimeout(() => { event.target.textContent = 'Copy badge code'; }, 2000);
+      });
+    }
+
+    function showError() {
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('error-state').classList.remove('hidden');
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

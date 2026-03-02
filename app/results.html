@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan Results | Halo COPPA Scanner</title>
+  <meta name="description" content="Your COPPA compliance scan results from Halo.">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            halo: {
+              bg: '#0a0a0f',
+              surface: '#12121a',
+              border: '#1e1e2e',
+              accent: '#6366f1',
+              'accent-light': '#818cf8',
+              green: '#22c55e',
+              'green-dim': '#166534',
+              red: '#ef4444',
+              'red-dim': '#7f1d1d',
+              yellow: '#eab308',
+              'yellow-dim': '#713f12',
+              orange: '#f97316',
+              muted: '#6b7280',
+              subtle: '#374151',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+            'score-fill': 'scoreFill 1.5s ease-out forwards',
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+            slideUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+            scoreFill: { '0%': { 'stroke-dashoffset': '283' }, '100%': { 'stroke-dashoffset': 'var(--score-offset)' } },
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body { background: #0a0a0f; }
+    .score-ring { transition: stroke-dashoffset 1.5s ease-out; }
+    .blur-overlay {
+      position: relative;
+    }
+    .blur-overlay::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(transparent, #0a0a0f);
+      pointer-events: none;
+    }
+    .violation-blurred {
+      filter: blur(4px);
+      user-select: none;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="font-sans text-white min-h-screen">
+
+  <!-- Nav -->
+  <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/app/" class="flex items-center gap-2 text-white hover:text-halo-accent-light transition-colors">
+        <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
+          <circle cx="12" cy="12" r="4" fill="currentColor" />
+        </svg>
+        <span class="font-bold text-lg">Halo</span>
+      </a>
+      <div class="flex items-center gap-4 text-sm">
+        <a href="/app/" class="text-halo-muted hover:text-white transition-colors">New Scan</a>
+        <a href="/app/login.html" id="auth-link" class="text-halo-accent hover:text-halo-accent-light transition-colors">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Loading -->
+  <div id="loading-state" class="max-w-3xl mx-auto px-6 pt-20 text-center">
+    <div class="animate-pulse">
+      <div class="w-32 h-32 rounded-full bg-halo-surface border border-halo-border mx-auto mb-6"></div>
+      <div class="h-4 bg-halo-surface rounded w-48 mx-auto mb-3"></div>
+      <div class="h-3 bg-halo-surface rounded w-32 mx-auto"></div>
+    </div>
+  </div>
+
+  <!-- Results Content -->
+  <main id="results-content" class="hidden max-w-4xl mx-auto px-6 pt-12 pb-32">
+
+    <!-- Score Header -->
+    <div class="text-center mb-10 animate-fade-in">
+      <!-- Repo name -->
+      <p class="text-halo-muted text-sm mb-2">
+        <span id="repo-owner" class="text-halo-subtle"></span>/<span id="repo-name" class="text-white font-medium"></span>
+      </p>
+
+      <!-- Score Circle -->
+      <div class="relative w-40 h-40 mx-auto mb-4">
+        <svg class="w-40 h-40 -rotate-90" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#1e1e2e" stroke-width="6" />
+          <circle
+            id="score-circle"
+            cx="50" cy="50" r="45"
+            fill="none"
+            stroke="#6366f1"
+            stroke-width="6"
+            stroke-linecap="round"
+            stroke-dasharray="283"
+            stroke-dashoffset="283"
+            class="score-ring"
+          />
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <span id="score-number" class="text-4xl font-extrabold">--</span>
+          <span id="grade-badge" class="text-xs font-bold px-2 py-0.5 rounded-full mt-1"></span>
+        </div>
+      </div>
+
+      <!-- Summary line -->
+      <p class="text-halo-muted text-sm">
+        <span id="total-violations" class="text-white font-semibold">--</span> violation(s) found across
+        <span id="total-files" class="text-white font-semibold">--</span> files
+      </p>
+    </div>
+
+    <!-- Severity Badges -->
+    <div id="severity-badges" class="flex justify-center gap-3 mb-10 animate-slide-up" style="animation-delay: 0.1s;">
+      <!-- Filled dynamically -->
+    </div>
+
+    <!-- Top 3 Violations (visible to all) -->
+    <section class="mb-8 animate-slide-up" style="animation-delay: 0.2s;">
+      <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+        </svg>
+        Top Violations
+      </h2>
+      <div id="top-violations" class="space-y-3">
+        <!-- Filled dynamically -->
+      </div>
+    </section>
+
+    <!-- Paywall Gate -->
+    <section id="paywall-gate" class="hidden animate-slide-up" style="animation-delay: 0.3s;">
+
+      <!-- Blurred violations preview -->
+      <div class="blur-overlay mb-6">
+        <div id="blurred-violations" class="space-y-3 violation-blurred">
+          <!-- Fake blurred cards -->
+          <div class="bg-halo-surface border border-halo-border rounded-lg p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2 py-0.5 rounded text-xs font-medium bg-yellow-500/10 text-yellow-400">medium</span>
+              <code class="text-xs text-halo-muted font-mono">coppa-sec-015</code>
+            </div>
+            <p class="text-sm text-halo-muted">Reflected XSS Risk — innerHTML with user-controlled content</p>
+            <p class="text-xs text-halo-subtle font-mono mt-1">src/components/editor.tsx:142</p>
+          </div>
+          <div class="bg-halo-surface border border-halo-border rounded-lg p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2 py-0.5 rounded text-xs font-medium bg-orange-500/10 text-orange-400">high</span>
+              <code class="text-xs text-halo-muted font-mono">coppa-bio-012</code>
+            </div>
+            <p class="text-sm text-halo-muted">Biometric Data Collection — camera API without consent</p>
+            <p class="text-xs text-halo-subtle font-mono mt-1">src/auth/biometric.ts:67</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signup CTA Card -->
+      <div class="bg-gradient-to-br from-halo-accent/10 to-halo-surface border border-halo-accent/30 rounded-xl p-8 text-center">
+        <h3 class="text-xl font-bold mb-2">See All Violations</h3>
+        <p class="text-halo-muted text-sm mb-6">
+          Create a free account to view all <span id="hidden-count" class="text-white font-semibold">--</span> remaining violations with fix suggestions.
+        </p>
+
+        <!-- Email signup -->
+        <div class="max-w-sm mx-auto space-y-3">
+          <a href="/app/login.html?redirect=results&scan_id=" id="signup-cta-link"
+             class="block w-full bg-halo-accent hover:bg-halo-accent-light text-white font-semibold py-3 px-6 rounded-lg transition-all text-center">
+            Sign Up Free
+          </a>
+          <p class="text-halo-subtle text-xs">
+            Already have an account?
+            <a href="/app/login.html?tab=login" class="text-halo-accent hover:text-halo-accent-light underline underline-offset-2">Log in</a>
+          </p>
+          <p class="text-halo-subtle text-xs">
+            Have a Pro license?
+            <a href="/app/login.html?tab=license" class="text-halo-accent hover:text-halo-accent-light underline underline-offset-2">Enter it here</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full Violations (authenticated users only) -->
+    <section id="full-violations" class="hidden animate-slide-up">
+      <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+        </svg>
+        All Violations
+        <span id="full-count" class="text-sm font-normal text-halo-muted"></span>
+      </h2>
+
+      <!-- Filters -->
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button onclick="filterViolations('all')" class="filter-btn active px-3 py-1 rounded-full text-xs font-medium bg-halo-accent/20 text-halo-accent-light border border-halo-accent/30" data-filter="all">All</button>
+        <button onclick="filterViolations('critical')" class="filter-btn px-3 py-1 rounded-full text-xs font-medium bg-halo-surface text-halo-muted border border-halo-border hover:border-red-500/50" data-filter="critical">Critical</button>
+        <button onclick="filterViolations('high')" class="filter-btn px-3 py-1 rounded-full text-xs font-medium bg-halo-surface text-halo-muted border border-halo-border hover:border-orange-500/50" data-filter="high">High</button>
+        <button onclick="filterViolations('medium')" class="filter-btn px-3 py-1 rounded-full text-xs font-medium bg-halo-surface text-halo-muted border border-halo-border hover:border-yellow-500/50" data-filter="medium">Medium</button>
+        <button onclick="filterViolations('low')" class="filter-btn px-3 py-1 rounded-full text-xs font-medium bg-halo-surface text-halo-muted border border-halo-border hover:border-blue-500/50" data-filter="low">Low</button>
+      </div>
+
+      <div id="all-violations-list" class="space-y-3">
+        <!-- Filled dynamically -->
+      </div>
+    </section>
+
+    <!-- Share Section -->
+    <section class="mt-10 pt-8 border-t border-halo-border animate-slide-up" style="animation-delay: 0.4s;">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h3 class="font-semibold text-sm">Share This Scorecard</h3>
+          <p class="text-halo-muted text-xs">Share your COPPA compliance score publicly</p>
+        </div>
+        <button id="share-btn" onclick="copyShareLink()" class="flex items-center gap-2 px-4 py-2 bg-halo-surface border border-halo-border rounded-lg text-sm hover:border-halo-accent/50 transition-colors">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+          </svg>
+          <span id="share-btn-text">Copy Link</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Scan Another -->
+    <section class="mt-8 text-center">
+      <a href="/app/" class="inline-flex items-center gap-2 text-halo-accent hover:text-halo-accent-light text-sm transition-colors">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Scan Another Repo
+      </a>
+    </section>
+
+  </main>
+
+  <!-- Error State -->
+  <div id="error-state" class="hidden max-w-3xl mx-auto px-6 pt-20 text-center">
+    <div class="bg-halo-red-dim/30 border border-halo-red/30 rounded-xl p-6">
+      <p class="text-halo-red font-semibold mb-2">Scan Not Found</p>
+      <p class="text-halo-muted text-sm mb-4">This scan may have expired or the URL is invalid.</p>
+      <a href="/app/" class="text-halo-accent hover:text-halo-accent-light text-sm underline underline-offset-2">Start a new scan</a>
+    </div>
+  </div>
+
+  <footer class="border-t border-halo-border py-8">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
+      <span>&copy; 2026 Mindful Media. All rights reserved.</span>
+      <div class="flex gap-4">
+        <a href="/privacy.html" class="hover:text-white transition-colors">Privacy</a>
+        <a href="/terms.html" class="hover:text-white transition-colors">Terms</a>
+        <a href="https://github.com/runhalo/halo" class="hover:text-white transition-colors">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+    // ==================== Config ====================
+    const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentScan = null;
+    let allViolations = [];
+    let isAuthenticated = false;
+
+    // ==================== Severity Config ====================
+    const SEVERITY_CONFIG = {
+      critical: { color: 'red', bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/30' },
+      high: { color: 'orange', bg: 'bg-orange-500/10', text: 'text-orange-400', border: 'border-orange-500/30' },
+      medium: { color: 'yellow', bg: 'bg-yellow-500/10', text: 'text-yellow-400', border: 'border-yellow-500/30' },
+      low: { color: 'blue', bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/30' },
+    };
+
+    const GRADE_COLORS = {
+      A: { text: 'text-green-400', bg: 'bg-green-500/10', stroke: '#22c55e' },
+      B: { text: 'text-blue-400', bg: 'bg-blue-500/10', stroke: '#3b82f6' },
+      C: { text: 'text-yellow-400', bg: 'bg-yellow-500/10', stroke: '#eab308' },
+      D: { text: 'text-orange-400', bg: 'bg-orange-500/10', stroke: '#f97316' },
+      F: { text: 'text-red-400', bg: 'bg-red-500/10', stroke: '#ef4444' },
+    };
+
+    // ==================== Init ====================
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      const scanId = params.get('id');
+
+      if (!scanId) {
+        showError();
+        return;
+      }
+
+      // Check auth state
+      const { data: { session } } = await supabase.auth.getSession();
+      isAuthenticated = !!session;
+
+      if (isAuthenticated) {
+        document.getElementById('auth-link').textContent = 'Dashboard';
+        document.getElementById('auth-link').href = '/app/dashboard.html';
+      }
+
+      // Fetch scan data
+      await loadScan(scanId);
+    }
+
+    async function loadScan(scanId) {
+      try {
+        // Try fetching via session token first
+        const sessionToken = getCookie('halo_session');
+        let scan = null;
+
+        if (isAuthenticated) {
+          // Authenticated: fetch via user_id (RLS handles it)
+          const { data, error } = await supabase
+            .from('halo_scans')
+            .select('*')
+            .eq('id', scanId)
+            .single();
+
+          if (!error) scan = data;
+        }
+
+        if (!scan && sessionToken) {
+          // Try via RPC or direct fetch with session token header
+          const res = await fetch(
+            `${SUPABASE_URL}/rest/v1/halo_scans?id=eq.${scanId}&select=*`,
+            {
+              headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'x-session-token': sessionToken,
+              }
+            }
+          );
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) scan = data[0];
+        }
+
+        if (!scan) {
+          showError();
+          return;
+        }
+
+        currentScan = scan;
+        allViolations = scan.scan_json?.violations || [];
+        renderResults(scan);
+
+      } catch (err) {
+        console.error('Load error:', err);
+        showError();
+      }
+    }
+
+    // ==================== Render ====================
+    function renderResults(scan) {
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('results-content').classList.remove('hidden');
+
+      // Repo info
+      document.getElementById('repo-owner').textContent = scan.repo_owner;
+      document.getElementById('repo-name').textContent = scan.repo_name;
+
+      // Score circle
+      const score = scan.score;
+      const grade = scan.grade;
+      const gradeConfig = GRADE_COLORS[grade] || GRADE_COLORS.F;
+
+      const circle = document.getElementById('score-circle');
+      const circumference = 283; // 2 * PI * 45
+      const offset = circumference - (score / 100) * circumference;
+      circle.style.stroke = gradeConfig.stroke;
+      setTimeout(() => { circle.style.strokeDashoffset = offset; }, 100);
+
+      document.getElementById('score-number').textContent = score;
+      const badge = document.getElementById('grade-badge');
+      badge.textContent = grade;
+      badge.className = `text-xs font-bold px-2 py-0.5 rounded-full mt-1 ${gradeConfig.bg} ${gradeConfig.text}`;
+
+      // Summary
+      document.getElementById('total-violations').textContent = scan.total_violations;
+      document.getElementById('total-files').textContent = scan.total_files;
+
+      // Severity badges
+      const badgeContainer = document.getElementById('severity-badges');
+      const severities = scan.by_severity || {};
+      badgeContainer.innerHTML = Object.entries(severities)
+        .filter(([_, count]) => count > 0)
+        .map(([sev, count]) => {
+          const cfg = SEVERITY_CONFIG[sev] || SEVERITY_CONFIG.low;
+          return `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${cfg.bg} ${cfg.text}">${count} ${sev}</span>`;
+        })
+        .join('');
+
+      // Top 3 violations
+      const top3 = getTop3(allViolations);
+      const topContainer = document.getElementById('top-violations');
+      topContainer.innerHTML = top3.map(v => renderViolationCard(v)).join('');
+
+      // Update share link
+      const shareUrl = `${window.location.origin}/app/score.html?t=${scan.share_token}`;
+      window._shareUrl = shareUrl;
+
+      // Update signup link with scan_id
+      const signupLink = document.getElementById('signup-cta-link');
+      if (signupLink) {
+        signupLink.href = `/app/login.html?redirect=results&scan_id=${scan.id}`;
+      }
+
+      // Show paywall or full violations
+      if (isAuthenticated) {
+        // Show all violations
+        document.getElementById('paywall-gate').classList.add('hidden');
+        document.getElementById('full-violations').classList.remove('hidden');
+        document.getElementById('full-count').textContent = `(${allViolations.length})`;
+        renderAllViolations(allViolations);
+      } else if (scan.total_violations > 3) {
+        // Show paywall
+        document.getElementById('paywall-gate').classList.remove('hidden');
+        document.getElementById('hidden-count').textContent = scan.total_violations - 3;
+      }
+    }
+
+    function getTop3(violations) {
+      const severityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+      const byRule = new Map();
+      for (const v of violations) {
+        if (!byRule.has(v.ruleId)) byRule.set(v.ruleId, v);
+      }
+      const unique = Array.from(byRule.values());
+      unique.sort((a, b) => (severityOrder[a.severity] || 4) - (severityOrder[b.severity] || 4));
+      return unique.slice(0, 3);
+    }
+
+    function renderViolationCard(v) {
+      const cfg = SEVERITY_CONFIG[v.severity] || SEVERITY_CONFIG.low;
+      return `
+        <div class="bg-halo-surface border border-halo-border rounded-lg p-4 hover:border-halo-accent/30 transition-colors">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="px-2 py-0.5 rounded text-xs font-medium ${cfg.bg} ${cfg.text}">${v.severity}</span>
+            <code class="text-xs text-halo-muted font-mono">${v.ruleId}</code>
+          </div>
+          <p class="text-sm text-white mb-1">${v.ruleName || v.message}</p>
+          <p class="text-xs text-halo-muted mb-2">${v.message}</p>
+          <div class="flex items-center justify-between">
+            <p class="text-xs text-halo-subtle font-mono">${v.file}:${v.line}</p>
+            ${v.fixSuggestion ? `<p class="text-xs text-halo-accent">${truncate(v.fixSuggestion, 60)}</p>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAllViolations(violations) {
+      const container = document.getElementById('all-violations-list');
+      container.innerHTML = violations.map(v => renderViolationCard(v)).join('');
+    }
+
+    function filterViolations(severity) {
+      // Update active button
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        const isActive = btn.dataset.filter === severity;
+        btn.className = `filter-btn px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+          isActive
+            ? 'bg-halo-accent/20 text-halo-accent-light border border-halo-accent/30'
+            : 'bg-halo-surface text-halo-muted border border-halo-border hover:border-halo-accent/30'
+        }`;
+      });
+
+      const filtered = severity === 'all'
+        ? allViolations
+        : allViolations.filter(v => v.severity === severity);
+
+      renderAllViolations(filtered);
+      document.getElementById('full-count').textContent = `(${filtered.length})`;
+    }
+
+    // ==================== Share ====================
+    function copyShareLink() {
+      if (!window._shareUrl) return;
+      navigator.clipboard.writeText(window._shareUrl).then(() => {
+        const btn = document.getElementById('share-btn-text');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy Link'; }, 2000);
+      });
+    }
+
+    // ==================== Helpers ====================
+    function truncate(str, len) {
+      return str.length > len ? str.substring(0, len) + '...' : str;
+    }
+
+    function getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    }
+
+    function showError() {
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('error-state').classList.remove('hidden');
+    }
+
+    // ==================== Start ====================
+    init();
+  </script>
+
+</body>
+</html>

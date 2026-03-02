@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | Halo</title>
+  <meta name="description" content="Sign in to Halo to view full scan results and manage your compliance dashboard.">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            halo: {
+              bg: '#0a0a0f',
+              surface: '#12121a',
+              border: '#1e1e2e',
+              accent: '#6366f1',
+              'accent-light': '#818cf8',
+              green: '#22c55e',
+              'green-dim': '#166534',
+              red: '#ef4444',
+              'red-dim': '#7f1d1d',
+              muted: '#6b7280',
+              subtle: '#374151',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>body { background: #0a0a0f; }</style>
+</head>
+<body class="font-sans text-white min-h-screen flex flex-col">
+
+  <!-- Nav -->
+  <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/app/" class="flex items-center gap-2 text-white hover:text-halo-accent-light transition-colors">
+        <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
+          <circle cx="12" cy="12" r="4" fill="currentColor" />
+        </svg>
+        <span class="font-bold text-lg">Halo</span>
+      </a>
+      <a href="/app/" class="text-halo-muted hover:text-white text-sm transition-colors">Back to Scanner</a>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="flex-1 flex items-center justify-center px-6 py-12">
+    <div class="w-full max-w-sm animate-fade-in">
+
+      <!-- Tab Toggle -->
+      <div class="flex bg-halo-surface border border-halo-border rounded-lg p-1 mb-8">
+        <button id="tab-signup" onclick="switchTab('signup')" class="flex-1 py-2 text-sm font-medium rounded-md transition-all bg-halo-accent text-white">
+          Sign Up
+        </button>
+        <button id="tab-login" onclick="switchTab('login')" class="flex-1 py-2 text-sm font-medium rounded-md transition-all text-halo-muted hover:text-white">
+          Log In
+        </button>
+      </div>
+
+      <!-- Signup Form -->
+      <form id="signup-form" onsubmit="handleSignup(event)" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-halo-muted mb-1.5">Email</label>
+          <input
+            type="email"
+            id="signup-email"
+            required
+            placeholder="you@company.com"
+            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 text-white placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
+          >
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-halo-muted mb-1.5">Password</label>
+          <input
+            type="password"
+            id="signup-password"
+            required
+            minlength="6"
+            placeholder="Min 6 characters"
+            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 text-white placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
+          >
+        </div>
+        <button type="submit" id="signup-btn" class="w-full bg-halo-accent hover:bg-halo-accent-light text-white font-semibold py-3 rounded-lg transition-all">
+          Create Account
+        </button>
+
+        <!-- Magic link -->
+        <div class="text-center">
+          <button type="button" onclick="sendMagicLink('signup')" class="text-halo-muted text-xs hover:text-halo-accent-light transition-colors underline underline-offset-2">
+            Or sign up with a magic link
+          </button>
+        </div>
+      </form>
+
+      <!-- Login Form -->
+      <form id="login-form" onsubmit="handleLogin(event)" class="hidden space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-halo-muted mb-1.5">Email</label>
+          <input
+            type="email"
+            id="login-email"
+            required
+            placeholder="you@company.com"
+            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 text-white placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
+          >
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-halo-muted mb-1.5">Password</label>
+          <input
+            type="password"
+            id="login-password"
+            required
+            placeholder="Your password"
+            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 text-white placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
+          >
+        </div>
+        <button type="submit" id="login-btn" class="w-full bg-halo-accent hover:bg-halo-accent-light text-white font-semibold py-3 rounded-lg transition-all">
+          Log In
+        </button>
+
+        <!-- Magic link -->
+        <div class="text-center">
+          <button type="button" onclick="sendMagicLink('login')" class="text-halo-muted text-xs hover:text-halo-accent-light transition-colors underline underline-offset-2">
+            Or log in with a magic link
+          </button>
+        </div>
+      </form>
+
+      <!-- License Key Form -->
+      <form id="license-form" onsubmit="handleLicense(event)" class="hidden space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-halo-muted mb-1.5">License Key</label>
+          <input
+            type="text"
+            id="license-key"
+            required
+            placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 text-white placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors font-mono text-sm"
+          >
+        </div>
+        <button type="submit" id="license-btn" class="w-full bg-halo-accent hover:bg-halo-accent-light text-white font-semibold py-3 rounded-lg transition-all">
+          Activate License
+        </button>
+        <p class="text-halo-subtle text-xs text-center">
+          <button type="button" onclick="switchTab('signup')" class="text-halo-accent hover:text-halo-accent-light underline underline-offset-2">Back to Sign Up</button>
+        </p>
+      </form>
+
+      <!-- Status Messages -->
+      <div id="status-message" class="hidden mt-4 p-3 rounded-lg text-sm text-center"></div>
+
+      <!-- Pro upgrade CTA -->
+      <div class="mt-8 p-4 bg-halo-surface border border-halo-border rounded-lg text-center">
+        <p class="text-xs text-halo-muted mb-1">Need unlimited scans + CLI upload?</p>
+        <a href="/#pricing" class="text-halo-accent hover:text-halo-accent-light text-xs font-medium underline underline-offset-2">Upgrade to Pro — $29/mo</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="border-t border-halo-border py-6">
+    <div class="max-w-5xl mx-auto px-6 text-center text-halo-muted text-xs">
+      &copy; 2026 Mindful Media. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+    // ==================== Config ====================
+    const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ==================== Tab Switching ====================
+    function switchTab(tab) {
+      const forms = { signup: 'signup-form', login: 'login-form', license: 'license-form' };
+      const tabs = { signup: 'tab-signup', login: 'tab-login' };
+
+      // Hide all forms
+      Object.values(forms).forEach(id => document.getElementById(id).classList.add('hidden'));
+
+      // Show selected form
+      document.getElementById(forms[tab])?.classList.remove('hidden');
+
+      // Update tab styles
+      Object.entries(tabs).forEach(([key, id]) => {
+        const el = document.getElementById(id);
+        if (key === tab) {
+          el.className = 'flex-1 py-2 text-sm font-medium rounded-md transition-all bg-halo-accent text-white';
+        } else {
+          el.className = 'flex-1 py-2 text-sm font-medium rounded-md transition-all text-halo-muted hover:text-white';
+        }
+      });
+
+      hideStatus();
+    }
+
+    // ==================== Auth Handlers ====================
+    async function handleSignup(e) {
+      e.preventDefault();
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const btn = document.getElementById('signup-btn');
+
+      btn.textContent = 'Creating account...';
+      btn.disabled = true;
+
+      try {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/app/dashboard.html`,
+          }
+        });
+
+        if (error) throw error;
+
+        // Link anonymous scans
+        await linkScans(data.user?.id);
+
+        showStatus('Account created! Check your email to confirm, then you can log in.', 'success');
+
+        // If auto-confirmed (dev mode), redirect immediately
+        if (data.session) {
+          redirectAfterAuth();
+        }
+      } catch (err) {
+        showStatus(err.message || 'Signup failed. Please try again.', 'error');
+      } finally {
+        btn.textContent = 'Create Account';
+        btn.disabled = false;
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const btn = document.getElementById('login-btn');
+
+      btn.textContent = 'Logging in...';
+      btn.disabled = true;
+
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) throw error;
+
+        // Link anonymous scans
+        await linkScans(data.user?.id);
+
+        redirectAfterAuth();
+      } catch (err) {
+        showStatus(err.message || 'Login failed. Please check your credentials.', 'error');
+      } finally {
+        btn.textContent = 'Log In';
+        btn.disabled = false;
+      }
+    }
+
+    async function sendMagicLink(context) {
+      const emailId = context === 'signup' ? 'signup-email' : 'login-email';
+      const email = document.getElementById(emailId).value;
+
+      if (!email) {
+        showStatus('Please enter your email address first.', 'error');
+        return;
+      }
+
+      try {
+        const { error } = await supabaseClient.auth.signInWithOtp({
+          email,
+          options: {
+            emailRedirectTo: `${window.location.origin}/app/dashboard.html`,
+          }
+        });
+
+        if (error) throw error;
+        showStatus('Magic link sent! Check your email.', 'success');
+      } catch (err) {
+        showStatus(err.message || 'Failed to send magic link.', 'error');
+      }
+    }
+
+    async function handleLicense(e) {
+      e.preventDefault();
+      const key = document.getElementById('license-key').value.trim();
+      const btn = document.getElementById('license-btn');
+
+      btn.textContent = 'Validating...';
+      btn.disabled = true;
+
+      try {
+        // Validate license via existing edge function
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/validate-license`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ license_key: key }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.valid) {
+          throw new Error(data.error || 'Invalid or expired license key.');
+        }
+
+        // Store license in localStorage for dashboard access
+        localStorage.setItem('halo_license', JSON.stringify({
+          key,
+          email: data.email,
+          tier: data.tier,
+          status: data.status,
+        }));
+
+        showStatus(`License activated! Tier: ${data.tier}`, 'success');
+
+        // Try to sign in or create account with the license email
+        setTimeout(() => {
+          showStatus('Please sign up or log in with this email to access the dashboard.', 'info');
+          switchTab('signup');
+          document.getElementById('signup-email').value = data.email || '';
+        }, 1500);
+
+      } catch (err) {
+        showStatus(err.message || 'License validation failed.', 'error');
+      } finally {
+        btn.textContent = 'Activate License';
+        btn.disabled = false;
+      }
+    }
+
+    // ==================== Helpers ====================
+    async function linkScans(userId) {
+      if (!userId) return;
+      const sessionToken = getCookie('halo_session');
+      if (!sessionToken) return;
+
+      try {
+        await supabaseClient.rpc('link_anonymous_scans', {
+          p_session_token: sessionToken,
+          p_user_id: userId,
+        });
+      } catch (err) {
+        console.warn('Failed to link anonymous scans:', err);
+      }
+    }
+
+    function redirectAfterAuth() {
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get('redirect');
+      const scanId = params.get('scan_id');
+
+      if (redirect === 'results' && scanId) {
+        window.location.href = `/app/results.html?id=${scanId}`;
+      } else {
+        window.location.href = '/app/dashboard.html';
+      }
+    }
+
+    function getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    }
+
+    function showStatus(message, type) {
+      const el = document.getElementById('status-message');
+      el.classList.remove('hidden');
+      el.textContent = message;
+      el.className = `mt-4 p-3 rounded-lg text-sm text-center ${
+        type === 'success' ? 'bg-halo-green-dim/30 border border-halo-green/30 text-halo-green' :
+        type === 'error' ? 'bg-halo-red-dim/30 border border-halo-red/30 text-halo-red' :
+        'bg-halo-accent/10 border border-halo-accent/30 text-halo-accent-light'
+      }`;
+    }
+
+    function hideStatus() {
+      document.getElementById('status-message').classList.add('hidden');
+    }
+
+    // ==================== Init ====================
+    // Check URL params for initial tab
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('tab') === 'login') switchTab('login');
+    else if (params.get('tab') === 'license') switchTab('license');
+
+    // If already authenticated, redirect
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        redirectAfterAuth();
+      }
+    });
+
+    // Handle auth state changes (magic link redirect)
+    supabaseClient.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        await linkScans(session.user?.id);
+        redirectAfterAuth();
+      }
+    });
+  </script>
+
+</body>
+</html>
