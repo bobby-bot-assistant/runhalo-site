@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Halo Pro | runhalo.dev</title>
+  <meta name="robots" content="noindex">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            halo: {
+              bg: '#0a0a0f',
+              surface: '#12121a',
+              border: '#1e1e2e',
+              accent: '#6366f1',
+              'accent-light': '#818cf8',
+              green: '#22c55e',
+              'green-dim': '#166534',
+              red: '#ef4444',
+              muted: '#6b7280',
+              subtle: '#374151',
+            }
+          },
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #0a0a0f; }
+    .animate-check { animation: checkPop 0.5s ease-out; }
+    @keyframes checkPop {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .copy-btn:active { transform: scale(0.95); }
+  </style>
+</head>
+<body class="min-h-screen bg-halo-bg text-gray-300">
+
+  <div class="max-w-2xl mx-auto px-4 py-20 sm:py-32">
+    <!-- Success Icon -->
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-halo-green/10 border-2 border-halo-green/30 mb-6 animate-check">
+        <svg class="w-10 h-10 text-halo-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">Welcome to Halo Pro</h1>
+      <p class="text-gray-400 text-lg">Your subscription is active. Let's get you set up.</p>
+    </div>
+
+    <!-- License Key Card -->
+    <div id="license-card" class="bg-halo-surface border border-halo-border rounded-2xl p-8 mb-8" style="display: none;">
+      <h2 class="text-lg font-semibold text-white mb-4">Your License Key</h2>
+      <div class="flex items-center gap-3 bg-halo-bg border border-halo-border rounded-lg p-4">
+        <code id="license-key" class="font-mono text-halo-accent text-sm flex-1 break-all select-all">Loading...</code>
+        <button onclick="copyLicenseKey()" class="copy-btn shrink-0 text-gray-500 hover:text-white transition-colors p-2 rounded-lg hover:bg-halo-border/50" title="Copy license key">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+          </svg>
+        </button>
+      </div>
+      <p class="text-gray-600 text-xs mt-3">Save this key somewhere safe. You'll need it to activate Halo Pro in your terminal.</p>
+    </div>
+
+    <!-- Setup Steps -->
+    <div class="bg-halo-surface border border-halo-border rounded-2xl p-8 mb-8">
+      <h2 class="text-lg font-semibold text-white mb-6">Quick Setup</h2>
+
+      <div class="space-y-6">
+        <!-- Step 1 -->
+        <div class="flex gap-4">
+          <div class="shrink-0 w-8 h-8 rounded-full bg-halo-accent/10 border border-halo-accent/30 flex items-center justify-center text-halo-accent font-semibold text-sm">1</div>
+          <div class="flex-1">
+            <h3 class="text-white font-medium mb-2">Install Halo (if you haven't)</h3>
+            <div class="bg-halo-bg border border-halo-border rounded-lg p-3 flex items-center justify-between">
+              <code class="font-mono text-sm text-gray-300">npm install -g runhalo</code>
+              <button onclick="copyText('npm install -g runhalo')" class="copy-btn text-gray-500 hover:text-white transition-colors p-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex gap-4">
+          <div class="shrink-0 w-8 h-8 rounded-full bg-halo-accent/10 border border-halo-accent/30 flex items-center justify-center text-halo-accent font-semibold text-sm">2</div>
+          <div class="flex-1">
+            <h3 class="text-white font-medium mb-2">Activate your license</h3>
+            <div id="activate-cmd" class="bg-halo-bg border border-halo-border rounded-lg p-3 flex items-center justify-between">
+              <code class="font-mono text-sm text-gray-300">halo activate <span id="activate-key" class="text-halo-accent">&lt;your-license-key&gt;</span></code>
+              <button onclick="copyActivateCommand()" class="copy-btn text-gray-500 hover:text-white transition-colors p-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flex gap-4">
+          <div class="shrink-0 w-8 h-8 rounded-full bg-halo-accent/10 border border-halo-accent/30 flex items-center justify-center text-halo-accent font-semibold text-sm">3</div>
+          <div class="flex-1">
+            <h3 class="text-white font-medium mb-2">Scan with Pro features</h3>
+            <div class="bg-halo-bg border border-halo-border rounded-lg p-3 flex items-center justify-between">
+              <code class="font-mono text-sm text-gray-300">halo scan . --report --ethical</code>
+              <button onclick="copyText('halo scan . --report --ethical')" class="copy-btn text-gray-500 hover:text-white transition-colors p-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pro Features Unlocked -->
+    <div class="bg-halo-surface border border-halo-border rounded-2xl p-8 mb-8">
+      <h2 class="text-lg font-semibold text-white mb-4">What's Unlocked</h2>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div class="flex items-center gap-2 text-sm text-gray-300"><span class="text-halo-green">&#10003;</span> Unlimited scans</div>
+        <div class="flex items-center gap-2 text-sm text-gray-300"><span class="text-halo-green">&#10003;</span> Ethical design rules</div>
+        <div class="flex items-center gap-2 text-sm text-gray-300"><span class="text-halo-green">&#10003;</span> AI-generated code audit</div>
+        <div class="flex items-center gap-2 text-sm text-gray-300"><span class="text-halo-green">&#10003;</span> HTML compliance reports</div>
+        <div class="flex items-center gap-2 text-sm text-gray-300"><span class="text-halo-green">&#10003;</span> Guided scaffold generation</div>
+        <div class="flex items-center gap-2 text-sm text-gray-300"><span class="text-halo-green">&#10003;</span> IDE rules (Cursor, Copilot)</div>
+        <div class="flex items-center gap-2 text-sm text-gray-300"><span class="text-halo-green">&#10003;</span> MCP real-time scan + fix</div>
+        <div class="flex items-center gap-2 text-sm text-gray-300"><span class="text-halo-green">&#10003;</span> Priority support</div>
+      </div>
+    </div>
+
+    <!-- Help Links -->
+    <div class="text-center space-y-4">
+      <div class="flex items-center justify-center gap-6 text-sm">
+        <a href="https://github.com/runhalo/halo" target="_blank" class="text-gray-500 hover:text-white transition-colors">Documentation</a>
+        <a href="mailto:hello@mindfulmedia.org" class="text-gray-500 hover:text-white transition-colors">Support</a>
+        <a href="/" class="text-gray-500 hover:text-white transition-colors">Back to Home</a>
+      </div>
+      <p class="text-gray-600 text-xs">Halo Pro by <a href="https://mindfulmedia.org" class="text-gray-500 hover:text-white transition-colors">Mindful Media</a></p>
+    </div>
+  </div>
+
+  <!-- Loading State (shown initially) -->
+  <div id="loading-state" class="fixed inset-0 bg-halo-bg flex items-center justify-center z-50" style="display: none;">
+    <div class="text-center">
+      <div class="w-8 h-8 border-2 border-halo-accent border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
+      <p class="text-gray-400">Confirming your subscription...</p>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
+
+    let storedLicenseKey = null;
+
+    // Extract session_id from URL
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+
+    // If we have a session_id, try to look up the license (webhook may have fired)
+    if (sessionId) {
+      // Give webhook a moment to process, then show the page
+      // License key will be emailed and available via CLI
+      document.getElementById('license-card').style.display = 'block';
+      document.getElementById('license-key').textContent = 'Check your email for your license key, or use the email you signed up with.';
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        // Brief visual feedback would be nice but keep it simple
+      });
+    }
+
+    function copyLicenseKey() {
+      if (storedLicenseKey) {
+        copyText(storedLicenseKey);
+      }
+    }
+
+    function copyActivateCommand() {
+      const key = storedLicenseKey || '<your-license-key>';
+      copyText('halo activate ' + key);
+    }
+  </script>
+
+</body>
+</html>

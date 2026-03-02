@@ -658,69 +658,84 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════ PRO WAITLIST ═══════════════════════════════════════════ -->
-  <section id="pro" class="py-20 sm:py-28">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6">
-      <div class="bg-gradient-to-br from-halo-accent/10 via-purple-500/5 to-halo-surface border border-halo-accent/20 rounded-2xl p-8 sm:p-12">
-        <div class="text-center mb-10">
-          <span class="text-xs font-semibold text-halo-accent bg-halo-accent/10 border border-halo-accent/20 rounded-full px-3 py-1">Coming Q2 2026</span>
-          <h2 class="text-3xl sm:text-4xl font-bold text-white mt-6 mb-4">Halo Pro</h2>
-          <p class="text-gray-400 text-lg max-w-2xl mx-auto">Everything in the open source scanner, plus the tools your team needs to stay compliant at scale.</p>
-        </div>
+  <!-- ═══════════════════════════════════════════ PRICING ═══════════════════════════════════════════ -->
+  <section id="pricing" class="py-20 sm:py-28">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Simple, Transparent Pricing</h2>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto">Start scanning for free. Upgrade when your team needs more.</p>
+      </div>
 
-        <!-- Pro features grid -->
-        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-10">
-          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
-            <div class="text-halo-accent text-lg mb-2">📊</div>
-            <h4 class="text-white text-sm font-semibold mb-1">CI/CD Dashboard</h4>
-            <p class="text-gray-500 text-xs">Scan history, trend charts, team-wide visibility across all repos.</p>
-          </div>
-          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
-            <div class="text-halo-accent text-lg mb-2">📋</div>
-            <h4 class="text-white text-sm font-semibold mb-1">Compliance Reports</h4>
-            <p class="text-gray-500 text-xs">PDF/HTML reports for legal teams. Exportable audit trail for regulators.</p>
-          </div>
-          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
-            <div class="text-halo-accent text-lg mb-2">👥</div>
-            <h4 class="text-white text-sm font-semibold mb-1">Team Workspace</h4>
-            <p class="text-gray-500 text-xs">Centralized config, shared ignore rules, role-based access.</p>
-          </div>
-          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
-            <div class="text-halo-accent text-lg mb-2">🔔</div>
-            <h4 class="text-white text-sm font-semibold mb-1">Slack & Teams Alerts</h4>
-            <p class="text-gray-500 text-xs">Real-time alerts when new violations appear in PRs or main branch.</p>
-          </div>
-          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
-            <div class="text-halo-accent text-lg mb-2">🔧</div>
-            <h4 class="text-white text-sm font-semibold mb-1">Auto-Fix Suggestions</h4>
-            <p class="text-gray-500 text-xs">AI-generated consent flows, age gates, and privacy policy scaffolds.</p>
-          </div>
-          <div class="bg-halo-bg/50 border border-halo-border rounded-lg p-4">
-            <div class="text-halo-accent text-lg mb-2">🛡️</div>
-            <h4 class="text-white text-sm font-semibold mb-1">AADCA Rules</h4>
-            <p class="text-gray-500 text-xs">California Age-Appropriate Design Code Act scanning. Beyond federal COPPA.</p>
-          </div>
-        </div>
-
-        <!-- Waitlist form -->
-        <div class="max-w-md mx-auto">
-          <form id="pro-waitlist" onsubmit="handleProWaitlist(event)" class="space-y-3">
-            <input type="email" name="email" required placeholder="you@company.com" class="w-full bg-halo-bg border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
-            <div class="flex gap-3">
-              <input type="text" name="company" placeholder="Company" class="flex-1 bg-halo-bg border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
-              <select name="team_size" class="bg-halo-bg border border-halo-border rounded-lg px-3 py-2.5 text-sm text-gray-400 focus:outline-none focus:border-halo-accent/50 transition-colors appearance-none cursor-pointer">
-                <option value="">Team size</option>
-                <option value="1-5">1-5</option>
-                <option value="6-20">6-20</option>
-                <option value="21-100">21-100</option>
-                <option value="100+">100+</option>
-              </select>
+      <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <!-- Free Tier -->
+        <div class="bg-halo-surface border border-halo-border rounded-2xl p-8 flex flex-col">
+          <div class="mb-6">
+            <h3 class="text-xl font-bold text-white mb-2">Free</h3>
+            <div class="flex items-baseline gap-1">
+              <span class="text-4xl font-bold text-white">$0</span>
+              <span class="text-gray-500 text-sm">/forever</span>
             </div>
-            <button type="submit" class="w-full bg-gradient-to-r from-halo-accent to-purple-500 hover:from-halo-accent-light hover:to-purple-400 text-white font-medium px-6 py-3 rounded-lg transition-all">Join the Waitlist</button>
-          </form>
-          <p class="text-xs text-gray-600 text-center mt-3">No spam. We'll email you when Pro launches. Unsubscribe anytime.</p>
+            <p class="text-gray-400 text-sm mt-3">Perfect for indie developers and side projects.</p>
+          </div>
+          <ul class="space-y-3 mb-8 flex-1">
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> 5 scans per day</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> 20 COPPA 2.0 rules</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> 4 auto-fix transforms</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> VS Code extension</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> GitHub Action (CI/CD)</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> Text output</li>
+          </ul>
+          <a href="#get-started" class="block w-full text-center bg-halo-surface border border-halo-border hover:border-halo-accent/50 text-white font-medium px-6 py-3 rounded-lg transition-all">Get Started</a>
+        </div>
+
+        <!-- Pro Tier (highlighted) -->
+        <div class="bg-gradient-to-b from-halo-accent/10 to-halo-surface border-2 border-halo-accent/40 rounded-2xl p-8 flex flex-col relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+            <span class="text-xs font-semibold text-white bg-halo-accent rounded-full px-3 py-1">Most Popular</span>
+          </div>
+          <div class="mb-6">
+            <h3 class="text-xl font-bold text-white mb-2">Pro</h3>
+            <div class="flex items-baseline gap-1">
+              <span class="text-4xl font-bold text-white">$29</span>
+              <span class="text-gray-500 text-sm">/month</span>
+            </div>
+            <p class="text-gray-400 text-sm mt-3">For teams shipping children's products.</p>
+          </div>
+          <ul class="space-y-3 mb-8 flex-1">
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> <strong class="text-white">Unlimited</strong> scans</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> 20 COPPA + ethical design rules</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> AI-generated code audit mode</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> JSON, SARIF, HTML reports</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> Guided scaffold generation</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> Compliance score + trend line</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> IDE rules files (Cursor, Copilot)</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> MCP real-time scan + fix</li>
+          </ul>
+          <button onclick="startCheckout('pro')" class="w-full bg-gradient-to-r from-halo-accent to-purple-500 hover:from-halo-accent-light hover:to-purple-400 text-white font-medium px-6 py-3 rounded-lg transition-all cursor-pointer">Start Pro</button>
+        </div>
+
+        <!-- Enterprise Tier -->
+        <div class="bg-halo-surface border border-halo-border rounded-2xl p-8 flex flex-col">
+          <div class="mb-6">
+            <h3 class="text-xl font-bold text-white mb-2">Enterprise</h3>
+            <div class="flex items-baseline gap-1">
+              <span class="text-4xl font-bold text-white">Custom</span>
+            </div>
+            <p class="text-gray-400 text-sm mt-3">For regulated industries and government.</p>
+          </div>
+          <ul class="space-y-3 mb-8 flex-1">
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Everything in Pro</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> PDF compliance reports</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Sector rule packs (AU SbD, AADCA)</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Priority support + SLA</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Dedicated onboarding</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Custom rule development</li>
+          </ul>
+          <a href="mailto:hello@mindfulmedia.org?subject=Halo%20Enterprise" class="block w-full text-center bg-halo-surface border border-purple-500/30 hover:border-purple-400/50 text-white font-medium px-6 py-3 rounded-lg transition-all">Contact Us</a>
         </div>
       </div>
+
+      <p class="text-center text-gray-600 text-xs mt-8">All plans include the open-source scanner. Pro and Enterprise add premium features and priority support. Cancel anytime.</p>
     </div>
   </section>
 
@@ -746,7 +761,7 @@
             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
-            Yes. The core scanner is open source and free forever. Run it with <code class="text-halo-accent bg-halo-accent/10 px-1 py-0.5 rounded text-xs">npx runhalo scan .</code> in any Node.js project. Pro features (CI/CD dashboard, compliance reports, scan history) are coming soon.
+            Yes. The core scanner is open source and free forever — 5 scans per day with 20 COPPA 2.0 rules. Run it with <code class="text-halo-accent bg-halo-accent/10 px-1 py-0.5 rounded text-xs">npx runhalo scan .</code> in any project. <a href="#pricing" class="text-halo-accent hover:underline">Halo Pro</a> ($29/mo) unlocks unlimited scans, ethical design rules, AI audit mode, and premium reports.
           </div>
         </details>
 
@@ -917,28 +932,47 @@
       }
     }
 
-    async function handleProWaitlist(event) {
-      event.preventDefault();
-      const form = document.getElementById('pro-waitlist');
-      const formData = new FormData(form);
-      const utm = getUtmParams();
+    // ═══════════════ STRIPE CHECKOUT ═══════════════
+
+    async function startCheckout(tier) {
+      const btn = event.target;
+      const originalText = btn.textContent;
+      btn.textContent = 'Loading...';
+      btn.disabled = true;
 
       try {
-        await submitLead({
-          email: formData.get('email'),
-          company: formData.get('company') || null,
-          team_size: formData.get('team_size') || null,
-          source: 'pro_waitlist',
-          utm_source: utm.utm_source,
-          utm_medium: utm.utm_medium,
-          utm_campaign: utm.utm_campaign,
-          consent_given: true,
-          consent_text: 'Opted in via Halo Pro waitlist on runhalo.dev',
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            email: '', // Stripe Checkout will collect email
+            tier: tier,
+            success_url: window.location.origin + '/success.html?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url: window.location.origin + '/#pricing',
+          }),
         });
-        showFormSuccess(form, "You're on the list! We'll notify you when Pro launches.");
-        form.reset();
+
+        const data = await res.json();
+
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          throw new Error(data.error || 'Failed to create checkout session');
+        }
       } catch (err) {
-        showFormError(form);
+        console.error('Checkout error:', err);
+        btn.textContent = 'Something went wrong';
+        btn.classList.remove('from-halo-accent', 'to-purple-500');
+        btn.classList.add('bg-halo-red');
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('bg-halo-red');
+          btn.classList.add('from-halo-accent', 'to-purple-500');
+          btn.disabled = false;
+        }, 3000);
       }
     }
 
