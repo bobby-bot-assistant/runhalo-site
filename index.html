@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Halo | Open Source COPPA Scanner & Ethical Design Linter</title>
-  <meta name="description" content="Scan your app for potential COPPA 2.0 compliance issues. Free open-source scanner for privacy risks and dark patterns. Ready for the April 2026 deadline.">
-  <meta name="keywords" content="COPPA compliance tool, COPPA 2.0 scanner, children's app compliance, ethical design linter, COPPA audit, children's privacy scanner, dark pattern detector">
+  <title>Halo — Children's Compliance Intelligence for Engineering Teams</title>
+  <meta name="description" content="Scan your codebase for COPPA, AADC, EU DSA, and 7 more regulatory frameworks. 114 rules. AST-aware analysis. AI-powered review. Free CLI.">
+  <meta name="keywords" content="COPPA compliance tool, COPPA 2.0 scanner, children's app compliance, ethical design linter, COPPA audit, children's privacy scanner, dark pattern detector, AADC, EU DSA, children's regulatory compliance">
   <link rel="canonical" href="https://runhalo.dev">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Halo — Open Source COPPA 2.0 Risk Scanner">
-  <meta property="og:description" content="Scan your children's app for potential COPPA 2.0 risks, dark patterns, and privacy issues. Free. Open source. Ready for April 2026.">
+  <meta property="og:title" content="Halo — Children's Compliance Intelligence">
+  <meta property="og:description" content="Scan your codebase for COPPA, AADC, EU DSA, and 7 more regulatory frameworks. 114 rules. AST-aware analysis. AI-powered review. Free CLI.">
   <meta property="og:url" content="https://runhalo.dev">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://runhalo.dev/og-image.png">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Halo — COPPA 2.0 Risk Scanner">
-  <meta name="twitter:description" content="Free open-source scanner for potential COPPA 2.0 risks. April 2026 deadline is real.">
+  <meta name="twitter:title" content="Halo — Children's Compliance Intelligence for Engineering Teams">
+  <meta name="twitter:description" content="114 rules across 10 regulatory frameworks. AST-aware analysis. AI-powered review. Free CLI. COPPA 2.0 enforcement starts April 22, 2026.">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -82,11 +82,11 @@
       "priceCurrency": "USD",
       "description": "Open source core — free forever"
     },
-    "description": "Open-source code scanner for identifying potential COPPA 2.0 risks and ethical design issues in children's digital products.",
+    "description": "Children's compliance intelligence for engineering teams. Scan your codebase against 114 rules across 10 regulatory frameworks — COPPA, UK AADC, EU DSA, and more. AST-aware analysis. AI-powered review.",
     "url": "https://runhalo.dev",
     "downloadUrl": "https://www.npmjs.com/package/@runhalo/cli",
     "codeRepository": "https://github.com/runhalo/halo",
-    "softwareVersion": "0.1.1",
+    "softwareVersion": "0.4.2",
     "author": {
       "@type": "Organization",
       "name": "Mindful Media",
@@ -101,10 +101,10 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "When is the COPPA 2.0 compliance deadline?",
+        "name": "When does COPPA 2.0 take effect?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "April 22, 2026. The FTC's COPPA 2.0 Final Rule (published April 22, 2025) includes a 12-month grace period ending April 22, 2026."
+          "text": "April 22, 2026. The age threshold is extended to under 17. Penalties up to $53,088 per violation per day."
         }
       },
       {
@@ -112,7 +112,7 @@
         "name": "Is Halo free?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. The core scanner is open source and free forever. Run it with npx runhalo scan in any Node.js project."
+          "text": "Yes. 5 scans per day with 25 COPPA rules, completely free. Pro ($29/mo) unlocks all 114 rules across 10 packs, plus the AI Review Board, compliance scoring, and PDF reports."
         }
       },
       {
@@ -120,7 +120,31 @@
         "name": "What does Halo scan for?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Potential COPPA 2.0 risks including PII collection patterns, consent flows, data retention, dark patterns (manipulative UI), known high-risk tracking SDKs, and biometric data leakage."
+          "text": "COPPA violations, dark patterns, data collection risks, missing consent flows, tracking, age verification gaps, retention issues, and ethical design concerns — across 10 regulatory frameworks covering US, UK, EU, and Australian law."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is Halo different from Semgrep or Snyk?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Semgrep and Snyk scan for security vulnerabilities. Halo scans for children's regulatory compliance. Different problem. Complementary tools, not replacements."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What frameworks does Halo support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "JavaScript, TypeScript, Python, Ruby, Go, Java, and Swift. Built-in profiles for Next.js, Django, and Rails."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the AI Review Board?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Pro feature. Each violation is assessed by Claude Sonnet with clinical evidence from peer-reviewed developmental psychology research. Confirms true positives. Suppresses false positives."
         }
       }
     ]
@@ -186,10 +210,12 @@
       </a>
       <div class="hidden sm:flex items-center gap-6 text-sm">
         <a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a>
-        <a href="#scan-results" class="text-gray-400 hover:text-white transition-colors">Results</a>
-        <a href="#compliance" class="text-gray-400 hover:text-white transition-colors">COPPA 2.0</a>
+        <a href="#coverage" class="text-gray-400 hover:text-white transition-colors">Coverage</a>
+        <a href="#pricing" class="text-gray-400 hover:text-white transition-colors">Pricing</a>
         <a href="#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a>
-        <a href="#pro" class="text-gray-400 hover:text-white transition-colors">Pro</a>
+        <a href="https://github.com/runhalo/halo" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
       </div>
       <div class="flex items-center gap-3">
         <a href="#get-started" class="bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
@@ -205,21 +231,21 @@
     <div class="absolute inset-0 bg-gradient-to-b from-halo-accent/5 via-transparent to-transparent pointer-events-none"></div>
 
     <div class="relative max-w-6xl mx-auto px-4 sm:px-6">
-      <!-- Deadline badge -->
+      <!-- Urgency banner -->
       <div class="flex justify-center mb-8">
         <div class="countdown-pulse inline-flex items-center gap-2 bg-halo-red-dim/50 border border-red-500/30 rounded-full px-4 py-1.5 text-sm">
           <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-          <span class="text-red-400 font-medium">COPPA 2.0 enforcement begins April 22, 2026</span>
+          <span class="text-red-400 font-medium">COPPA 2.0 takes effect April 22, 2026 &mdash; penalties up to $53,088 per violation per day.</span>
         </div>
       </div>
 
       <div class="text-center max-w-4xl mx-auto">
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 tracking-tight">
-          The Open Source <span class="text-transparent bg-clip-text bg-gradient-to-r from-halo-accent to-purple-400">COPPA 2.0 Audit Scanner</span> & Ethical Design Linter
+          Is your code safe for kids?
         </h1>
 
-        <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-          Prepare for COPPA 2.0. Scan your codebase for potential privacy risks and dark patterns before the April 22, 2026 deadline.
+        <p class="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
+          Halo scans your codebase against 114 compliance rules across 10 regulatory frameworks &mdash; COPPA, UK AADC, EU DSA, and more. AST-aware analysis. AI-powered review. Two minutes to your first scan.
         </p>
 
         <!-- Terminal CTA -->
@@ -251,25 +277,10 @@
           <div class="flex items-center gap-4 text-sm">
             <span class="text-gray-500">Free &amp; Open Source</span>
             <span class="text-gray-600">|</span>
-            <span class="text-gray-500">20 COPPA rules</span>
+            <span class="text-gray-500">25 COPPA rules</span>
             <span class="text-gray-600">|</span>
             <a href="https://github.com/runhalo/halo" target="_blank" class="text-gray-400 hover:text-white transition-colors">View on GitHub</a>
           </div>
-
-          <!-- Dashboard CTA -->
-          <a href="/app/" class="mt-3 inline-flex items-center gap-2 text-halo-accent hover:text-halo-accent-light text-sm font-medium transition-colors">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
-            </svg>
-            See what we found scanning 48 edtech repos →
-          </a>
-
-          <!-- Email signup -->
-          <form id="hero-signup" onsubmit="handleSignup(event, 'hero-signup')" class="mt-6 flex flex-col sm:flex-row items-center gap-2 max-w-md w-full">
-            <input type="email" name="email" required placeholder="you@company.com" class="w-full sm:flex-1 bg-halo-surface border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
-            <button type="submit" class="w-full sm:w-auto bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap">Get Updates</button>
-          </form>
-          <p class="text-xs text-gray-600 mt-2">Be first to know when Pro launches. No spam.</p>
         </div>
       </div>
 
@@ -286,7 +297,7 @@
           </div>
           <div id="terminal-output" class="p-4 sm:p-6 font-mono text-sm leading-relaxed space-y-1 min-h-[260px]">
             <div class="terminal-line" data-delay="200">
-              <span class="text-halo-accent font-semibold">halo</span> <span class="text-gray-500">v0.1.0</span> <span class="text-gray-600">— COPPA Risk Scanner</span>
+              <span class="text-halo-accent font-semibold">halo</span> <span class="text-gray-500">v0.4.2</span> <span class="text-gray-600">— COPPA Risk Scanner</span>
             </div>
             <div class="terminal-line" data-delay="500">
               <span class="text-gray-500">Scanning 847 files...</span>
@@ -320,7 +331,7 @@
               <span class="text-white font-semibold">3 potential issues</span> <span class="text-gray-500">found across</span> <span class="text-white">847 files</span>
             </div>
             <div class="terminal-line" data-delay="4000">
-              <span class="text-red-400">1 high</span> <span class="text-gray-600">·</span> <span class="text-yellow-400">2 medium</span> <span class="text-gray-600">·</span> <span class="text-green-400">0 low</span>
+              <span class="text-red-400">1 high</span> <span class="text-gray-600">&middot;</span> <span class="text-yellow-400">2 medium</span> <span class="text-gray-600">&middot;</span> <span class="text-green-400">0 low</span>
             </div>
           </div>
         </div>
@@ -328,346 +339,341 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════ FEATURES ═══════════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════════ SOCIAL PROOF BAR ═══════════════════════════════════════════ -->
+  <section class="py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 text-center">
+          <div class="text-3xl sm:text-4xl font-bold text-white">100</div>
+          <div class="text-sm text-gray-500 mt-2">Repos scanned</div>
+        </div>
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 text-center">
+          <div class="text-3xl sm:text-4xl font-bold text-white">3,569</div>
+          <div class="text-sm text-gray-500 mt-2">Violations found</div>
+        </div>
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 text-center">
+          <div class="text-3xl sm:text-4xl font-bold text-white">114</div>
+          <div class="text-sm text-gray-500 mt-2">Compliance rules</div>
+        </div>
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 text-center">
+          <div class="text-3xl sm:text-4xl font-bold text-white">10</div>
+          <div class="text-sm text-gray-500 mt-2">Regulatory packs</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ WHAT HALO DOES ═══════════════════════════════════════════ -->
   <section id="features" class="py-20 sm:py-28">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-16">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">One command. Deep codebase scan.</h2>
-        <p class="text-gray-400 text-lg max-w-2xl mx-auto">Legacy tools scan for cookies. Halo scans for <em>risk</em>.</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">What Halo Does</h2>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto">Static analysis, AI-powered review, and compliance tracking &mdash; in one CLI.</p>
       </div>
 
       <div class="grid md:grid-cols-3 gap-6">
-        <!-- COPPA Scanner -->
+        <!-- Scan -->
         <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
-          <div class="w-12 h-12 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div class="w-12 h-12 rounded-lg bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-halo-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
           </div>
-          <h3 class="text-lg font-semibold text-white mb-2">COPPA Scanner</h3>
-          <p class="text-gray-400 text-sm leading-relaxed">Identify known high-risk SDKs, data collection patterns, missing consent flows, and biometric data leakage. 20 rules based on the COPPA 2.0 Final Rule.</p>
+          <h3 class="text-lg font-semibold text-white mb-2">Scan</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Static analysis with AST-aware intelligence. Halo understands your code's context, traces data flows, and recognizes framework-specific patterns. Next.js, Django, and Rails profiles built in.</p>
         </div>
 
-        <!-- Ethical Design Linter -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors relative">
-          <div class="absolute top-4 right-4">
-            <span class="text-xs bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-full px-2 py-0.5">Coming Soon</span>
-          </div>
+        <!-- Review -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
           <div class="w-12 h-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
           </div>
-          <h3 class="text-lg font-semibold text-white mb-2">Ethical Design Linter</h3>
-          <p class="text-gray-400 text-sm leading-relaxed">Help detect dark patterns, manipulative UI, infinite scroll, streak pressure, and attention-hijacking mechanics. Move beyond scanning to ethical design patterns.</p>
+          <h3 class="text-lg font-semibold text-white mb-2">Review</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">AI-powered compliance review by the Halo Review Board. Every violation is assessed by Claude Sonnet with clinical evidence from peer-reviewed developmental psychology research. True positives confirmed. False positives suppressed.</p>
         </div>
 
-        <!-- CI/CD Integration -->
+        <!-- Track -->
         <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
           <div class="w-12 h-12 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
           </div>
-          <h3 class="text-lg font-semibold text-white mb-2">CI/CD Integration</h3>
-          <p class="text-gray-400 text-sm leading-relaxed">Add <code class="text-halo-accent text-xs bg-halo-accent/10 px-1.5 py-0.5 rounded">runhalo scan</code> to your GitHub Actions. Continuous scanning on every PR. Surface potential risks before they ship.</p>
-        </div>
-      </div>
-
-      <!-- Positioning -->
-      <div class="mt-12 text-center">
-        <p class="text-gray-500 text-sm">Safe Harbor certification costs $15k+. <span class="text-gray-300">Halo is free.</span> Run it before you pay for the audit — fix many obvious issues first.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════ SCAN RESULTS ═══════════════════════════════════════════ -->
-  <section id="scan-results" class="py-20 sm:py-28 bg-gradient-to-b from-transparent via-halo-accent/3 to-transparent">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">We scanned 10 open-source ed-tech apps.</h2>
-        <p class="text-gray-400 text-lg">39,000+ GitHub stars. Here's what we found.</p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-6">
-        <!-- Scratch GUI -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
-          <div class="p-6">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h3 class="text-lg font-semibold text-white">Scratch</h3>
-                <p class="text-xs text-gray-500">MIT &middot; Ages 8-16</p>
-              </div>
-              <span class="text-2xl font-bold text-red-400">3</span>
-            </div>
-            <div class="space-y-3">
-              <div class="flex items-start gap-2">
-                <span class="text-xs font-semibold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded mt-0.5 shrink-0">HIGH</span>
-                <p class="text-sm text-gray-400">Unauthorized audio recording: <code class="text-xs text-gray-300">getUserMedia({audio: true})</code></p>
-              </div>
-              <div class="flex items-start gap-2">
-                <span class="text-xs font-semibold text-yellow-400 bg-yellow-500/10 px-1.5 py-0.5 rounded mt-0.5 shrink-0">MED</span>
-                <p class="text-sm text-gray-400">2 unwarned external links in child-facing views</p>
-              </div>
-            </div>
-          </div>
-          <div class="px-6 py-3 bg-halo-bg/50 border-t border-halo-border">
-            <span class="text-xs text-gray-500">Captures microphone input without detected parental consent mechanism</span>
-          </div>
-        </div>
-
-        <!-- ScratchJr -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
-          <div class="p-6">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h3 class="text-lg font-semibold text-white">ScratchJr</h3>
-                <p class="text-xs text-gray-500">Tufts/MIT &middot; Ages 5-7</p>
-              </div>
-              <span class="text-2xl font-bold text-red-400">1</span>
-            </div>
-            <div class="space-y-3">
-              <div class="flex items-start gap-2">
-                <span class="text-xs font-semibold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded mt-0.5 shrink-0">HIGH</span>
-                <p class="text-sm text-gray-400">Direct microphone access: <code class="text-xs text-gray-300">new AudioRecord(MIC)</code></p>
-              </div>
-            </div>
-          </div>
-          <div class="px-6 py-3 bg-halo-bg/50 border-t border-halo-border">
-            <span class="text-xs text-gray-500">Direct mic access in an app for 5-7 year olds. No parental consent mechanism detected.</span>
-          </div>
-        </div>
-
-        <!-- ClassroomIO -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
-          <div class="p-6">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h3 class="text-lg font-semibold text-white">ClassroomIO</h3>
-                <p class="text-xs text-gray-500">Open Source LMS</p>
-              </div>
-              <span class="text-2xl font-bold text-yellow-400">14</span>
-            </div>
-            <div class="space-y-3">
-              <div class="flex items-start gap-2">
-                <span class="text-xs font-semibold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded mt-0.5 shrink-0">HIGH</span>
-                <p class="text-sm text-gray-400">7 audio/tracking issues including UGC without PII filtering</p>
-              </div>
-              <div class="flex items-start gap-2">
-                <span class="text-xs font-semibold text-yellow-400 bg-yellow-500/10 px-1.5 py-0.5 rounded mt-0.5 shrink-0">MED</span>
-                <p class="text-sm text-gray-400">7 unwarned external links to social media</p>
-              </div>
-            </div>
-          </div>
-          <div class="px-6 py-3 bg-halo-bg/50 border-t border-halo-border">
-            <span class="text-xs text-gray-500">Missing privacy policy link on signup form</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Stats bar -->
-      <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-halo-surface border border-halo-border rounded-lg p-4 text-center">
-          <div class="text-2xl font-bold text-white">501</div>
-          <div class="text-xs text-gray-500 mt-1">Issues Detected</div>
-        </div>
-        <div class="bg-halo-surface border border-halo-border rounded-lg p-4 text-center">
-          <div class="text-2xl font-bold text-halo-green">10</div>
-          <div class="text-xs text-gray-500 mt-1">Repos Scanned</div>
-        </div>
-        <div class="bg-halo-surface border border-halo-border rounded-lg p-4 text-center">
-          <div class="text-2xl font-bold text-white">39k+</div>
-          <div class="text-xs text-gray-500 mt-1">GitHub Stars</div>
-        </div>
-        <div class="bg-halo-surface border border-halo-border rounded-lg p-4 text-center">
-          <div class="text-2xl font-bold text-halo-accent">25</div>
-          <div class="text-xs text-gray-500 mt-1">Detection Rules</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Track</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Compliance posture scoring from A+ to F. Track your grade over time. Get regression alerts when new violations appear. Generate PDF compliance reports for audits and board presentations.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════ COST OF NON-COMPLIANCE ═══════════════════════════════════════════ -->
-  <section id="compliance" class="py-20 sm:py-28">
+  <!-- ═══════════════════════════════════════════ REGULATORY COVERAGE TABLE ═══════════════════════════════════════════ -->
+  <section id="coverage" class="py-20 sm:py-28 bg-gradient-to-b from-transparent via-halo-accent/3 to-transparent">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
-      <div class="bg-gradient-to-br from-red-500/10 via-halo-surface to-halo-surface border border-red-500/20 rounded-2xl p-8 sm:p-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
-          The Potential $54,540-Per-Child Risk.
-        </h2>
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">10 packs. 114 rules. The regulations that matter.</h2>
+      </div>
 
-        <div class="space-y-4 text-gray-400 leading-relaxed mb-8">
-          <p>
-            COPPA 2.0 enforcement begins <span class="text-white font-semibold">April 22, 2026</span>. Penalties are assessed per child, per day. A platform with 10,000 underage users that collected data without consent for 30 days faces a theoretical maximum of <span class="text-red-400 font-semibold">$16.3 billion</span>.
-          </p>
-          <p>
-            The FTC isn't waiting. Disney settled for $10M in December 2025. IXL Learning and PowerSchool face active litigation right now.
-          </p>
-          <p class="text-white font-medium">Don't wait for a Civil Investigative Demand.</p>
-        </div>
-
-        <!-- COPPA 2.0 Changes Table -->
-        <h3 class="text-lg font-semibold text-white mb-4">What Changed in COPPA 2.0</h3>
-        <div class="overflow-x-auto -mx-2">
+      <div class="bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
+        <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
-              <tr class="border-b border-halo-border">
-                <th class="text-left py-3 px-2 text-gray-500 font-medium">Category</th>
-                <th class="text-left py-3 px-2 text-gray-500 font-medium">Old Rule</th>
-                <th class="text-left py-3 px-2 text-gray-500 font-medium">New Rule</th>
+              <tr class="border-b border-halo-border bg-halo-bg/50">
+                <th class="text-left py-4 px-6 text-gray-400 font-semibold">Pack</th>
+                <th class="text-center py-4 px-6 text-gray-400 font-semibold">Rules</th>
+                <th class="text-left py-4 px-6 text-gray-400 font-semibold">Jurisdiction</th>
               </tr>
             </thead>
-            <tbody class="text-gray-400">
-              <tr class="border-b border-halo-border/50">
-                <td class="py-3 px-2 text-gray-300">Personal Info</td>
-                <td class="py-3 px-2">Name, email, identifiers</td>
-                <td class="py-3 px-2"><span class="text-red-400">Now includes biometrics</span> (voice, face, gait)</td>
+            <tbody class="text-gray-300">
+              <tr class="border-b border-halo-border/50 hover:bg-white/[0.02] transition-colors">
+                <td class="py-3.5 px-6 font-medium text-white">COPPA 2.0</td>
+                <td class="py-3.5 px-6 text-center text-halo-accent font-semibold">25</td>
+                <td class="py-3.5 px-6 text-gray-400">US Federal</td>
               </tr>
-              <tr class="border-b border-halo-border/50">
-                <td class="py-3 px-2 text-gray-300">Audience</td>
-                <td class="py-3 px-2">"Child-Directed" only</td>
-                <td class="py-3 px-2"><span class="text-red-400">New "Mixed Audience"</span> — if kids <em>can</em> access it, scrutiny increases</td>
+              <tr class="border-b border-halo-border/50 hover:bg-white/[0.02] transition-colors">
+                <td class="py-3.5 px-6 font-medium text-white">UK Age Appropriate Design Code</td>
+                <td class="py-3.5 px-6 text-center text-halo-accent font-semibold">15</td>
+                <td class="py-3.5 px-6 text-gray-400">United Kingdom</td>
               </tr>
-              <tr class="border-b border-halo-border/50">
-                <td class="py-3 px-2 text-gray-300">Data Retention</td>
-                <td class="py-3 px-2">"Reasonably necessary"</td>
-                <td class="py-3 px-2"><span class="text-red-400">Strict necessity</span> with explicit timeframes</td>
+              <tr class="border-b border-halo-border/50 hover:bg-white/[0.02] transition-colors">
+                <td class="py-3.5 px-6 font-medium text-white">EU Digital Services Act</td>
+                <td class="py-3.5 px-6 text-center text-halo-accent font-semibold">10</td>
+                <td class="py-3.5 px-6 text-gray-400">European Union</td>
               </tr>
-              <tr>
-                <td class="py-3 px-2 text-gray-300">Safe Harbor</td>
-                <td class="py-3 px-2">Self-regulatory programs</td>
-                <td class="py-3 px-2"><span class="text-red-400">Tighter oversight</span>, public membership disclosure</td>
+              <tr class="border-b border-halo-border/50 hover:bg-white/[0.02] transition-colors">
+                <td class="py-3.5 px-6 font-medium text-white">California AADCA</td>
+                <td class="py-3.5 px-6 text-center text-halo-accent font-semibold">15</td>
+                <td class="py-3.5 px-6 text-gray-400">US State</td>
+              </tr>
+              <tr class="border-b border-halo-border/50 hover:bg-white/[0.02] transition-colors">
+                <td class="py-3.5 px-6 font-medium text-white">Australia Online Safety Act</td>
+                <td class="py-3.5 px-6 text-center text-halo-accent font-semibold">12</td>
+                <td class="py-3.5 px-6 text-gray-400">AU Federal</td>
+              </tr>
+              <tr class="border-b border-halo-border/50 hover:bg-white/[0.02] transition-colors">
+                <td class="py-3.5 px-6 font-medium text-white">Australia Safety by Design</td>
+                <td class="py-3.5 px-6 text-center text-halo-accent font-semibold">6</td>
+                <td class="py-3.5 px-6 text-gray-400">AU Federal</td>
+              </tr>
+              <tr class="border-b border-halo-border/50 hover:bg-white/[0.02] transition-colors">
+                <td class="py-3.5 px-6 font-medium text-white">Utah SB142</td>
+                <td class="py-3.5 px-6 text-center text-halo-accent font-semibold">5</td>
+                <td class="py-3.5 px-6 text-gray-400">US State</td>
+              </tr>
+              <tr class="border-b border-halo-border/50 hover:bg-white/[0.02] transition-colors">
+                <td class="py-3.5 px-6 font-medium text-white">AI-Generated Code Audit</td>
+                <td class="py-3.5 px-6 text-center text-halo-accent font-semibold">6</td>
+                <td class="py-3.5 px-6 text-gray-400">International</td>
+              </tr>
+              <tr class="border-b border-halo-border/50 hover:bg-white/[0.02] transition-colors">
+                <td class="py-3.5 px-6 font-medium text-white">Ethical Design Standards</td>
+                <td class="py-3.5 px-6 text-center text-halo-accent font-semibold">5</td>
+                <td class="py-3.5 px-6 text-gray-400">International</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors">
+                <td class="py-3.5 px-6 font-medium text-white">EU AI Act (Children)</td>
+                <td class="py-3.5 px-6 text-center text-halo-accent font-semibold">15</td>
+                <td class="py-3.5 px-6 text-gray-400">European Union</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+
+      <p class="text-center text-gray-500 text-sm mt-6">New packs ship regularly. Custom rule development available for Enterprise.</p>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════ CHECKLIST ═══════════════════════════════════════════ -->
-  <section class="py-20 sm:py-28 bg-gradient-to-b from-transparent via-halo-accent/3 to-transparent">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+  <!-- ═══════════════════════════════════════════ THE DATA ═══════════════════════════════════════════ -->
+  <section id="the-data" class="py-20 sm:py-28">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Are You at Risk?</h2>
-        <p class="text-gray-400">Check the boxes that apply to your product.</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">We scanned 100 repos. Here's what we found.</h2>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto">100 public repositories. 1.5M+ combined GitHub stars. Apps and platforms that children use every day.</p>
+        <p class="text-2xl font-bold text-red-400 mt-6">3,569 violations. <span class="text-gray-400 text-lg font-normal">Average: 35+ per repo.</span></p>
       </div>
 
       <div class="bg-halo-surface border border-halo-border rounded-xl p-6 sm:p-8">
-        <div id="checklist" class="space-y-4">
-          <label class="checklist-item flex items-start gap-3 cursor-pointer group">
-            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-600 bg-halo-bg text-halo-accent focus:ring-halo-accent cursor-pointer" onchange="updateChecklist()">
-            <span class="text-gray-300 group-hover:text-white transition-colors">Do you collect voice, face, or gait data? <span class="text-gray-500 text-sm">(New biometric rules)</span></span>
-          </label>
-          <label class="checklist-item flex items-start gap-3 cursor-pointer group">
-            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-600 bg-halo-bg text-halo-accent focus:ring-halo-accent cursor-pointer" onchange="updateChecklist()">
-            <span class="text-gray-300 group-hover:text-white transition-colors">Do you have colorful characters or simple games? <span class="text-gray-500 text-sm">(Mixed Audience risk)</span></span>
-          </label>
-          <label class="checklist-item flex items-start gap-3 cursor-pointer group">
-            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-600 bg-halo-bg text-halo-accent focus:ring-halo-accent cursor-pointer" onchange="updateChecklist()">
-            <span class="text-gray-300 group-hover:text-white transition-colors">Do you retain user data indefinitely "for analytics"? <span class="text-gray-500 text-sm">(Retention risk)</span></span>
-          </label>
-          <label class="checklist-item flex items-start gap-3 cursor-pointer group">
-            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-600 bg-halo-bg text-halo-accent focus:ring-halo-accent cursor-pointer" onchange="updateChecklist()">
-            <span class="text-gray-300 group-hover:text-white transition-colors">Do you use third-party ad SDKs? <span class="text-gray-500 text-sm">(Strict rules for trackers)</span></span>
-          </label>
+        <h3 class="text-lg font-semibold text-white mb-6">Top violation categories</h3>
+        <div class="space-y-4">
+          <!-- Data collection without consent — 31% -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-sm text-gray-300">Data collection without consent</span>
+              <span class="text-sm font-semibold text-red-400">31%</span>
+            </div>
+            <div class="w-full bg-halo-bg rounded-full h-2.5">
+              <div class="bg-red-500 h-2.5 rounded-full" style="width: 31%"></div>
+            </div>
+          </div>
+          <!-- Dark patterns & manipulative design — 24% -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-sm text-gray-300">Dark patterns &amp; manipulative design</span>
+              <span class="text-sm font-semibold text-red-400">24%</span>
+            </div>
+            <div class="w-full bg-halo-bg rounded-full h-2.5">
+              <div class="bg-red-500/80 h-2.5 rounded-full" style="width: 24%"></div>
+            </div>
+          </div>
+          <!-- Missing age verification — 18% -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-sm text-gray-300">Missing age verification</span>
+              <span class="text-sm font-semibold text-yellow-400">18%</span>
+            </div>
+            <div class="w-full bg-halo-bg rounded-full h-2.5">
+              <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 18%"></div>
+            </div>
+          </div>
+          <!-- Behavioral tracking — 15% -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-sm text-gray-300">Behavioral tracking</span>
+              <span class="text-sm font-semibold text-yellow-400">15%</span>
+            </div>
+            <div class="w-full bg-halo-bg rounded-full h-2.5">
+              <div class="bg-yellow-500/80 h-2.5 rounded-full" style="width: 15%"></div>
+            </div>
+          </div>
+          <!-- Retention & deletion gaps — 8% -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-sm text-gray-300">Retention &amp; deletion gaps</span>
+              <span class="text-sm font-semibold text-halo-accent">8%</span>
+            </div>
+            <div class="w-full bg-halo-bg rounded-full h-2.5">
+              <div class="bg-halo-accent h-2.5 rounded-full" style="width: 8%"></div>
+            </div>
+          </div>
+          <!-- Missing parental controls — 4% -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-sm text-gray-300">Missing parental controls</span>
+              <span class="text-sm font-semibold text-halo-accent">4%</span>
+            </div>
+            <div class="w-full bg-halo-bg rounded-full h-2.5">
+              <div class="bg-halo-accent/80 h-2.5 rounded-full" style="width: 4%"></div>
+            </div>
+          </div>
         </div>
 
-        <!-- CTA appears when any checkbox is checked -->
-        <div id="checklist-cta" class="mt-6 pt-6 border-t border-halo-border hidden">
-          <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-center">
-            <p class="text-red-400 font-semibold mb-3">You may be at risk. Scan your codebase now.</p>
-            <button onclick="copyCommand()" class="bg-halo-accent hover:bg-halo-accent-light text-white font-medium px-6 py-2.5 rounded-lg transition-colors font-mono text-sm">
-              npx runhalo scan .
-            </button>
-          </div>
+        <div class="mt-8 pt-6 border-t border-halo-border text-center">
+          <p class="text-gray-400">Theoretical penalty exposure across all 100 repos: <span class="text-red-400 font-bold text-lg">$189M per day.</span></p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════ GET STARTED ═══════════════════════════════════════════ -->
-  <section id="get-started" class="py-20 sm:py-28">
+  <!-- ═══════════════════════════════════════════ HOW IT WORKS ═══════════════════════════════════════════ -->
+  <section id="get-started" class="py-20 sm:py-28 bg-gradient-to-b from-transparent via-halo-accent/3 to-transparent">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Get Started in 30 Seconds</h2>
-        <p class="text-gray-400">No signup. No config. Just scan.</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">How It Works</h2>
+        <p class="text-gray-400 text-lg">Three steps. No signup. No config.</p>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-6">
+      <div class="grid md:grid-cols-3 gap-8">
         <div class="text-center">
-          <div class="w-12 h-12 rounded-full bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-4">
-            <span class="text-halo-accent font-bold">1</span>
+          <div class="w-14 h-14 rounded-full bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-5">
+            <span class="text-halo-accent font-bold text-lg">1</span>
           </div>
-          <h3 class="text-white font-semibold mb-2">Run the scan</h3>
-          <code class="text-sm text-gray-400 font-mono">npx runhalo scan .</code>
-        </div>
-        <div class="text-center">
-          <div class="w-12 h-12 rounded-full bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-4">
-            <span class="text-halo-accent font-bold">2</span>
-          </div>
-          <h3 class="text-white font-semibold mb-2">Review findings</h3>
-          <p class="text-sm text-gray-400">Each finding includes the rule, risk level, and fix suggestion</p>
+          <h3 class="text-white font-semibold mb-3 text-lg">Run the scan</h3>
+          <code class="text-sm text-halo-accent font-mono bg-halo-accent/10 px-3 py-1 rounded">npx runhalo scan .</code>
+          <p class="text-sm text-gray-400 mt-3">No signup. No config. Results in under two minutes.</p>
         </div>
         <div class="text-center">
-          <div class="w-12 h-12 rounded-full bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-4">
-            <span class="text-halo-accent font-bold">3</span>
+          <div class="w-14 h-14 rounded-full bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-5">
+            <span class="text-halo-accent font-bold text-lg">2</span>
           </div>
-          <h3 class="text-white font-semibold mb-2">Ship with more confidence</h3>
-          <p class="text-sm text-gray-400">Add to CI/CD for continuous scanning on every PR</p>
+          <h3 class="text-white font-semibold mb-3 text-lg">Review findings</h3>
+          <p class="text-sm text-gray-400">Every finding includes the regulation cited, severity level, developmental context, and a fix suggestion. AST-aware analysis suppresses false positives automatically.</p>
         </div>
-      </div>
-
-      <!-- Pricing teaser -->
-      <div class="mt-16 bg-halo-surface border border-halo-border rounded-xl p-8 text-center">
-        <h3 class="text-xl font-semibold text-white mb-2">Open source core — free forever.</h3>
-        <p class="text-gray-400 mb-6">CLI, 20 COPPA rules, VS Code extension, JSON/SARIF output, .haloignore</p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button onclick="copyCommand()" class="bg-halo-accent hover:bg-halo-accent-light text-white font-medium px-6 py-3 rounded-lg transition-colors font-mono">
-            npx runhalo scan .
-          </button>
-          <span class="text-gray-500 flex items-center gap-2">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-            <a href="https://github.com/runhalo/halo" target="_blank" class="hover:text-white transition-colors">View on GitHub</a>
-          </span>
-        </div>
-        <!-- Bottom signup form -->
-        <div id="bottom-signup-wrap" class="mt-8 pt-6 border-t border-halo-border max-w-md mx-auto">
-          <p class="text-gray-400 text-sm mb-4">Get notified when Pro launches — CI/CD dashboard, compliance reports, scan history.</p>
-          <form id="bottom-signup" onsubmit="handleSignup(event, 'bottom-signup')" class="space-y-3">
-            <input type="email" name="email" required placeholder="you@company.com" class="w-full bg-halo-bg border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
-            <div class="flex gap-3">
-              <input type="text" name="company" placeholder="Company (optional)" class="flex-1 bg-halo-bg border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
-              <select name="role" class="bg-halo-bg border border-halo-border rounded-lg px-3 py-2.5 text-sm text-gray-400 focus:outline-none focus:border-halo-accent/50 transition-colors appearance-none cursor-pointer">
-                <option value="">Role</option>
-                <option value="developer">Developer</option>
-                <option value="engineering_lead">Engineering Lead</option>
-                <option value="product">Product</option>
-                <option value="compliance_legal">Compliance/Legal</option>
-                <option value="cto_vp">CTO/VP Eng</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <button type="submit" class="w-full bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">Notify Me</button>
-          </form>
+        <div class="text-center">
+          <div class="w-14 h-14 rounded-full bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-5">
+            <span class="text-halo-accent font-bold text-lg">3</span>
+          </div>
+          <h3 class="text-white font-semibold mb-3 text-lg">Ship with confidence</h3>
+          <p class="text-sm text-gray-400">Add Halo to your CI/CD pipeline. GitHub Action runs on every PR. VS Code extension flags issues in real time. Compliance tracking keeps your grade current.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════ ETHICAL DESIGN TEASER ═══════════════════════════════════════════ -->
-  <section class="py-20 sm:py-28 bg-gradient-to-b from-transparent via-purple-500/3 to-transparent">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-      <span class="text-xs font-semibold text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-full px-3 py-1">Coming Soon</span>
-      <h2 class="text-3xl sm:text-4xl font-bold text-white mt-6 mb-4">Design Conscience</h2>
-      <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-8">
-        COPPA alignment is the floor, not the ceiling. Halo's ethical design linter helps identify dark patterns, manipulative mechanics, and attention-hijacking — the things regulation hasn't caught up with yet.
-      </p>
-      <div class="grid sm:grid-cols-5 gap-3 max-w-xl mx-auto text-sm">
-        <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No infinite scroll</div>
-        <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No streak pressure</div>
-        <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No variable rewards</div>
-        <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No manipulative notifs</div>
-        <div class="bg-halo-surface border border-halo-border rounded-lg px-3 py-2 text-gray-400">No artificial scarcity</div>
+  <!-- ═══════════════════════════════════════════ DEVELOPER EXPERIENCE ═══════════════════════════════════════════ -->
+  <section class="py-20 sm:py-28">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Built for engineers, not lawyers.</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- CLI -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-halo-accent/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-halo-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <h3 class="text-white font-semibold">CLI</h3>
+          </div>
+          <p class="text-gray-400 text-sm leading-relaxed"><code class="text-halo-accent text-xs bg-halo-accent/10 px-1.5 py-0.5 rounded">npx runhalo scan .</code> in any directory. Supports JS, TS, Python, Ruby, Go, Java, Swift.</p>
+        </div>
+
+        <!-- GitHub Action -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-halo-accent/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-halo-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </div>
+            <h3 class="text-white font-semibold">GitHub Action</h3>
+          </div>
+          <p class="text-gray-400 text-sm leading-relaxed">One YAML block. Compliance checks on every PR before merge.</p>
+        </div>
+
+        <!-- VS Code Extension -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            </div>
+            <h3 class="text-white font-semibold">VS Code Extension</h3>
+          </div>
+          <p class="text-gray-400 text-sm leading-relaxed">Real-time scanning with AST intelligence. Version 0.4.2 on the marketplace.</p>
+        </div>
+
+        <!-- AI Review Board -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </div>
+            <h3 class="text-white font-semibold">AI Review Board</h3>
+          </div>
+          <p class="text-gray-400 text-sm leading-relaxed"><code class="text-halo-accent text-xs bg-halo-accent/10 px-1.5 py-0.5 rounded">--review-board</code> flag for AI-powered violation assessment with clinical evidence citations.</p>
+        </div>
+
+        <!-- .halorc.json -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            </div>
+            <h3 class="text-white font-semibold">.halorc.json</h3>
+          </div>
+          <p class="text-gray-400 text-sm leading-relaxed">Configure framework profiles, pack selection, severity thresholds, and ignore paths.</p>
+        </div>
+
+        <!-- Reports -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <h3 class="text-white font-semibold">Reports</h3>
+          </div>
+          <p class="text-gray-400 text-sm leading-relaxed">JSON, SARIF, HTML, and PDF output. Enterprise-grade compliance documentation.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════ PRICING ═══════════════════════════════════════════ -->
-  <section id="pricing" class="py-20 sm:py-28">
+  <section id="pricing" class="py-20 sm:py-28 bg-gradient-to-b from-transparent via-halo-accent/3 to-transparent">
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-12">
         <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Simple, Transparent Pricing</h2>
@@ -683,15 +689,15 @@
               <span class="text-4xl font-bold text-white">$0</span>
               <span class="text-gray-500 text-sm">/forever</span>
             </div>
-            <p class="text-gray-400 text-sm mt-3">Perfect for indie developers and side projects.</p>
+            <p class="text-gray-400 text-sm mt-3">For individual developers and open source projects.</p>
           </div>
           <ul class="space-y-3 mb-8 flex-1">
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> 5 scans per day</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> 20 COPPA 2.0 rules</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> 4 auto-fix transforms</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> VS Code extension</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> GitHub Action (CI/CD)</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> Text output</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> 25 COPPA 2.0 rules</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> CLI + VS Code extension</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> GitHub Action</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> Text + JSON output</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> .halorc.json config</li>
           </ul>
           <a href="#get-started" class="block w-full text-center bg-halo-surface border border-halo-border hover:border-halo-accent/50 text-white font-medium px-6 py-3 rounded-lg transition-all">Get Started</a>
         </div>
@@ -707,17 +713,18 @@
               <span class="text-4xl font-bold text-white">$29</span>
               <span class="text-gray-500 text-sm">/month</span>
             </div>
-            <p class="text-gray-400 text-sm mt-3">For teams shipping children's products.</p>
+            <p class="text-gray-400 text-sm mt-3">For teams building products children use.</p>
           </div>
           <ul class="space-y-3 mb-8 flex-1">
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> <strong class="text-white">Unlimited</strong> scans</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> 20 COPPA + ethical design rules</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> AI-generated code audit mode</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> JSON, SARIF, HTML reports</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> Guided scaffold generation</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> Compliance score + trend line</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> IDE rules files (Cursor, Copilot)</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> MCP real-time scan + fix</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> All 114 rules, all 10 packs</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> AI Review Board (Sonnet-powered)</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> AST-aware analysis + framework profiles</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> Compliance posture scoring (A+ to F)</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> PDF compliance reports</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> SARIF + HTML output</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> Regression alerts</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> Priority support</li>
           </ul>
           <button onclick="startCheckout('pro')" class="w-full bg-gradient-to-r from-halo-accent to-purple-500 hover:from-halo-accent-light hover:to-purple-400 text-white font-medium px-6 py-3 rounded-lg transition-all cursor-pointer">Start Pro</button>
         </div>
@@ -729,21 +736,22 @@
             <div class="flex items-baseline gap-1">
               <span class="text-4xl font-bold text-white">Custom</span>
             </div>
-            <p class="text-gray-400 text-sm mt-3">For regulated industries and government.</p>
+            <p class="text-gray-400 text-sm mt-3">For regulated industries, government, and large teams.</p>
           </div>
           <ul class="space-y-3 mb-8 flex-1">
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Everything in Pro</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> PDF compliance reports</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Sector rule packs (AU SbD, AADCA)</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Priority support + SLA</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Dedicated onboarding</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Custom rule development</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Dedicated onboarding</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> SLA + priority support</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Team management</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> API access</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Audit-ready documentation</li>
           </ul>
-          <a href="mailto:hello@mindfulmedia.org?subject=Halo%20Enterprise" class="block w-full text-center bg-halo-surface border border-purple-500/30 hover:border-purple-400/50 text-white font-medium px-6 py-3 rounded-lg transition-all">Contact Us</a>
+          <a href="mailto:bobby@mindfulmedia.org?subject=Halo%20Enterprise%20Inquiry" class="block w-full text-center bg-halo-surface border border-purple-500/30 hover:border-purple-400/50 text-white font-medium px-6 py-3 rounded-lg transition-all">Contact Us</a>
         </div>
       </div>
 
-      <p class="text-center text-gray-600 text-xs mt-8">All plans include the open-source scanner. Pro and Enterprise add premium features and priority support. Cancel anytime.</p>
+      <p class="text-center text-gray-600 text-xs mt-8">All plans include the open-source CLI. Cancel anytime.</p>
     </div>
   </section>
 
@@ -755,11 +763,11 @@
       <div class="space-y-4">
         <details class="bg-halo-surface border border-halo-border rounded-xl group" open>
           <summary class="px-6 py-4 cursor-pointer flex items-center justify-between text-white font-medium hover:bg-surface-hover/30 rounded-xl transition-colors">
-            When is the COPPA 2.0 compliance deadline?
+            When does COPPA 2.0 take effect?
             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
-            April 22, 2026. The FTC's COPPA 2.0 Final Rule (published April 22, 2025) includes a 12-month grace period ending April 22, 2026. After that date, enforcement begins with penalties up to $54,540 per violation per child per day.
+            April 22, 2026. The age threshold is extended to under 17. Penalties up to $53,088 per violation per day.
           </div>
         </details>
 
@@ -769,7 +777,7 @@
             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
-            Yes. The core scanner is open source and free forever — 5 scans per day with 20 COPPA 2.0 rules. Run it with <code class="text-halo-accent bg-halo-accent/10 px-1 py-0.5 rounded text-xs">npx runhalo scan .</code> in any project. <a href="#pricing" class="text-halo-accent hover:underline">Halo Pro</a> ($29/mo) unlocks unlimited scans, ethical design rules, AI audit mode, and premium reports.
+            Yes. 5 scans per day with 25 COPPA rules, completely free. <a href="#pricing" class="text-halo-accent hover:underline">Pro</a> ($29/mo) unlocks all 114 rules across 10 packs, plus the AI Review Board, compliance scoring, and PDF reports.
           </div>
         </details>
 
@@ -779,19 +787,81 @@
             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
-            Potential COPPA 2.0 risks including PII collection patterns, missing consent flows, data retention issues, known high-risk tracking SDKs, biometric data leakage (voice, face, gait), unwarned external links, and missing privacy policies. 20 rules based on the COPPA 2.0 Final Rule.
+            COPPA violations, dark patterns, data collection risks, missing consent flows, tracking, age verification gaps, retention issues, and ethical design concerns &mdash; across 10 regulatory frameworks covering US, UK, EU, and Australian law.
           </div>
         </details>
 
         <details class="bg-halo-surface border border-halo-border rounded-xl group">
           <summary class="px-6 py-4 cursor-pointer flex items-center justify-between text-white font-medium hover:bg-surface-hover/30 rounded-xl transition-colors">
-            Does Halo work with my framework?
+            How is Halo different from Semgrep or Snyk?
             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
-            Halo scans source code files directly — it works with React, Vue, Angular, Svelte, plain HTML/JS, and any other web framework. It also scans Java (Android) and Swift (iOS) files. If it's text, Halo can scan it.
+            They scan for security vulnerabilities. Halo scans for children's regulatory compliance. Different problem. Complementary, not replacement.
           </div>
         </details>
+
+        <details class="bg-halo-surface border border-halo-border rounded-xl group">
+          <summary class="px-6 py-4 cursor-pointer flex items-center justify-between text-white font-medium hover:bg-surface-hover/30 rounded-xl transition-colors">
+            What frameworks does Halo support?
+            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
+            JS, TS, Python, Ruby, Go, Java, Swift. Built-in profiles for Next.js, Django, and Rails.
+          </div>
+        </details>
+
+        <details class="bg-halo-surface border border-halo-border rounded-xl group">
+          <summary class="px-6 py-4 cursor-pointer flex items-center justify-between text-white font-medium hover:bg-surface-hover/30 rounded-xl transition-colors">
+            What is the AI Review Board?
+            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
+            A Pro feature. Each violation is assessed by Claude Sonnet with clinical evidence from peer-reviewed developmental psychology research. Confirms true positives. Suppresses false positives.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ FOOTER CTA ═══════════════════════════════════════════ -->
+  <section class="py-20 sm:py-28 bg-gradient-to-b from-transparent via-halo-accent/3 to-transparent">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">Find out where you stand.</h2>
+
+      <div class="inline-flex items-center gap-2 bg-halo-surface border border-halo-border rounded-xl px-6 py-3 mb-4">
+        <button onclick="copyCommand()" class="flex items-center gap-2 hover:bg-white/5 transition-colors">
+          <code class="font-mono text-base sm:text-lg">
+            <span class="text-halo-green">$</span>
+            <span class="text-white ml-2">npx runhalo scan .</span>
+          </code>
+          <span class="text-gray-500 hover:text-gray-300 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          </span>
+        </button>
+      </div>
+
+      <p class="text-gray-400 mb-10">Two minutes. Free. Before the FTC finds out for you.</p>
+
+      <!-- Email signup form -->
+      <div class="max-w-md mx-auto bg-halo-surface border border-halo-border rounded-xl p-6">
+        <p class="text-gray-400 text-sm mb-4">Stay updated on new rule packs, framework support, and compliance intelligence.</p>
+        <form id="bottom-signup" onsubmit="handleSignup(event, 'bottom-signup')" class="space-y-3">
+          <input type="email" name="email" required placeholder="you@company.com" class="w-full bg-halo-bg border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
+          <div class="flex gap-3">
+            <input type="text" name="company" placeholder="Company (optional)" class="flex-1 bg-halo-bg border border-halo-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-halo-accent/50 transition-colors">
+            <select name="role" class="bg-halo-bg border border-halo-border rounded-lg px-3 py-2.5 text-sm text-gray-400 focus:outline-none focus:border-halo-accent/50 transition-colors appearance-none cursor-pointer">
+              <option value="">Role</option>
+              <option value="developer">Developer</option>
+              <option value="engineering_lead">Engineering Lead</option>
+              <option value="product">Product</option>
+              <option value="compliance_legal">Compliance/Legal</option>
+              <option value="cto_vp">CTO/VP Eng</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">Get Updates</button>
+        </form>
       </div>
     </div>
   </section>
@@ -809,6 +879,8 @@
         <div class="flex items-center gap-6 text-sm text-gray-500">
           <a href="https://github.com/runhalo/halo" target="_blank" class="hover:text-white transition-colors">GitHub</a>
           <a href="#features" class="hover:text-white transition-colors">Features</a>
+          <a href="#coverage" class="hover:text-white transition-colors">Coverage</a>
+          <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
           <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
           <a href="/terms.html" class="hover:text-white transition-colors">Terms</a>
           <a href="/privacy.html" class="hover:text-white transition-colors">Privacy</a>
