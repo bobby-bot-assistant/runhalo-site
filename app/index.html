@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Halo | Free COPPA Scanner for Developers</title>
-  <meta name="description" content="Is your codebase safe for kids? Find out in 60 seconds. Free CLI scans every file with 160+ rules across 16 packs, AST parsing, and AI-powered analysis.">
+  <title>Getting Started with Halo — Preventive Mental Health Infrastructure</title>
+  <meta name="description" content="Set up Halo in 3 steps. Install the CLI, activate your license, and run your first scan to protect children by design.">
 
-  <meta property="og:title" content="Halo — Is Your Codebase Safe for Kids?">
-  <meta property="og:description" content="We scanned the biggest names in edtech. Canvas LMS has 194 COPPA violations. Habitica has 689. What does YOUR app have?">
+  <meta property="og:title" content="Getting Started with Halo">
+  <meta property="og:description" content="Preventive mental health infrastructure at the code level. Set up in under 60 seconds.">
   <meta property="og:url" content="https://runhalo.dev/app/">
   <meta property="og:type" content="website">
 
@@ -33,19 +33,15 @@
               'red-dim': '#7f1d1d',
               yellow: '#eab308',
               'yellow-dim': '#713f12',
-              orange: '#f97316',
-              'orange-dim': '#7c2d12',
               muted: '#6b7280',
               subtle: '#374151',
             }
           },
           animation: {
-            'cursor-blink': 'blink 1.2s step-end infinite',
             'fade-in': 'fadeIn 0.6s ease-out',
             'slide-up': 'slideUp 0.6s ease-out',
           },
           keyframes: {
-            blink: { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0 } },
             fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
             slideUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
           }
@@ -60,28 +56,15 @@
 
   <style>
     body { background: #0a0a0f; }
-    .grade-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 0.5rem;
-      font-weight: 800;
-      font-size: 1.125rem;
-    }
-    .grade-F { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
-    .severity-critical { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
-    .severity-high { background: rgba(249, 115, 22, 0.1); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.2); }
-    .severity-medium { background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.2); }
-    .severity-low { background: rgba(99, 102, 241, 0.1); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.2); }
+    .step-done { opacity: 0.5; }
+    .step-done .step-check { background: #22c55e; color: white; }
   </style>
 </head>
 <body class="font-sans text-white min-h-screen">
 
   <!-- Nav -->
   <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
       <a href="/" class="flex items-center gap-2 text-white hover:text-halo-accent-light transition-colors">
         <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
@@ -91,353 +74,181 @@
       </a>
       <div class="flex items-center gap-4 text-sm">
         <a href="/" class="text-halo-muted hover:text-white transition-colors">Home</a>
-        <a href="/app/dashboard.html" class="text-halo-muted hover:text-white transition-colors">Dashboard</a>
         <a href="https://github.com/runhalo/halo" target="_blank" class="text-halo-muted hover:text-white transition-colors">GitHub</a>
-        <a href="/app/login.html" class="text-halo-accent hover:text-halo-accent-light transition-colors font-medium">Sign In</a>
+        <a href="https://runhalo.dev/#pricing" class="text-halo-accent hover:text-halo-accent-light transition-colors font-medium">Pricing</a>
       </div>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <main class="max-w-5xl mx-auto px-6">
-    <section class="pt-20 pb-16 text-center animate-fade-in">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-halo-red-dim/40 border border-halo-red/20 text-halo-red text-xs font-medium mb-6">
+  <main class="max-w-3xl mx-auto px-6">
+
+    <!-- COPPA Countdown -->
+    <div class="mt-6 flex justify-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-halo-red-dim/40 border border-halo-red/20 text-halo-red text-xs font-medium">
         <span class="w-2 h-2 rounded-full bg-halo-red animate-pulse"></span>
         COPPA 2.0 enforcement begins April 22, 2026 — <span id="coppa-countdown"></span>
       </div>
+    </div>
 
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-5">
-        Is your codebase<br>
-        <span class="text-halo-accent">safe for kids?</span>
+    <!-- Hero -->
+    <section class="pt-12 pb-8 text-center animate-fade-in">
+      <h1 class="text-3xl md:text-4xl font-extrabold leading-tight mb-4">
+        Getting Started with Halo
       </h1>
-
-      <p class="text-halo-muted text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
-        Find out in 60 seconds. Halo scans every file in your project for COPPA 2.0
-        violations — 160+ rules across 16 regulatory packs, AST parsing, AI-powered analysis. Free tier available.
-      </p>
-
-      <!-- CLI Command -->
-      <div class="inline-flex items-center bg-halo-surface border border-halo-border rounded-xl px-5 py-4 gap-3 max-w-lg mx-auto">
-        <span class="text-halo-green font-mono text-sm">$</span>
-        <code class="text-white font-mono text-sm md:text-base flex-1 text-left">npx runhalo scan .</code>
-        <button onclick="copyCommand()" id="copy-btn" class="text-halo-muted hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/5" title="Copy command">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-          </svg>
-        </button>
-        <span id="copy-tooltip" class="hidden text-halo-green text-xs font-medium">Copied!</span>
-      </div>
-
-      <p class="text-halo-subtle text-xs mt-4">
-        Works with any Node.js project &middot; No signup &middot; No API key &middot; Takes 10-30 seconds
+      <p class="text-halo-muted text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+        Preventive mental health infrastructure at the code level.
+        Set up in under 60 seconds.
       </p>
     </section>
 
-    <!-- ============ Showcase ============ -->
-    <section class="pb-20 animate-slide-up" style="animation-delay: 0.2s;">
-      <div class="text-center mb-12">
-        <h2 class="text-2xl md:text-3xl font-bold mb-3">We scanned the biggest names in edtech.</h2>
-        <p class="text-halo-muted text-base max-w-xl mx-auto">
-          Real results from our scan campaign — 48 open-source repos used by millions of children.
-          These are what Halo found.
+    <!-- 3-Step Setup Checklist -->
+    <section class="pb-12 animate-slide-up" id="setup">
+      <div class="space-y-4">
+
+        <!-- Step 1: Install -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
+          <div class="flex items-start gap-4">
+            <div class="step-check w-10 h-10 rounded-full bg-halo-accent/20 border border-halo-accent/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span class="text-halo-accent font-bold text-lg">1</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg mb-2">Install the CLI</h3>
+              <p class="text-halo-muted text-sm mb-3">Install globally with npm. Works with any Node.js 18+ project.</p>
+              <div class="flex items-center bg-halo-bg border border-halo-border rounded-lg px-4 py-3 gap-2">
+                <span class="text-halo-green font-mono text-sm">$</span>
+                <code class="text-halo-accent-light font-mono text-sm flex-1">npm install -g @runhalo/cli</code>
+                <button onclick="copyText('npm install -g @runhalo/cli', this)" class="text-halo-muted hover:text-white transition-colors p-1" title="Copy">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                </button>
+              </div>
+              <p class="text-halo-subtle text-xs mt-2">Or use npx for a one-time scan: <code class="text-halo-muted">npx @runhalo/cli scan .</code></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Activate -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
+          <div class="flex items-start gap-4">
+            <div class="step-check w-10 h-10 rounded-full bg-halo-accent/20 border border-halo-accent/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span class="text-halo-accent font-bold text-lg">2</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg mb-2">Activate your license</h3>
+              <p class="text-halo-muted text-sm mb-3">Enter the license key from your welcome email. Free users can skip this step.</p>
+              <div class="flex items-center bg-halo-bg border border-halo-border rounded-lg px-4 py-3 gap-2">
+                <span class="text-halo-green font-mono text-sm">$</span>
+                <code class="text-halo-accent-light font-mono text-sm flex-1">halo activate --key YOUR_LICENSE_KEY</code>
+                <button onclick="copyText('halo activate --key ', this)" class="text-halo-muted hover:text-white transition-colors p-1" title="Copy">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                </button>
+              </div>
+              <p class="text-halo-subtle text-xs mt-2">Free tier: 5 scans/day, 25 COPPA 2.0 rules. <a href="https://runhalo.dev/#pricing" class="text-halo-accent hover:underline">Upgrade for unlimited scans + 160 rules.</a></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Scan -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
+          <div class="flex items-start gap-4">
+            <div class="step-check w-10 h-10 rounded-full bg-halo-accent/20 border border-halo-accent/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span class="text-halo-accent font-bold text-lg">3</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg mb-2">Run your first scan</h3>
+              <p class="text-halo-muted text-sm mb-3">Point Halo at your project root. You'll get a compliance score, severity breakdown, and fix suggestions in 10-30 seconds.</p>
+              <div class="flex items-center bg-halo-bg border border-halo-border rounded-lg px-4 py-3 gap-2">
+                <span class="text-halo-green font-mono text-sm">$</span>
+                <code class="text-halo-accent-light font-mono text-sm flex-1">halo scan .</code>
+                <button onclick="copyText('halo scan .', this)" class="text-halo-muted hover:text-white transition-colors p-1" title="Copy">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- What's Next -->
+    <section class="pb-12 animate-slide-up" style="animation-delay: 0.2s;">
+      <h2 class="text-xl font-bold mb-4">What's Next</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+
+        <a href="https://github.com/runhalo/halo#github-action" target="_blank" class="bg-halo-surface border border-halo-border rounded-xl p-5 hover:border-halo-accent/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-2">
+            <svg class="w-5 h-5 text-halo-muted group-hover:text-halo-accent transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 class="font-semibold text-sm">Add to CI/CD</h3>
+          </div>
+          <p class="text-halo-muted text-xs">Add the GitHub Action to scan every PR automatically.</p>
+        </a>
+
+        <a href="https://marketplace.visualstudio.com/items?itemName=runhalo.halo-vscode" target="_blank" class="bg-halo-surface border border-halo-border rounded-xl p-5 hover:border-halo-accent/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-2">
+            <svg class="w-5 h-5 text-halo-muted group-hover:text-halo-accent transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            <h3 class="font-semibold text-sm">VS Code Extension</h3>
+          </div>
+          <p class="text-halo-muted text-xs">Real-time scanning as you code. Activate with your license key.</p>
+        </a>
+
+        <a href="https://runhalo.dev/#pricing" class="bg-halo-surface border border-halo-border rounded-xl p-5 hover:border-halo-accent/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-2">
+            <svg class="w-5 h-5 text-halo-muted group-hover:text-halo-accent transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            <h3 class="font-semibold text-sm">Upgrade Your Plan</h3>
+          </div>
+          <p class="text-halo-muted text-xs">Unlock all 160+ rules, AI review, PDF reports, and team features.</p>
+        </a>
+
+        <a href="https://github.com/runhalo/halo" target="_blank" class="bg-halo-surface border border-halo-border rounded-xl p-5 hover:border-halo-accent/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-2">
+            <svg class="w-5 h-5 text-halo-muted group-hover:text-halo-accent transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <h3 class="font-semibold text-sm">Documentation</h3>
+          </div>
+          <p class="text-halo-muted text-xs">CLI flags, rule reference, and configuration options.</p>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Help Section -->
+    <section class="pb-16">
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-6 text-center">
+        <h3 class="font-semibold mb-2">Need help?</h3>
+        <p class="text-halo-muted text-sm mb-4">
+          We read every email. Reach out at
+          <a href="mailto:support@runhalo.dev" class="text-halo-accent hover:underline">support@runhalo.dev</a>
+          or open an issue on
+          <a href="https://github.com/runhalo/halo/issues" target="_blank" class="text-halo-accent hover:underline">GitHub</a>.
         </p>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-5" id="showcase-grid">
-
-        <!-- Canvas LMS -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
-          <div class="flex items-start justify-between mb-4">
-            <div>
-              <h3 class="font-bold text-lg">Canvas LMS</h3>
-              <p class="text-halo-muted text-xs mt-0.5">The #1 LMS in US K-12 schools</p>
-            </div>
-            <div class="text-right">
-              <div class="grade-badge grade-F">F</div>
-              <div class="text-xs text-halo-muted mt-1">0/100</div>
-            </div>
-          </div>
-          <div class="text-3xl font-extrabold text-halo-red mb-3">194 <span class="text-sm font-medium text-halo-muted">violations</span></div>
-          <div class="flex gap-2 mb-4 flex-wrap">
-            <span class="severity-critical text-xs px-2 py-0.5 rounded-full">33 critical</span>
-            <span class="severity-high text-xs px-2 py-0.5 rounded-full">3 high</span>
-            <span class="severity-medium text-xs px-2 py-0.5 rounded-full">157 medium</span>
-            <span class="severity-low text-xs px-2 py-0.5 rounded-full">1 low</span>
-          </div>
-          <div class="space-y-1.5 text-xs">
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-red flex-shrink-0"></span>
-              XSS/innerHTML vulnerabilities in student-facing views
-            </div>
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-red flex-shrink-0"></span>
-              Unencrypted PII transmission (HTTP URLs)
-            </div>
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-yellow flex-shrink-0"></span>
-              Teacher accounts bypass school verification
-            </div>
-          </div>
-        </div>
-
-        <!-- Habitica -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
-          <div class="flex items-start justify-between mb-4">
-            <div>
-              <h3 class="font-bold text-lg">Habitica</h3>
-              <p class="text-halo-muted text-xs mt-0.5">Gamified habit tracker &middot; 13k GitHub stars</p>
-            </div>
-            <div class="text-right">
-              <div class="grade-badge grade-F">F</div>
-              <div class="text-xs text-halo-muted mt-1">0/100</div>
-            </div>
-          </div>
-          <div class="text-3xl font-extrabold text-halo-red mb-3">689 <span class="text-sm font-medium text-halo-muted">violations</span></div>
-          <div class="flex gap-2 mb-4 flex-wrap">
-            <span class="severity-high text-xs px-2 py-0.5 rounded-full">1 high</span>
-            <span class="severity-medium text-xs px-2 py-0.5 rounded-full">682 medium</span>
-            <span class="severity-low text-xs px-2 py-0.5 rounded-full">6 low</span>
-          </div>
-          <div class="space-y-1.5 text-xs">
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-yellow flex-shrink-0"></span>
-              645 XSS/innerHTML instances from Vue.js v-html usage
-            </div>
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-yellow flex-shrink-0"></span>
-              26 external SDKs without child-directed flags
-            </div>
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-yellow flex-shrink-0"></span>
-              Push notifications sent without parental consent
-            </div>
-          </div>
-        </div>
-
-        <!-- Moodle -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
-          <div class="flex items-start justify-between mb-4">
-            <div>
-              <h3 class="font-bold text-lg">Moodle</h3>
-              <p class="text-halo-muted text-xs mt-0.5">Open-source LMS &middot; 6k GitHub stars</p>
-            </div>
-            <div class="text-right">
-              <div class="grade-badge grade-F">F</div>
-              <div class="text-xs text-halo-muted mt-1">0/100</div>
-            </div>
-          </div>
-          <div class="text-3xl font-extrabold text-halo-red mb-3">201 <span class="text-sm font-medium text-halo-muted">violations</span></div>
-          <div class="flex gap-2 mb-4 flex-wrap">
-            <span class="severity-critical text-xs px-2 py-0.5 rounded-full">84 critical</span>
-            <span class="severity-high text-xs px-2 py-0.5 rounded-full">5 high</span>
-            <span class="severity-medium text-xs px-2 py-0.5 rounded-full">107 medium</span>
-            <span class="severity-low text-xs px-2 py-0.5 rounded-full">5 low</span>
-          </div>
-          <div class="space-y-1.5 text-xs">
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-red flex-shrink-0"></span>
-              46 biometric data collection patterns
-            </div>
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-red flex-shrink-0"></span>
-              38 unencrypted PII transmissions (HTTP)
-            </div>
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-yellow flex-shrink-0"></span>
-              34 push notifications without consent
-            </div>
-          </div>
-        </div>
-
-        <!-- freeCodeCamp -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-6 hover:border-halo-accent/30 transition-colors">
-          <div class="flex items-start justify-between mb-4">
-            <div>
-              <h3 class="font-bold text-lg">freeCodeCamp</h3>
-              <p class="text-halo-muted text-xs mt-0.5">Youth coding platform &middot; 405k GitHub stars</p>
-            </div>
-            <div class="text-right">
-              <div class="grade-badge grade-F">F</div>
-              <div class="text-xs text-halo-muted mt-1">25/100</div>
-            </div>
-          </div>
-          <div class="text-3xl font-extrabold text-halo-red mb-3">29 <span class="text-sm font-medium text-halo-muted">violations</span></div>
-          <div class="flex gap-2 mb-4 flex-wrap">
-            <span class="severity-critical text-xs px-2 py-0.5 rounded-full">2 critical</span>
-            <span class="severity-high text-xs px-2 py-0.5 rounded-full">2 high</span>
-            <span class="severity-medium text-xs px-2 py-0.5 rounded-full">20 medium</span>
-            <span class="severity-low text-xs px-2 py-0.5 rounded-full">5 low</span>
-          </div>
-          <div class="space-y-1.5 text-xs">
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-red flex-shrink-0"></span>
-              Unencrypted PII in API endpoints
-            </div>
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-orange flex-shrink-0"></span>
-              External SDKs without child-directed flags
-            </div>
-            <div class="flex items-center gap-2 text-halo-muted">
-              <span class="w-1 h-1 rounded-full bg-halo-yellow flex-shrink-0"></span>
-              Cookie/storage access without consent mechanism
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Showcase footer -->
-      <div class="text-center mt-8">
         <p class="text-halo-subtle text-xs">
-          Scanned March 2026 using Halo CLI v1.0.0 &middot; 160+ rules &middot; Full AST parsing
-          &middot; <a href="https://github.com/runhalo/halo" class="text-halo-muted hover:text-halo-accent-light underline underline-offset-2">View source &amp; methodology</a>
+          Halo is preventive mental health infrastructure at the code level — built by
+          <a href="https://mindfulmedia.org" class="text-halo-muted hover:text-white transition-colors">Mindful Media</a>.
         </p>
       </div>
     </section>
 
-    <!-- ============ What We Scan For ============ -->
-    <section class="pb-20 animate-slide-up" style="animation-delay: 0.3s;">
-      <h2 class="text-2xl md:text-3xl font-bold text-center mb-3">What Halo Scans For</h2>
-      <p class="text-halo-muted text-center text-sm mb-10 max-w-lg mx-auto">
-        16 regulatory packs covering every major children's digital safety regulation.
-      </p>
-
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- COPPA 2.0 -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-5 hover:border-halo-accent/30 transition-colors">
-          <div class="w-10 h-10 rounded-lg bg-halo-red-dim/50 flex items-center justify-center mb-3">
-            <svg class="w-5 h-5 text-halo-red" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-          </div>
-          <h3 class="font-semibold text-sm mb-1">COPPA 2.0</h3>
-          <p class="text-halo-muted text-xs leading-relaxed">25+ rules. Data collection, PII, consent, biometrics, tracking, cookies, XSS, HTTP, push notifications, retention.</p>
-          <div class="mt-3 text-xs text-halo-green font-medium">Included free</div>
-        </div>
-
-        <!-- Ethical Design -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-5 hover:border-halo-accent/30 transition-colors">
-          <div class="w-10 h-10 rounded-lg bg-halo-yellow-dim/50 flex items-center justify-center mb-3">
-            <svg class="w-5 h-5 text-halo-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-          </div>
-          <h3 class="font-semibold text-sm mb-1">Ethical Design</h3>
-          <p class="text-halo-muted text-xs leading-relaxed">Dark patterns, manipulative UX, infinite scroll, autoplay, loot boxes, engagement traps.</p>
-          <div class="mt-3 text-xs text-halo-accent font-medium">Pro &middot; --ethical-preview</div>
-        </div>
-
-        <!-- AI Audit -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-5 hover:border-halo-accent/30 transition-colors">
-          <div class="w-10 h-10 rounded-lg bg-halo-accent/20 flex items-center justify-center mb-3">
-            <svg class="w-5 h-5 text-halo-accent-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <h3 class="font-semibold text-sm mb-1">AI Audit</h3>
-          <p class="text-halo-muted text-xs leading-relaxed">Catch AI coding assistant mistakes — hallucinated APIs, insecure patterns, missing consent flows.</p>
-          <div class="mt-3 text-xs text-halo-accent font-medium">Pro &middot; --ai-audit</div>
-        </div>
-
-        <!-- AU Safety by Design -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-5 hover:border-halo-accent/30 transition-colors">
-          <div class="w-10 h-10 rounded-lg bg-halo-green-dim/50 flex items-center justify-center mb-3">
-            <svg class="w-5 h-5 text-halo-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h3 class="font-semibold text-sm mb-1">AU Safety by Design</h3>
-          <p class="text-halo-muted text-xs leading-relaxed">eSafety Commissioner framework. Reporting tools, content moderation, harm reduction.</p>
-          <div class="mt-3 text-xs text-halo-accent font-medium">Pro &middot; --sector-au-sbd</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ How It Works ============ -->
-    <section class="pb-20">
-      <h2 class="text-2xl md:text-3xl font-bold text-center mb-10">How It Works</h2>
-      <div class="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-        <div class="text-center">
-          <div class="w-12 h-12 rounded-xl bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-4">
-            <span class="text-halo-accent font-bold text-lg">1</span>
-          </div>
-          <h3 class="font-semibold mb-2">Run the scan</h3>
-          <p class="text-halo-muted text-sm">One command. Scans every file with AST parsing and regex. Takes 10-30 seconds.</p>
-        </div>
-        <div class="text-center">
-          <div class="w-12 h-12 rounded-xl bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-4">
-            <span class="text-halo-accent font-bold text-lg">2</span>
-          </div>
-          <h3 class="font-semibold mb-2">Get your score</h3>
-          <p class="text-halo-muted text-sm">Score from 0-100, severity breakdown, and every violation with file/line/fix suggestion.</p>
-        </div>
-        <div class="text-center">
-          <div class="w-12 h-12 rounded-xl bg-halo-accent/10 border border-halo-accent/20 flex items-center justify-center mx-auto mb-4">
-            <span class="text-halo-accent font-bold text-lg">3</span>
-          </div>
-          <h3 class="font-semibold mb-2">Track &amp; share</h3>
-          <p class="text-halo-muted text-sm">Sign up free to track scores over time, share scorecards, and get README badges.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ Dashboard CTA ============ -->
-    <section class="pb-20">
-      <div class="bg-halo-surface border border-halo-border rounded-2xl p-8 md:p-12 text-center">
-        <h2 class="text-2xl md:text-3xl font-bold mb-3">Already scanned?</h2>
-        <p class="text-halo-muted text-base mb-8 max-w-lg mx-auto">
-          Track your compliance score over time. Share scorecards with your team.
-          Get a README badge that proves you care about kids' safety.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="/app/login.html" class="bg-halo-accent hover:bg-halo-accent-light text-white font-semibold px-8 py-3 rounded-lg transition-colors inline-flex items-center gap-2 justify-center">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            Sign Up Free
-          </a>
-          <a href="/app/dashboard.html" class="border border-halo-border hover:border-halo-accent/50 text-white font-semibold px-8 py-3 rounded-lg transition-colors inline-flex items-center gap-2 justify-center">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-            </svg>
-            Go to Dashboard
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Trust Signals -->
-    <section class="pb-16 text-center">
-      <div class="flex flex-wrap justify-center gap-6 text-halo-muted text-xs">
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-halo-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" /></svg>
-          160+ compliance rules
-        </div>
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-halo-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" /></svg>
-          Open source (Apache 2.0)
-        </div>
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-halo-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" /></svg>
-          AST + regex scanning
-        </div>
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-halo-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" /></svg>
-          10+ languages supported
-        </div>
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-halo-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" /></svg>
-          48 repos scanned
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- Footer -->
   <footer class="border-t border-halo-border py-8">
-    <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
+    <div class="max-w-3xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
       <span>&copy; 2026 Mindful Media. All rights reserved.</span>
       <div class="flex gap-4">
         <a href="/privacy.html" class="hover:text-white transition-colors">Privacy</a>
@@ -457,16 +268,11 @@
       if (el) el.textContent = days + ' days';
     })();
 
-    function copyCommand() {
-      navigator.clipboard.writeText('npx runhalo scan .').then(() => {
-        const btn = document.getElementById('copy-btn');
-        const tooltip = document.getElementById('copy-tooltip');
-        btn.classList.add('hidden');
-        tooltip.classList.remove('hidden');
-        setTimeout(() => {
-          btn.classList.remove('hidden');
-          tooltip.classList.add('hidden');
-        }, 2000);
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.innerHTML;
+        btn.innerHTML = '<span class="text-halo-green text-xs font-medium">Copied!</span>';
+        setTimeout(() => { btn.innerHTML = original; }, 1500);
       });
     }
   </script>
