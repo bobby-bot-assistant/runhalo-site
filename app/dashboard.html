@@ -182,6 +182,12 @@
               </svg>
               Upgrade to Pro
             </a>
+            <button onclick="openBillingPortal()" id="billing-btn" class="hidden inline-flex items-center gap-2 px-4 py-2 bg-halo-surface border border-halo-border hover:border-halo-accent text-white text-sm font-medium rounded-lg transition-all">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+              Manage Billing
+            </button>
           </div>
         </div>
       </div>
@@ -250,27 +256,33 @@
       document.getElementById('dashboard-content').classList.remove('hidden');
     }
 
+    let currentLicenseKey = null;
+
     async function checkTier(email) {
       try {
         const { data: licenses } = await supabaseClient
           .from('halo_licenses')
-          .select('tier, status')
+          .select('license_key, tier, status')
           .eq('email', email)
           .in('status', ['active', 'trialing'])
           .limit(1);
 
         if (licenses && licenses.length > 0) {
           const license = licenses[0];
+          currentLicenseKey = license.license_key;
           const tierLabel = license.tier.charAt(0).toUpperCase() + license.tier.slice(1);
           document.getElementById('stat-tier').textContent = tierLabel;
           document.getElementById('account-tier').textContent = `${tierLabel} (${license.status})`;
 
-          if (license.tier === 'pro' || license.tier === 'enterprise') {
+          if (['pro', 'business', 'enterprise'].includes(license.tier)) {
             document.getElementById('upgrade-btn').classList.add('hidden');
             document.getElementById('scan-limit-text').textContent = 'Unlimited scans';
+            // Show billing portal button for paid tiers
+            document.getElementById('billing-btn').classList.remove('hidden');
           }
         } else {
-          document.getElementById('scan-limit-text').textContent = '5 scans per day on Free tier';
+          // Free tier — show usage quota
+          await showFreeUsage(email);
         }
       } catch (err) {
         console.warn('License check error:', err);
@@ -359,6 +371,72 @@
         btn.classList.add('text-halo-green');
         setTimeout(() => btn.classList.remove('text-halo-green'), 1500);
       });
+    }
+
+    async function showFreeUsage(email) {
+      try {
+        // Get today's scan count from halo_events
+        const today = new Date();
+        today.setUTCHours(0, 0, 0, 0);
+
+        // Check localStorage license key for quota lookup
+        const storedLicense = JSON.parse(localStorage.getItem('halo_license') || '{}');
+        const licenseKey = storedLicense.key || currentLicenseKey;
+
+        let usedToday = 0;
+        if (licenseKey) {
+          const { count } = await supabaseClient
+            .from('halo_events')
+            .select('id', { count: 'exact', head: true })
+            .eq('event_type', 'scan')
+            .eq('actor_license_key', licenseKey)
+            .gte('created_at', today.toISOString());
+          usedToday = count || 0;
+        }
+
+        const remaining = Math.max(0, 5 - usedToday);
+        const limitEl = document.getElementById('scan-limit-text');
+        limitEl.innerHTML = `
+          <span class="${remaining === 0 ? 'text-halo-red' : 'text-halo-muted'}">${usedToday}/5 scans used today</span>
+          ${remaining === 0 ? ' · <a href="/#pricing" class="text-halo-accent hover:text-halo-accent-light underline underline-offset-2">Upgrade for unlimited</a>' : ''}
+        `;
+      } catch (err) {
+        document.getElementById('scan-limit-text').textContent = '5 scans per day on Free tier';
+      }
+    }
+
+    async function openBillingPortal() {
+      if (!currentLicenseKey) {
+        alert('No license found. Please contact support.');
+        return;
+      }
+
+      const btn = document.getElementById('billing-btn');
+      btn.textContent = 'Opening...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/create-portal-session`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            license_key: currentLicenseKey,
+            return_url: window.location.href,
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to open billing portal');
+
+        window.location.href = data.url;
+      } catch (err) {
+        alert(err.message || 'Failed to open billing portal. Please try again.');
+        btn.innerHTML = `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg> Manage Billing`;
+        btn.disabled = false;
+      }
     }
 
     async function signOut() {
