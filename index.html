@@ -125,10 +125,10 @@
       },
       {
         "@type": "Question",
-        "name": "How is Halo different from Semgrep or Snyk?",
+        "name": "How is Halo different from other code scanning tools?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Semgrep and Snyk scan for security vulnerabilities. Halo scans for children's regulatory compliance. Different problem. Complementary tools, not replacements."
+          "text": "Most code scanning tools look for security vulnerabilities. Halo is the only tool that scans source code for children's regulatory compliance: dark patterns, unauthorized data collection, missing consent flows, age verification gaps. Complementary to your existing security toolchain, not a replacement."
         }
       },
       {
@@ -144,7 +144,7 @@
         "name": "What is the AI Review Board?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "A Pro feature. Each violation is assessed by Claude Sonnet with clinical evidence from peer-reviewed developmental psychology research. Confirms true positives. Suppresses false positives."
+          "text": "A Pro feature. Each violation is assessed by an AI review agent with clinical evidence from peer-reviewed developmental psychology research. Confirms true positives. Suppresses false positives."
         }
       }
     ]
@@ -212,6 +212,7 @@
         <a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a>
         <a href="#coverage" class="text-gray-400 hover:text-white transition-colors">Coverage</a>
         <a href="#pricing" class="text-gray-400 hover:text-white transition-colors">Pricing</a>
+        <a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a>
         <a href="#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a>
         <a href="https://github.com/runhalo/halo" target="_blank" class="text-gray-400 hover:text-white transition-colors">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
@@ -241,11 +242,11 @@
 
       <div class="text-center max-w-4xl mx-auto">
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 tracking-tight">
-          Code is the first line of defense<br>for children's mental health.
+          Your code reaches millions of kids.<br>Is it designed to protect them?
         </h1>
 
         <p class="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto mb-4 leading-relaxed">
-          Halo scans your codebase for ethical design gaps, dark patterns, and COPPA 2.0 violations &mdash; so you can ship products that protect kids by design.
+          Halo scans your codebase for dark patterns, data collection risks, and COPPA 2.0 violations &mdash; so you can ship products that protect kids by design.
         </p>
         <p class="text-sm text-gray-500 max-w-2xl mx-auto mb-10">
           Security tools find vulnerabilities. Halo finds harm. 160 rules across 16 regulatory frameworks. AST-aware. AI-powered.
@@ -390,7 +391,7 @@
             <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-white mb-2">Review</h3>
-          <p class="text-gray-400 text-sm leading-relaxed">AI-powered compliance review by the Halo Review Board. Every violation is assessed by Claude Sonnet with clinical evidence from peer-reviewed developmental psychology research. True positives confirmed. False positives suppressed.</p>
+          <p class="text-gray-400 text-sm leading-relaxed">AI-powered compliance review by the Halo Review Board. Every violation is assessed with clinical evidence from peer-reviewed developmental psychology research. True positives confirmed. False positives suppressed.</p>
         </div>
 
         <!-- Track -->
@@ -698,7 +699,7 @@
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> 5 scans per day</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> 25 COPPA 2.0 rules</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> CLI + VS Code extension</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> GitHub Action (regex)</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> GitHub Action</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> Text + JSON output</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-green mt-0.5">&#10003;</span> Summary PDF report</li>
           </ul>
@@ -720,7 +721,7 @@
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> All 160 rules, 16 packs</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> AI Review Board</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> AST structural analysis</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> Compliance scoring (A+ to F)</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> A+ to F compliance scoring</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> PDF + SARIF + HTML output</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-halo-accent mt-0.5">&#10003;</span> Regression alerts</li>
           </ul>
@@ -744,7 +745,7 @@
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Everything in Pro</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> <strong class="text-white">Compliance attestation</strong> PDF</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Recurring scans + drift alerts</li>
-            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Multi-repo workspace (10 repos)</li>
+            <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Multi-repo workspace, up to 10 repos</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Immutable audit trail</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Enforcement intelligence feed</li>
             <li class="flex items-start gap-2 text-sm text-gray-300"><span class="text-purple-400 mt-0.5">&#10003;</span> Role-based views</li>
@@ -775,6 +776,33 @@
       </div>
 
       <p class="text-center text-gray-600 text-xs mt-8">All plans include the open-source CLI. Cancel anytime.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ WHY WE BUILT HALO ═══════════════════════════════════════════ -->
+  <section id="about" class="py-20 sm:py-28">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Why We Built Halo</h2>
+      </div>
+
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-8 sm:p-10 space-y-6 text-gray-400 leading-relaxed">
+        <p>
+          Children spend more time inside software than they do in classrooms. The apps they use every day &mdash; learning platforms, games, social feeds &mdash; are built by engineers who rarely see the regulatory landscape they're shipping into.
+        </p>
+        <p>
+          We built Halo because we believe the gap between what the law requires and what engineering teams actually know is the single biggest risk to children online. Not malice. Blind spots.
+        </p>
+        <p>
+          COPPA was written in 1998. The 2.0 update extends protections to kids under 17, with penalties up to $53,088 per violation per day. Most engineering teams have never read it. Most codebases have never been audited against it.
+        </p>
+        <p>
+          Halo is preventive mental health infrastructure at the code level. We scan source code the way a regulator would &mdash; looking for dark patterns, unauthorized data collection, missing consent flows, and age verification gaps &mdash; so teams can fix issues before they ship, not after an enforcement action.
+        </p>
+        <p class="text-white font-medium">
+          Built by <a href="https://mindfulmedia.org" class="text-halo-accent hover:underline">Mindful Media</a> in Santa Monica, California. Open source core. Mission-driven.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -816,11 +844,11 @@
 
         <details class="bg-halo-surface border border-halo-border rounded-xl group">
           <summary class="px-6 py-4 cursor-pointer flex items-center justify-between text-white font-medium hover:bg-surface-hover/30 rounded-xl transition-colors">
-            How is Halo different from Semgrep or Snyk?
+            How is Halo different from other code scanning tools?
             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
-            They scan for security vulnerabilities. Halo scans for children's regulatory compliance. Different problem. Complementary, not replacement.
+            Most code scanning tools look for security vulnerabilities &mdash; SQL injection, XSS, dependency CVEs. Important, but not the same problem. Halo is the only tool that scans source code for children's regulatory compliance: dark patterns, unauthorized data collection, missing consent flows, age verification gaps. It reads your code the way a regulator would. Complementary to your existing security toolchain, not a replacement.
           </div>
         </details>
 
@@ -840,7 +868,7 @@
             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="px-6 pb-4 text-gray-400 text-sm leading-relaxed">
-            A Pro feature. Each violation is assessed by Claude Sonnet with clinical evidence from peer-reviewed developmental psychology research. Confirms true positives. Suppresses false positives.
+            A Pro feature. Each violation is assessed by an AI review agent with clinical evidence from peer-reviewed developmental psychology research. Confirms true positives. Suppresses false positives.
           </div>
         </details>
       </div>
@@ -904,6 +932,7 @@
           <a href="#features" class="hover:text-white transition-colors">Features</a>
           <a href="#coverage" class="hover:text-white transition-colors">Coverage</a>
           <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+          <a href="#about" class="hover:text-white transition-colors">About</a>
           <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
           <a href="/terms.html" class="hover:text-white transition-colors">Terms</a>
           <a href="/privacy.html" class="hover:text-white transition-colors">Privacy</a>
