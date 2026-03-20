@@ -235,6 +235,21 @@
       </div>
     </section>
 
+    <!-- Sprint 25: Quick Feedback Section (authenticated users only) -->
+    <section id="feedback-section" class="hidden mt-10 pt-8 border-t border-halo-border animate-slide-up">
+      <h2 class="text-lg font-bold mb-2 flex items-center gap-2">
+        <svg class="w-5 h-5 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+        Quick Feedback
+      </h2>
+      <p class="text-halo-muted text-xs mb-4">Help improve YOUR future scans. Your feedback trains Halo's AI for your codebase.</p>
+      <div id="feedback-cards" class="space-y-3">
+        <!-- Filled dynamically: top 5 uncertainty-weighted findings -->
+      </div>
+      <p class="text-halo-subtle text-xs mt-3 text-center">Showing findings where your input has the most impact</p>
+    </section>
+
     <!-- Share Section -->
     <section class="mt-10 pt-8 border-t border-halo-border animate-slide-up" style="animation-delay: 0.4s;">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -446,6 +461,8 @@
         document.getElementById('full-violations').classList.remove('hidden');
         document.getElementById('full-count').textContent = `(${allViolations.length})`;
         renderAllViolations(allViolations);
+        // Sprint 25: Render feedback section (uncertainty-weighted top 5)
+        renderFeedbackSection(allViolations);
       } else if (scan.total_violations > 3) {
         // Show paywall
         document.getElementById('paywall-gate').classList.remove('hidden');
@@ -529,6 +546,128 @@
     function showError() {
       document.getElementById('loading-state').classList.add('hidden');
       document.getElementById('error-state').classList.remove('hidden');
+    }
+
+    // ==================== Sprint 25: Feedback ====================
+    function computeFeedbackValue(v) {
+      // Uncertainty-weighted composite: severity(0.3) + uncertainty(0.7)
+      const severityScores = { critical: 1.0, high: 0.75, medium: 0.5, low: 0.25 };
+      const severityScore = severityScores[v.severity] || 0.25;
+      const confidence = v.confidence || 5; // default mid-range
+      const uncertainty = 1 - (confidence / 10);
+      return (severityScore * 0.3) + (uncertainty * 0.7);
+    }
+
+    function getFeedbackFindings(violations) {
+      // Dedupe by ruleId, score by feedback value, return top 5
+      const byRule = new Map();
+      for (const v of violations) {
+        const existing = byRule.get(v.ruleId);
+        if (!existing || computeFeedbackValue(v) > computeFeedbackValue(existing)) {
+          byRule.set(v.ruleId, v);
+        }
+      }
+      const unique = Array.from(byRule.values());
+      unique.sort((a, b) => computeFeedbackValue(b) - computeFeedbackValue(a));
+      return unique.slice(0, 5);
+    }
+
+    function makeFindingHash(v) {
+      const fp = (v.file || '').split('/').slice(-2).join('/');
+      return `${v.ruleId}:${fp}:${v.line || 0}`;
+    }
+
+    function renderFeedbackCard(v, index) {
+      const cfg = SEVERITY_CONFIG[v.severity] || SEVERITY_CONFIG.low;
+      const hash = makeFindingHash(v);
+      const snippet = v.codeSnippet ? truncate(v.codeSnippet, 80) : '';
+      const filePath = v.file ? v.file.split('/').slice(-2).join('/') : '';
+
+      return `
+        <div id="fb-card-${index}" class="bg-halo-surface border border-halo-border rounded-lg p-4 hover:border-halo-accent/30 transition-colors">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 rounded text-xs font-medium ${cfg.bg} ${cfg.text}">${v.severity}</span>
+                <code class="text-xs text-halo-muted font-mono">${v.ruleId}</code>
+              </div>
+              <p class="text-sm text-white truncate">${v.ruleName || v.message}</p>
+              ${filePath ? `<p class="text-xs text-halo-subtle font-mono mt-0.5">${filePath}:${v.line || ''}</p>` : ''}
+              ${snippet ? `<p class="text-xs text-halo-muted font-mono mt-1 truncate">${snippet}</p>` : ''}
+            </div>
+            <div id="fb-btns-${index}" class="flex items-center gap-2 ml-4 flex-shrink-0">
+              <button onclick="submitFeedback(${index}, '${hash}', '${v.ruleId}', 'confirmed')"
+                      title="Yes, this is a real issue"
+                      class="w-9 h-9 rounded-lg border border-halo-border bg-halo-bg flex items-center justify-center hover:border-green-500/50 hover:bg-green-500/10 transition-all group">
+                <svg class="w-5 h-5 text-halo-muted group-hover:text-green-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M5 13l4 4L19 7" />
+                </svg>
+              </button>
+              <button onclick="submitFeedback(${index}, '${hash}', '${v.ruleId}', 'false_positive')"
+                      title="No, this is a false positive"
+                      class="w-9 h-9 rounded-lg border border-halo-border bg-halo-bg flex items-center justify-center hover:border-red-500/50 hover:bg-red-500/10 transition-all group">
+                <svg class="w-5 h-5 text-halo-muted group-hover:text-red-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFeedbackSection(violations) {
+      const licenseKey = localStorage.getItem('halo_license_key');
+      if (!isAuthenticated || !licenseKey) return;
+
+      const findings = getFeedbackFindings(violations);
+      if (findings.length === 0) return;
+
+      // Store findings for submit handler
+      window._feedbackFindings = findings;
+
+      const container = document.getElementById('feedback-cards');
+      container.innerHTML = findings.map((v, i) => renderFeedbackCard(v, i)).join('');
+      document.getElementById('feedback-section').classList.remove('hidden');
+    }
+
+    async function submitFeedback(index, findingHash, ruleId, verdict) {
+      const licenseKey = localStorage.getItem('halo_license_key');
+      if (!licenseKey) return;
+
+      const v = window._feedbackFindings?.[index];
+      const btnContainer = document.getElementById(`fb-btns-${index}`);
+
+      // Optimistic UI: show "Thanks!" immediately
+      btnContainer.innerHTML = `<span class="text-xs font-medium ${verdict === 'confirmed' ? 'text-green-400' : 'text-red-400'}">
+        ${verdict === 'confirmed' ? 'Confirmed' : 'False positive'} — thanks!</span>`;
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/customer-verdict`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-license-key': licenseKey,
+          },
+          body: JSON.stringify({
+            finding_hash: findingHash,
+            rule_id: ruleId,
+            verdict: verdict,
+            scan_id: currentScan?.id || null,
+            file_path: v?.file || null,
+            line_number: v?.line || null,
+            code_snippet: v?.codeSnippet?.substring(0, 200) || null,
+          }),
+        });
+
+        if (!res.ok) {
+          console.error('[feedback] Submit failed:', await res.text());
+          btnContainer.innerHTML = `<span class="text-xs text-halo-muted">Error — try again</span>`;
+        }
+      } catch (err) {
+        console.error('[feedback] Submit error:', err);
+        btnContainer.innerHTML = `<span class="text-xs text-halo-muted">Error — try again</span>`;
+      }
     }
 
     // ==================== Start ====================

@@ -424,6 +424,22 @@
     supabaseClient.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
         await linkScans(session.user?.id);
+        // Sprint 25: Fetch and store license key for feedback UI
+        try {
+          const email = session.user?.email;
+          if (email) {
+            const { data: license } = await supabaseClient
+              .from('halo_licenses')
+              .select('license_key')
+              .eq('email', email)
+              .eq('status', 'active')
+              .limit(1)
+              .single();
+            if (license?.license_key) {
+              localStorage.setItem('halo_license_key', license.license_key);
+            }
+          }
+        } catch (e) { /* non-fatal */ }
         redirectAfterAuth();
       }
     });
