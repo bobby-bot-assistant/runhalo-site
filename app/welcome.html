@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Halo Pro! | Halo</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            halo: {
+              bg: 'var(--halo-bg)',
+              surface: 'var(--halo-surface)',
+              border: 'var(--halo-border)',
+              accent: 'var(--halo-accent)',
+              'accent-light': 'var(--halo-accent-light)',
+              green: 'var(--halo-green)',
+              muted: 'var(--halo-muted)',
+              subtle: 'var(--halo-subtle)',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --halo-bg: #ffffff; --halo-surface: #f9fafb; --halo-border: #e5e7eb;
+      --halo-accent: #4f46e5; --halo-accent-light: #6366f1;
+      --halo-text: #111827; --halo-text-secondary: #4b5563;
+      --halo-muted: #6b7280; --halo-subtle: #9ca3af;
+      --halo-green: #16a34a;
+    }
+    [data-theme="dark"] {
+      --halo-bg: #0a0a0f; --halo-surface: #12121a; --halo-border: #1e1e2e;
+      --halo-accent: #6366f1; --halo-accent-light: #818cf8;
+      --halo-text: #f9fafb; --halo-text-secondary: #d1d5db;
+      --halo-muted: #6b7280; --halo-subtle: #374151;
+      --halo-green: #22c55e;
+    }
+    body { background: var(--halo-bg); color: var(--halo-text); }
+  </style>
+  <script>
+    const savedTheme = localStorage.getItem('halo-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+</head>
+<body class="font-sans min-h-screen flex items-center justify-center px-6 py-12">
+
+  <div class="max-w-lg w-full text-center">
+    <!-- Success icon -->
+    <div class="w-20 h-20 bg-halo-green/10 rounded-full flex items-center justify-center mx-auto mb-6">
+      <svg class="w-10 h-10 text-halo-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+
+    <!-- Welcome message -->
+    <h1 class="text-3xl font-bold mb-2">Welcome to Halo <span id="tier-name" class="text-halo-accent">Pro</span>!</h1>
+    <p class="text-halo-muted mb-8">Your account is active. Here's how to get started.</p>
+
+    <!-- License Key -->
+    <div class="bg-halo-surface border border-halo-border rounded-xl p-6 mb-6 text-left">
+      <p class="text-xs text-halo-muted mb-2 font-medium uppercase tracking-wider">Your License Key</p>
+      <div class="flex items-center gap-2">
+        <code id="license-key" class="flex-1 font-mono text-sm bg-halo-bg border border-halo-border rounded px-3 py-2 select-all" style="color: var(--halo-text);">Loading...</code>
+        <button onclick="copyKey()" id="copy-btn" class="px-3 py-2 bg-halo-accent text-white text-xs font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Copy</button>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="bg-halo-surface border border-halo-border rounded-xl p-6 mb-6 text-left space-y-4">
+      <p class="text-xs text-halo-muted font-medium uppercase tracking-wider">Get Started</p>
+
+      <div class="flex gap-3">
+        <div class="w-6 h-6 bg-halo-accent text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</div>
+        <div>
+          <p class="text-sm font-medium" style="color: var(--halo-text);">Activate your license</p>
+          <div class="mt-1 bg-halo-bg border border-halo-border rounded px-3 py-2 flex items-center justify-between">
+            <code id="activate-cmd" class="font-mono text-xs text-halo-accent select-all">runhalo activate <span id="key-preview">...</span></code>
+            <button onclick="copyActivate()" class="text-halo-muted hover:text-halo-accent text-xs ml-2">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <div class="w-6 h-6 bg-halo-accent text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</div>
+        <div>
+          <p class="text-sm font-medium" style="color: var(--halo-text);">Run your first Pro scan</p>
+          <div class="mt-1 bg-halo-bg border border-halo-border rounded px-3 py-2 flex items-center justify-between">
+            <code class="font-mono text-xs text-halo-accent select-all">runhalo scan . --review</code>
+            <button onclick="navigator.clipboard.writeText('runhalo scan . --review')" class="text-halo-muted hover:text-halo-accent text-xs ml-2">Copy</button>
+          </div>
+          <p class="text-xs text-halo-muted mt-1">Knox, Trace, and Reese will verify every finding.</p>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <div class="w-6 h-6 bg-halo-accent text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</div>
+        <div>
+          <p class="text-sm font-medium" style="color: var(--halo-text);">View your dashboard</p>
+          <p class="text-xs text-halo-muted mt-1">Track compliance grade, scan history, and AI Review Board results.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="/app/dashboard.html" class="px-6 py-3 bg-halo-accent text-white font-medium rounded-lg hover:bg-halo-accent-light transition-colors text-sm">
+        Go to Dashboard →
+      </a>
+      <a href="/app/" class="px-6 py-3 bg-halo-surface border border-halo-border font-medium rounded-lg hover:border-halo-accent transition-colors text-sm" style="color: var(--halo-text);">
+        Run a Scan
+      </a>
+    </div>
+
+    <p class="text-xs text-halo-subtle mt-6">
+      Questions? Email <a href="mailto:support@runhalo.dev" class="text-halo-accent hover:underline">support@runhalo.dev</a>
+    </p>
+  </div>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let licenseKey = '';
+
+    async function init() {
+      // Try to get license from URL params (Stripe redirect) or session
+      const params = new URLSearchParams(window.location.search);
+      const sessionId = params.get('session_id');
+      const email = params.get('email');
+
+      // If we have a session, check for the user's license
+      const { data: { session } } = await supabaseClient.auth.getSession();
+
+      if (session) {
+        // Look up license by email
+        const { data: licenses } = await supabaseClient
+          .from('halo_licenses')
+          .select('license_key, tier, email')
+          .eq('email', session.user.email)
+          .in('status', ['active', 'trialing'])
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (licenses && licenses.length > 0) {
+          licenseKey = licenses[0].license_key;
+          const tier = licenses[0].tier;
+          document.getElementById('license-key').textContent = licenseKey;
+          document.getElementById('key-preview').textContent = licenseKey.substring(0, 8) + '...';
+          document.getElementById('tier-name').textContent = tier.charAt(0).toUpperCase() + tier.slice(1);
+        }
+      } else if (email) {
+        // Not logged in but have email from Stripe redirect
+        // Show a login prompt
+        document.getElementById('license-key').textContent = 'Sign in to see your key';
+        document.getElementById('key-preview').textContent = 'sign-in-first';
+      }
+    }
+
+    function copyKey() {
+      if (!licenseKey) return;
+      navigator.clipboard.writeText(licenseKey).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('bg-halo-green');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('bg-halo-green'); }, 2000);
+      });
+    }
+
+    function copyActivate() {
+      if (!licenseKey) return;
+      navigator.clipboard.writeText(`runhalo activate ${licenseKey}`);
+    }
+
+    init();
+  </script>
+</body>
+</html>
