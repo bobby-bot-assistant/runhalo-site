@@ -214,6 +214,159 @@
       </div>
     </section>
 
+    <!-- AI Review Board (Pro+) -->
+    <section data-tier-min="pro" class="hidden mt-8 animate-slide-up">
+      <h2 class="text-lg font-bold mb-4">AI Review Board</h2>
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
+        <p class="text-sm text-halo-muted mb-4">Three AI agents verify every finding before it reaches you.</p>
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
+            <div class="text-xs text-halo-muted mb-1">Knox (Regulatory)</div>
+            <div id="ai-knox-count" class="text-xl font-bold text-halo-accent">--</div>
+            <div class="text-xs text-halo-subtle">confirmed</div>
+          </div>
+          <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
+            <div class="text-xs text-halo-muted mb-1">Trace (Code)</div>
+            <div id="ai-trace-count" class="text-xl font-bold text-halo-accent">--</div>
+            <div class="text-xs text-halo-subtle">confirmed</div>
+          </div>
+          <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
+            <div class="text-xs text-halo-muted mb-1">Reese (Defense)</div>
+            <div id="ai-reese-count" class="text-xl font-bold text-halo-green">--</div>
+            <div class="text-xs text-halo-subtle">dismissed</div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between text-xs text-halo-muted">
+          <span>Based on your latest Pro scan</span>
+          <span id="ai-fp-rate" class="font-medium">--% false positives caught</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Review Board - LOCKED for Free -->
+    <section data-tier-locked="pro" class="mt-8 animate-slide-up">
+      <h2 class="text-lg font-bold mb-4 text-halo-muted">AI Review Board</h2>
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-6 relative overflow-hidden">
+        <div class="absolute inset-0 bg-halo-bg/60 backdrop-blur-[2px] flex items-center justify-center z-10">
+          <div class="text-center">
+            <div class="text-2xl mb-2">🔒</div>
+            <p class="text-sm font-medium" style="color: var(--halo-text);">AI Review Board</p>
+            <p class="text-xs text-halo-muted mt-1">Three AI agents verify your findings and catch false positives</p>
+            <a href="/#pricing" class="inline-block mt-3 px-4 py-2 bg-halo-accent text-white text-xs font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Upgrade to Pro — $29/mo</a>
+          </div>
+        </div>
+        <div class="opacity-30 pointer-events-none">
+          <div class="grid grid-cols-3 gap-4">
+            <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
+              <div class="text-xs text-halo-muted mb-1">Knox</div>
+              <div class="text-xl font-bold">12</div>
+            </div>
+            <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
+              <div class="text-xs text-halo-muted mb-1">Trace</div>
+              <div class="text-xl font-bold">12</div>
+            </div>
+            <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
+              <div class="text-xs text-halo-muted mb-1">Reese</div>
+              <div class="text-xl font-bold text-halo-green">8</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compliance Trend (Pro+) -->
+    <section data-tier-min="pro" class="hidden mt-8 animate-slide-up">
+      <h2 class="text-lg font-bold mb-4">Compliance Trend</h2>
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
+        <div id="trend-chart" class="h-48 flex items-end gap-1">
+          <!-- Filled dynamically with bar chart -->
+        </div>
+        <div class="flex justify-between text-xs text-halo-muted mt-3">
+          <span>Last 10 scans</span>
+          <span>Higher = better compliance</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compliance Trend - LOCKED for Free -->
+    <section data-tier-locked="pro" class="mt-8 animate-slide-up">
+      <h2 class="text-lg font-bold mb-4 text-halo-muted">Compliance Trend</h2>
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-6 relative overflow-hidden">
+        <div class="absolute inset-0 bg-halo-bg/60 backdrop-blur-[2px] flex items-center justify-center z-10">
+          <div class="text-center">
+            <div class="text-2xl mb-2">📈</div>
+            <p class="text-sm font-medium" style="color: var(--halo-text);">Track your compliance grade over time</p>
+            <a href="/#pricing" class="inline-block mt-3 px-4 py-2 bg-halo-accent text-white text-xs font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Upgrade to Pro — $29/mo</a>
+          </div>
+        </div>
+        <div class="opacity-20 pointer-events-none h-48 flex items-end gap-1">
+          <div class="flex-1 bg-halo-green rounded-t" style="height:60%"></div>
+          <div class="flex-1 bg-halo-green rounded-t" style="height:70%"></div>
+          <div class="flex-1 bg-halo-yellow rounded-t" style="height:45%"></div>
+          <div class="flex-1 bg-halo-green rounded-t" style="height:80%"></div>
+          <div class="flex-1 bg-halo-green rounded-t" style="height:85%"></div>
+          <div class="flex-1 bg-halo-green rounded-t" style="height:90%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Report Downloads (Pro+) -->
+    <section data-tier-min="pro" class="hidden mt-8 animate-slide-up">
+      <h2 class="text-lg font-bold mb-4">Reports</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <button onclick="downloadReport('pdf')" class="bg-halo-surface border border-halo-border rounded-xl p-5 text-left hover:border-halo-accent transition-colors">
+          <div class="text-halo-accent text-lg mb-2">📄</div>
+          <div class="text-sm font-medium" style="color: var(--halo-text);">PDF Report</div>
+          <div class="text-xs text-halo-muted mt-1">Compliance summary with findings</div>
+        </button>
+        <button onclick="downloadReport('sarif')" class="bg-halo-surface border border-halo-border rounded-xl p-5 text-left hover:border-halo-accent transition-colors">
+          <div class="text-halo-accent text-lg mb-2">🔧</div>
+          <div class="text-sm font-medium" style="color: var(--halo-text);">SARIF Export</div>
+          <div class="text-xs text-halo-muted mt-1">GitHub Code Scanning format</div>
+        </button>
+        <button onclick="downloadReport('html')" class="bg-halo-surface border border-halo-border rounded-xl p-5 text-left hover:border-halo-accent transition-colors">
+          <div class="text-halo-accent text-lg mb-2">🌐</div>
+          <div class="text-sm font-medium" style="color: var(--halo-text);">HTML Report</div>
+          <div class="text-xs text-halo-muted mt-1">Shareable web report</div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Team Management (Business+) -->
+    <section data-tier-min="business" class="hidden mt-8 animate-slide-up">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold">Team</h2>
+        <button onclick="inviteMember()" class="text-halo-accent hover:text-halo-accent-light text-sm flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+          Invite Member
+        </button>
+      </div>
+      <div class="bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-halo-border text-halo-muted text-xs">
+              <th class="text-left px-4 py-3 font-medium">Member</th>
+              <th class="text-center px-4 py-3 font-medium">Role</th>
+              <th class="text-center px-4 py-3 font-medium">Status</th>
+            </tr>
+          </thead>
+          <tbody id="team-members-body">
+            <tr class="text-center text-halo-muted text-xs"><td colspan="3" class="py-4">Loading team...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Audit Trail (Business+) -->
+    <section data-tier-min="business" class="hidden mt-8 animate-slide-up">
+      <h2 class="text-lg font-bold mb-4">Audit Trail</h2>
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
+        <div id="audit-trail" class="space-y-3 max-h-64 overflow-y-auto">
+          <p class="text-sm text-halo-muted">Loading audit trail...</p>
+        </div>
+      </div>
+    </section>
+
     <!-- Account Section -->
     <section class="mt-12 animate-slide-up" style="animation-delay: 0.3s;">
       <h2 class="text-lg font-bold mb-4">Account</h2>
@@ -321,6 +474,7 @@
     }
 
     let currentLicenseKey = null;
+    let currentTier = 'free';
 
     async function checkTier(email) {
       try {
@@ -334,6 +488,7 @@
         if (licenses && licenses.length > 0) {
           const license = licenses[0];
           currentLicenseKey = license.license_key;
+          currentTier = license.tier;
           const tierLabel = license.tier.charAt(0).toUpperCase() + license.tier.slice(1);
           document.getElementById('stat-tier').textContent = tierLabel;
           document.getElementById('account-tier').textContent = `${tierLabel} (${license.status})`;
@@ -351,6 +506,8 @@
       } catch (err) {
         console.warn('License check error:', err);
       }
+
+      applyTierVisibility(currentTier);
     }
 
     async function loadScans(userId) {
@@ -409,6 +566,11 @@
         document.getElementById('scan-table').classList.remove('hidden');
         const tbody = document.getElementById('scan-table-body');
         tbody.innerHTML = scans.map(scan => renderScanRow(scan)).join('');
+
+        // Render trend chart for Pro+
+        if (currentTier !== 'free') {
+          renderTrendChart(scans);
+        }
 
       } catch (err) {
         console.error('Load scans error:', err);
@@ -532,6 +694,55 @@
     async function signOut() {
       await supabaseClient.auth.signOut();
       window.location.href = '/app/';
+    }
+
+    // ==================== Tier Visibility ====================
+    function applyTierVisibility(tier) {
+      const tiers = ['free', 'pro', 'business', 'enterprise'];
+      const tierIndex = tiers.indexOf(tier);
+
+      // Show sections at or below current tier
+      document.querySelectorAll('[data-tier-min]').forEach(el => {
+        const minTier = el.dataset.tierMin;
+        const minIndex = tiers.indexOf(minTier);
+        if (tierIndex >= minIndex) {
+          el.classList.remove('hidden');
+        }
+      });
+
+      // Hide locked sections for features user HAS
+      document.querySelectorAll('[data-tier-locked]').forEach(el => {
+        const lockedTier = el.dataset.tierLocked;
+        const lockedIndex = tiers.indexOf(lockedTier);
+        if (tierIndex >= lockedIndex) {
+          el.remove(); // User has this tier, remove the locked preview
+        }
+      });
+    }
+
+    function renderTrendChart(scans) {
+      const chart = document.getElementById('trend-chart');
+      if (!chart || !scans || scans.length === 0) return;
+
+      const recent = scans.slice(0, 10).reverse();
+      chart.innerHTML = recent.map(scan => {
+        const height = scan.score;
+        const color = scan.score >= 80 ? 'bg-halo-green' : scan.score >= 60 ? 'bg-halo-yellow' : 'bg-halo-red';
+        return `<div class="flex-1 group relative">
+          <div class="${color} rounded-t transition-all hover:opacity-80 cursor-pointer" style="height: ${height}%;" title="${scan.repo_name}: ${scan.score}/100 (${scan.grade})"></div>
+          <div class="text-[9px] text-halo-subtle text-center mt-1 truncate">${scan.repo_name?.substring(0, 6) || '?'}</div>
+        </div>`;
+      }).join('');
+    }
+
+    async function downloadReport(format) {
+      alert('Report download coming soon. Use CLI: runhalo scan . --format ' + format);
+    }
+
+    async function inviteMember() {
+      const email = prompt('Enter team member email:');
+      if (!email) return;
+      alert('Invite sent to ' + email + ' (coming soon)');
     }
 
     // ==================== Start ====================
