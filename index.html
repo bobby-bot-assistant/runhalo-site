@@ -318,8 +318,8 @@
 
         <!-- Terminal CTA -->
         <div class="flex flex-col items-center gap-4">
-          <div id="hero-terminal" class="relative group glow-accent bg-halo-surface border border-halo-border rounded-xl p-1 max-w-md w-full">
-            <div class="flex items-center gap-2 px-3 py-2 border-b border-halo-border">
+          <div id="hero-terminal" class="relative group glow-accent rounded-xl p-1 max-w-md w-full" style="background: #12121a; border: 1px solid #1e1e2e;">
+            <div class="flex items-center gap-2 px-3 py-2" style="border-bottom: 1px solid #1e1e2e;">
               <div class="flex gap-1.5">
                 <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
                 <div class="w-3 h-3 rounded-full bg-yellow-500/70"></div>
@@ -329,8 +329,8 @@
             </div>
             <button onclick="copyCommand()" class="w-full text-left px-4 py-3 flex items-center justify-between hover:bg-white/5 rounded-b-lg transition-colors">
               <code class="font-mono text-base sm:text-lg">
-                <span class="text-halo-green">$</span>
-                <span class="text-white ml-2">npx runhalo scan .</span>
+                <span style="color: #22c55e;">$</span>
+                <span style="color: #f9fafb;" class="ml-2">npx runhalo scan .</span>
                 <span class="inline-block w-2 h-5 bg-halo-accent ml-1 animate-cursor-blink align-middle"></span>
               </code>
               <span id="copy-icon" class="text-gray-500 group-hover:text-gray-300 transition-colors text-sm">
