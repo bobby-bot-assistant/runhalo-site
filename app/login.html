@@ -17,17 +17,19 @@
           },
           colors: {
             halo: {
-              bg: '#0a0a0f',
-              surface: '#12121a',
-              border: '#1e1e2e',
-              accent: '#6366f1',
-              'accent-light': '#818cf8',
-              green: '#22c55e',
-              'green-dim': '#166534',
-              red: '#ef4444',
-              'red-dim': '#7f1d1d',
-              muted: '#6b7280',
-              subtle: '#374151',
+              bg: 'var(--halo-bg)',
+              surface: 'var(--halo-surface)',
+              border: 'var(--halo-border)',
+              accent: 'var(--halo-accent)',
+              'accent-light': 'var(--halo-accent-light)',
+              green: 'var(--halo-green)',
+              'green-dim': 'var(--halo-green-dim)',
+              red: 'var(--halo-red)',
+              'red-dim': 'var(--halo-red-dim)',
+              yellow: 'var(--halo-yellow)',
+              'yellow-dim': 'var(--halo-yellow-dim)',
+              muted: 'var(--halo-muted)',
+              subtle: 'var(--halo-subtle)',
             }
           },
           animation: {
@@ -45,21 +47,67 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <style>body { background: #0a0a0f; }</style>
+  <style>
+    :root {
+      --halo-bg: #ffffff;
+      --halo-surface: #f9fafb;
+      --halo-border: #e5e7eb;
+      --halo-accent: #4f46e5;
+      --halo-accent-light: #6366f1;
+      --halo-text: #111827;
+      --halo-text-secondary: #4b5563;
+      --halo-muted: #6b7280;
+      --halo-subtle: #9ca3af;
+      --halo-green: #16a34a;
+      --halo-green-dim: #dcfce7;
+      --halo-red: #dc2626;
+      --halo-red-dim: #fef2f2;
+      --halo-yellow: #ca8a04;
+      --halo-yellow-dim: #fefce8;
+    }
+    [data-theme="dark"] {
+      --halo-bg: #0a0a0f;
+      --halo-surface: #12121a;
+      --halo-border: #1e1e2e;
+      --halo-accent: #6366f1;
+      --halo-accent-light: #818cf8;
+      --halo-text: #f9fafb;
+      --halo-text-secondary: #d1d5db;
+      --halo-muted: #6b7280;
+      --halo-subtle: #374151;
+      --halo-green: #22c55e;
+      --halo-green-dim: #166534;
+      --halo-red: #ef4444;
+      --halo-red-dim: #7f1d1d;
+      --halo-yellow: #eab308;
+      --halo-yellow-dim: #713f12;
+    }
+    body { background: var(--halo-bg); color: var(--halo-text); }
+  </style>
+  <script>
+    const savedTheme = localStorage.getItem('halo-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
 </head>
-<body class="font-sans text-white min-h-screen flex flex-col">
+<body class="font-sans min-h-screen flex flex-col" style="color: var(--halo-text);">
 
   <!-- Nav -->
   <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm">
     <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/app/" class="flex items-center gap-2 text-white hover:text-halo-accent-light transition-colors">
+      <a href="/app/" class="flex items-center gap-2 hover:text-halo-accent-light transition-colors" style="color: var(--halo-text);">
         <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
           <circle cx="12" cy="12" r="4" fill="currentColor" />
         </svg>
         <span class="font-bold text-lg">Halo</span>
       </a>
-      <a href="/app/" class="text-halo-muted hover:text-white text-sm transition-colors">Back to Scanner</a>
+      <div class="flex items-center gap-4">
+        <a href="/app/" class="text-halo-muted hover:text-halo-accent text-sm transition-colors">Back to Scanner</a>
+        <button onclick="toggleTheme()" id="theme-toggle" class="text-halo-muted hover:text-halo-accent transition-colors" aria-label="Toggle theme">
+          <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+      </div>
     </div>
   </nav>
 
@@ -72,7 +120,7 @@
         <button id="tab-signup" onclick="switchTab('signup')" class="flex-1 py-2 text-sm font-medium rounded-md transition-all bg-halo-accent text-white">
           Sign Up
         </button>
-        <button id="tab-login" onclick="switchTab('login')" class="flex-1 py-2 text-sm font-medium rounded-md transition-all text-halo-muted hover:text-white">
+        <button id="tab-login" onclick="switchTab('login')" class="flex-1 py-2 text-sm font-medium rounded-md transition-all text-halo-muted hover:text-halo-accent">
           Log In
         </button>
       </div>
@@ -86,7 +134,7 @@
             id="signup-email"
             required
             placeholder="you@company.com"
-            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 text-white placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
+            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
           >
         </div>
         <div>
@@ -97,7 +145,7 @@
             required
             minlength="6"
             placeholder="Min 6 characters"
-            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 text-white placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
+            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
           >
         </div>
         <button type="submit" id="signup-btn" class="w-full bg-halo-accent hover:bg-halo-accent-light text-white font-semibold py-3 rounded-lg transition-all">
@@ -121,7 +169,7 @@
             id="login-email"
             required
             placeholder="you@company.com"
-            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 text-white placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
+            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
           >
         </div>
         <div>
@@ -131,7 +179,7 @@
             id="login-password"
             required
             placeholder="Your password"
-            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 text-white placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
+            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors"
           >
         </div>
         <button type="submit" id="login-btn" class="w-full bg-halo-accent hover:bg-halo-accent-light text-white font-semibold py-3 rounded-lg transition-all">
@@ -155,7 +203,7 @@
             id="license-key"
             required
             placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 text-white placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors font-mono text-sm"
+            class="w-full bg-halo-surface border border-halo-border rounded-lg px-4 py-3 placeholder-halo-subtle outline-none focus:border-halo-accent transition-colors font-mono text-sm"
           >
         </div>
         <button type="submit" id="license-btn" class="w-full bg-halo-accent hover:bg-halo-accent-light text-white font-semibold py-3 rounded-lg transition-all">
@@ -188,6 +236,21 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <script>
+    // ==================== Theme Toggle ====================
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      localStorage.setItem('halo-theme', isDark ? 'light' : 'dark');
+      updateThemeIcons();
+    }
+    function updateThemeIcons() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.getElementById('sun-icon')?.classList.toggle('hidden', !isDark);
+      document.getElementById('moon-icon')?.classList.toggle('hidden', isDark);
+    }
+    updateThemeIcons();
+
     // ==================== Config ====================
     const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
@@ -211,7 +274,7 @@
         if (key === tab) {
           el.className = 'flex-1 py-2 text-sm font-medium rounded-md transition-all bg-halo-accent text-white';
         } else {
-          el.className = 'flex-1 py-2 text-sm font-medium rounded-md transition-all text-halo-muted hover:text-white';
+          el.className = 'flex-1 py-2 text-sm font-medium rounded-md transition-all text-halo-muted hover:text-halo-accent';
         }
       });
 

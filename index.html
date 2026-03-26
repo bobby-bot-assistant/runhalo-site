@@ -32,19 +32,19 @@
           },
           colors: {
             halo: {
-              bg: '#0a0a0f',
-              surface: '#12121a',
-              border: '#1e1e2e',
-              accent: '#6366f1',
-              'accent-light': '#818cf8',
-              green: '#22c55e',
-              'green-dim': '#166534',
-              red: '#ef4444',
-              'red-dim': '#7f1d1d',
-              yellow: '#eab308',
-              'yellow-dim': '#713f12',
-              muted: '#6b7280',
-              subtle: '#374151',
+              bg: 'var(--halo-bg)',
+              surface: 'var(--halo-surface)',
+              border: 'var(--halo-border)',
+              accent: 'var(--halo-accent)',
+              'accent-light': 'var(--halo-accent-light)',
+              green: 'var(--halo-green)',
+              'green-dim': 'var(--halo-green-dim)',
+              red: 'var(--halo-red)',
+              'red-dim': 'var(--halo-red-dim)',
+              yellow: 'var(--halo-yellow)',
+              'yellow-dim': 'var(--halo-yellow-dim)',
+              muted: 'var(--halo-muted)',
+              subtle: 'var(--halo-subtle)',
             }
           },
           animation: {
@@ -152,8 +152,42 @@
   </script>
 
   <style>
+    :root {
+      --halo-bg: #ffffff;
+      --halo-surface: #f9fafb;
+      --halo-border: #e5e7eb;
+      --halo-accent: #4f46e5;
+      --halo-accent-light: #6366f1;
+      --halo-text: #111827;
+      --halo-text-secondary: #4b5563;
+      --halo-muted: #6b7280;
+      --halo-subtle: #9ca3af;
+      --halo-green: #16a34a;
+      --halo-green-dim: #dcfce7;
+      --halo-red: #dc2626;
+      --halo-red-dim: #fef2f2;
+      --halo-yellow: #ca8a04;
+      --halo-yellow-dim: #fefce8;
+    }
+    [data-theme="dark"] {
+      --halo-bg: #0a0a0f;
+      --halo-surface: #12121a;
+      --halo-border: #1e1e2e;
+      --halo-accent: #6366f1;
+      --halo-accent-light: #818cf8;
+      --halo-text: #f9fafb;
+      --halo-text-secondary: #d1d5db;
+      --halo-muted: #6b7280;
+      --halo-subtle: #374151;
+      --halo-green: #22c55e;
+      --halo-green-dim: #166534;
+      --halo-red: #ef4444;
+      --halo-red-dim: #7f1d1d;
+      --halo-yellow: #eab308;
+      --halo-yellow-dim: #713f12;
+    }
     html { scroll-behavior: smooth; }
-    body { background: #0a0a0f; }
+    body { background: var(--halo-bg); color: var(--halo-text); }
 
     /* Terminal scan animation */
     .terminal-line {
@@ -194,13 +228,39 @@
     .copy-tooltip.show {
       opacity: 1;
     }
+    /* Hero section always dark */
+    .hero-dark {
+      background: #0a0a0f;
+      color: #f9fafb;
+    }
+
+    /* Theme-aware overrides for sections outside hero */
+    :root .theme-section .text-white { color: var(--halo-text); }
+    :root .theme-section .text-gray-300 { color: var(--halo-text-secondary); }
+    :root .theme-section .text-gray-400 { color: var(--halo-muted); }
+    :root .theme-section .text-gray-500 { color: var(--halo-subtle); }
+    :root .theme-section .text-gray-600 { color: var(--halo-subtle); }
+    :root .theme-section .hover\:text-white:hover { color: var(--halo-text) !important; }
+    :root .theme-section .hover\:bg-white\/\[0\.02\]:hover { background-color: rgba(99, 102, 241, 0.03); }
+    :root .theme-section .bg-halo-bg { background-color: var(--halo-bg); }
+
+    [data-theme="dark"] .theme-section .text-white { color: #ffffff; }
+    [data-theme="dark"] .theme-section .text-gray-300 { color: #d1d5db; }
+    [data-theme="dark"] .theme-section .text-gray-400 { color: #9ca3af; }
+    [data-theme="dark"] .theme-section .text-gray-500 { color: #6b7280; }
+    [data-theme="dark"] .theme-section .text-gray-600 { color: #4b5563; }
+    [data-theme="dark"] .theme-section .hover\:text-white:hover { color: #ffffff !important; }
   </style>
+  <script>
+    const savedTheme = localStorage.getItem('halo-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
 </head>
 
-<body class="font-sans text-gray-300 antialiased">
+<body class="font-sans antialiased" style="color: var(--halo-text);">
 
   <!-- ═══════════════════════════════════════════ NAV ═══════════════════════════════════════════ -->
-  <nav class="fixed top-0 w-full z-50 bg-halo-bg/80 backdrop-blur-lg border-b border-halo-border">
+  <nav class="fixed top-0 w-full z-50 bg-[#0a0a0f]/80 backdrop-blur-lg border-b border-[#1e1e2e]">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <a href="/" class="flex items-center gap-2">
         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-halo-accent to-purple-500 flex items-center justify-center">
@@ -219,6 +279,10 @@
         </a>
       </div>
       <div class="flex items-center gap-3">
+        <button onclick="toggleTheme()" id="theme-toggle" class="text-gray-400 hover:text-white transition-colors" aria-label="Toggle theme">
+          <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
         <a href="#get-started" class="bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
           Get Started
         </a>
@@ -227,9 +291,9 @@
   </nav>
 
   <!-- ═══════════════════════════════════════════ HERO ═══════════════════════════════════════════ -->
-  <section class="relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
+  <section class="hero-dark relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
     <!-- Background gradient -->
-    <div class="absolute inset-0 bg-gradient-to-b from-halo-accent/5 via-transparent to-transparent pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#6366f1]/5 via-transparent to-transparent pointer-events-none"></div>
 
     <div class="relative max-w-6xl mx-auto px-4 sm:px-6">
       <!-- Urgency banner -->
@@ -342,6 +406,9 @@
       </div>
     </div>
   </section>
+
+  <!-- Theme-aware content sections -->
+  <div class="theme-section">
 
   <!-- ═══════════════════════════════════════════ SOCIAL PROOF BAR ═══════════════════════════════════════════ -->
   <section class="py-12 sm:py-16">
@@ -917,8 +984,10 @@
     </div>
   </section>
 
+  </div><!-- end theme-section -->
+
   <!-- ═══════════════════════════════════════════ FOOTER ═══════════════════════════════════════════ -->
-  <footer class="py-12 border-t border-halo-border">
+  <footer class="py-12 border-t border-halo-border theme-section">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-2">
@@ -946,6 +1015,21 @@
 
   <!-- ═══════════════════════════════════════════ SCRIPTS ═══════════════════════════════════════════ -->
   <script>
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      localStorage.setItem('halo-theme', isDark ? 'light' : 'dark');
+      updateThemeIcons();
+    }
+    function updateThemeIcons() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.getElementById('sun-icon')?.classList.toggle('hidden', !isDark);
+      document.getElementById('moon-icon')?.classList.toggle('hidden', isDark);
+    }
+    updateThemeIcons();
+
     // Copy command to clipboard
     function copyCommand() {
       navigator.clipboard.writeText('npx runhalo scan .').then(() => {

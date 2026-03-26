@@ -22,19 +22,19 @@
           },
           colors: {
             halo: {
-              bg: '#0a0a0f',
-              surface: '#12121a',
-              border: '#1e1e2e',
-              accent: '#6366f1',
-              'accent-light': '#818cf8',
-              green: '#22c55e',
-              'green-dim': '#166534',
-              red: '#ef4444',
-              'red-dim': '#7f1d1d',
-              yellow: '#eab308',
-              'yellow-dim': '#713f12',
-              muted: '#6b7280',
-              subtle: '#374151',
+              bg: 'var(--halo-bg)',
+              surface: 'var(--halo-surface)',
+              border: 'var(--halo-border)',
+              accent: 'var(--halo-accent)',
+              'accent-light': 'var(--halo-accent-light)',
+              green: 'var(--halo-green)',
+              'green-dim': 'var(--halo-green-dim)',
+              red: 'var(--halo-red)',
+              'red-dim': 'var(--halo-red-dim)',
+              yellow: 'var(--halo-yellow)',
+              'yellow-dim': 'var(--halo-yellow-dim)',
+              muted: 'var(--halo-muted)',
+              subtle: 'var(--halo-subtle)',
             }
           },
           animation: {
@@ -55,17 +55,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    body { background: #0a0a0f; }
+    :root {
+      --halo-bg: #ffffff;
+      --halo-surface: #f9fafb;
+      --halo-border: #e5e7eb;
+      --halo-accent: #4f46e5;
+      --halo-accent-light: #6366f1;
+      --halo-text: #111827;
+      --halo-text-secondary: #4b5563;
+      --halo-muted: #6b7280;
+      --halo-subtle: #9ca3af;
+      --halo-green: #16a34a;
+      --halo-green-dim: #dcfce7;
+      --halo-red: #dc2626;
+      --halo-red-dim: #fef2f2;
+      --halo-yellow: #ca8a04;
+      --halo-yellow-dim: #fefce8;
+    }
+    [data-theme="dark"] {
+      --halo-bg: #0a0a0f;
+      --halo-surface: #12121a;
+      --halo-border: #1e1e2e;
+      --halo-accent: #6366f1;
+      --halo-accent-light: #818cf8;
+      --halo-text: #f9fafb;
+      --halo-text-secondary: #d1d5db;
+      --halo-muted: #6b7280;
+      --halo-subtle: #374151;
+      --halo-green: #22c55e;
+      --halo-green-dim: #166534;
+      --halo-red: #ef4444;
+      --halo-red-dim: #7f1d1d;
+      --halo-yellow: #eab308;
+      --halo-yellow-dim: #713f12;
+    }
+    body { background: var(--halo-bg); color: var(--halo-text); }
     .step-done { opacity: 0.5; }
-    .step-done .step-check { background: #22c55e; color: white; }
+    .step-done .step-check { background: var(--halo-green); color: white; }
   </style>
+  <script>
+    // Load saved theme before render to prevent flash
+    const savedTheme = localStorage.getItem('halo-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
 </head>
-<body class="font-sans text-white min-h-screen">
+<body class="font-sans min-h-screen" style="color: var(--halo-text);">
 
   <!-- Nav -->
   <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm sticky top-0 z-50">
     <div class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2 text-white hover:text-halo-accent-light transition-colors">
+      <a href="/" class="flex items-center gap-2 hover:text-halo-accent-light transition-colors" style="color: var(--halo-text);">
         <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
           <circle cx="12" cy="12" r="4" fill="currentColor" />
@@ -73,9 +112,13 @@
         <span class="font-bold text-lg">Halo</span>
       </a>
       <div class="flex items-center gap-4 text-sm">
-        <a href="/" class="text-halo-muted hover:text-white transition-colors">Home</a>
-        <a href="https://github.com/runhalo/halo" target="_blank" class="text-halo-muted hover:text-white transition-colors">GitHub</a>
+        <a href="/" class="text-halo-muted hover:text-halo-accent transition-colors">Home</a>
+        <a href="https://github.com/runhalo/halo" target="_blank" class="text-halo-muted hover:text-halo-accent transition-colors">GitHub</a>
         <a href="https://runhalo.dev/#pricing" class="text-halo-accent hover:text-halo-accent-light transition-colors font-medium">Pricing</a>
+        <button onclick="toggleTheme()" id="theme-toggle" class="text-halo-muted hover:text-halo-accent transition-colors" aria-label="Toggle theme">
+          <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
       </div>
     </div>
   </nav>
@@ -117,7 +160,7 @@
               <div class="flex items-center bg-halo-bg border border-halo-border rounded-lg px-4 py-3 gap-2">
                 <span class="text-halo-green font-mono text-sm">$</span>
                 <code class="text-halo-accent-light font-mono text-sm flex-1">npm install -g @runhalo/cli</code>
-                <button onclick="copyText('npm install -g @runhalo/cli', this)" class="text-halo-muted hover:text-white transition-colors p-1" title="Copy">
+                <button onclick="copyText('npm install -g @runhalo/cli', this)" class="text-halo-muted hover:text-halo-accent transition-colors p-1" title="Copy">
                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
@@ -141,7 +184,7 @@
               <div class="flex items-center bg-halo-bg border border-halo-border rounded-lg px-4 py-3 gap-2">
                 <span class="text-halo-green font-mono text-sm">$</span>
                 <code class="text-halo-accent-light font-mono text-sm flex-1">halo activate --key YOUR_LICENSE_KEY</code>
-                <button onclick="copyText('halo activate --key ', this)" class="text-halo-muted hover:text-white transition-colors p-1" title="Copy">
+                <button onclick="copyText('halo activate --key ', this)" class="text-halo-muted hover:text-halo-accent transition-colors p-1" title="Copy">
                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
@@ -165,7 +208,7 @@
               <div class="flex items-center bg-halo-bg border border-halo-border rounded-lg px-4 py-3 gap-2">
                 <span class="text-halo-green font-mono text-sm">$</span>
                 <code class="text-halo-accent-light font-mono text-sm flex-1">halo scan .</code>
-                <button onclick="copyText('halo scan .', this)" class="text-halo-muted hover:text-white transition-colors p-1" title="Copy">
+                <button onclick="copyText('halo scan .', this)" class="text-halo-muted hover:text-halo-accent transition-colors p-1" title="Copy">
                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
@@ -239,7 +282,7 @@
         </p>
         <p class="text-halo-subtle text-xs">
           Halo is preventive mental health infrastructure at the code level — built by
-          <a href="https://mindfulmedia.org" class="text-halo-muted hover:text-white transition-colors">Mindful Media</a>.
+          <a href="https://mindfulmedia.org" class="text-halo-muted hover:text-halo-accent transition-colors">Mindful Media</a>.
         </p>
       </div>
     </section>
@@ -251,9 +294,9 @@
     <div class="max-w-3xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
       <span>&copy; 2026 Mindful Media. All rights reserved.</span>
       <div class="flex gap-4">
-        <a href="/privacy.html" class="hover:text-white transition-colors">Privacy</a>
-        <a href="/terms.html" class="hover:text-white transition-colors">Terms</a>
-        <a href="https://github.com/runhalo/halo" class="hover:text-white transition-colors">GitHub</a>
+        <a href="/privacy.html" class="hover:text-halo-accent transition-colors">Privacy</a>
+        <a href="/terms.html" class="hover:text-halo-accent transition-colors">Terms</a>
+        <a href="https://github.com/runhalo/halo" class="hover:text-halo-accent transition-colors">GitHub</a>
       </div>
     </div>
   </footer>
@@ -275,6 +318,21 @@
         setTimeout(() => { btn.innerHTML = original; }, 1500);
       });
     }
+
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      localStorage.setItem('halo-theme', isDark ? 'light' : 'dark');
+      updateThemeIcons();
+    }
+    function updateThemeIcons() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.getElementById('sun-icon')?.classList.toggle('hidden', !isDark);
+      document.getElementById('moon-icon')?.classList.toggle('hidden', isDark);
+    }
+    updateThemeIcons();
   </script>
 
 </body>

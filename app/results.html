@@ -17,20 +17,20 @@
           },
           colors: {
             halo: {
-              bg: '#0a0a0f',
-              surface: '#12121a',
-              border: '#1e1e2e',
-              accent: '#6366f1',
-              'accent-light': '#818cf8',
-              green: '#22c55e',
-              'green-dim': '#166534',
-              red: '#ef4444',
-              'red-dim': '#7f1d1d',
-              yellow: '#eab308',
-              'yellow-dim': '#713f12',
+              bg: 'var(--halo-bg)',
+              surface: 'var(--halo-surface)',
+              border: 'var(--halo-border)',
+              accent: 'var(--halo-accent)',
+              'accent-light': 'var(--halo-accent-light)',
+              green: 'var(--halo-green)',
+              'green-dim': 'var(--halo-green-dim)',
+              red: 'var(--halo-red)',
+              'red-dim': 'var(--halo-red-dim)',
+              yellow: 'var(--halo-yellow)',
+              'yellow-dim': 'var(--halo-yellow-dim)',
               orange: '#f97316',
-              muted: '#6b7280',
-              subtle: '#374151',
+              muted: 'var(--halo-muted)',
+              subtle: 'var(--halo-subtle)',
             }
           },
           animation: {
@@ -53,7 +53,41 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    body { background: #0a0a0f; }
+    :root {
+      --halo-bg: #ffffff;
+      --halo-surface: #f9fafb;
+      --halo-border: #e5e7eb;
+      --halo-accent: #4f46e5;
+      --halo-accent-light: #6366f1;
+      --halo-text: #111827;
+      --halo-text-secondary: #4b5563;
+      --halo-muted: #6b7280;
+      --halo-subtle: #9ca3af;
+      --halo-green: #16a34a;
+      --halo-green-dim: #dcfce7;
+      --halo-red: #dc2626;
+      --halo-red-dim: #fef2f2;
+      --halo-yellow: #ca8a04;
+      --halo-yellow-dim: #fefce8;
+    }
+    [data-theme="dark"] {
+      --halo-bg: #0a0a0f;
+      --halo-surface: #12121a;
+      --halo-border: #1e1e2e;
+      --halo-accent: #6366f1;
+      --halo-accent-light: #818cf8;
+      --halo-text: #f9fafb;
+      --halo-text-secondary: #d1d5db;
+      --halo-muted: #6b7280;
+      --halo-subtle: #374151;
+      --halo-green: #22c55e;
+      --halo-green-dim: #166534;
+      --halo-red: #ef4444;
+      --halo-red-dim: #7f1d1d;
+      --halo-yellow: #eab308;
+      --halo-yellow-dim: #713f12;
+    }
+    body { background: var(--halo-bg); color: var(--halo-text); }
     .score-ring { transition: stroke-dashoffset 1.5s ease-out; }
     .blur-overlay {
       position: relative;
@@ -65,7 +99,7 @@
       left: 0;
       right: 0;
       height: 120px;
-      background: linear-gradient(transparent, #0a0a0f);
+      background: linear-gradient(transparent, var(--halo-bg));
       pointer-events: none;
     }
     .violation-blurred {
@@ -74,13 +108,17 @@
       pointer-events: none;
     }
   </style>
+  <script>
+    const savedTheme = localStorage.getItem('halo-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
 </head>
-<body class="font-sans text-white min-h-screen">
+<body class="font-sans min-h-screen" style="color: var(--halo-text);">
 
   <!-- Nav -->
   <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm sticky top-0 z-50">
     <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/app/" class="flex items-center gap-2 text-white hover:text-halo-accent-light transition-colors">
+      <a href="/app/" class="flex items-center gap-2 hover:text-halo-accent-light transition-colors" style="color: var(--halo-text);">
         <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
           <circle cx="12" cy="12" r="4" fill="currentColor" />
@@ -88,8 +126,12 @@
         <span class="font-bold text-lg">Halo</span>
       </a>
       <div class="flex items-center gap-4 text-sm">
-        <a href="/app/" class="text-halo-muted hover:text-white transition-colors">New Scan</a>
+        <a href="/app/" class="text-halo-muted hover:text-halo-accent transition-colors">New Scan</a>
         <a href="/app/login.html" id="auth-link" class="text-halo-accent hover:text-halo-accent-light transition-colors">Sign In</a>
+        <button onclick="toggleTheme()" id="theme-toggle" class="text-halo-muted hover:text-halo-accent transition-colors" aria-label="Toggle theme">
+          <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
       </div>
     </div>
   </nav>
@@ -110,13 +152,13 @@
     <div class="text-center mb-10 animate-fade-in">
       <!-- Repo name -->
       <p class="text-halo-muted text-sm mb-2">
-        <span id="repo-owner" class="text-halo-subtle"></span>/<span id="repo-name" class="text-white font-medium"></span>
+        <span id="repo-owner" class="text-halo-subtle"></span>/<span id="repo-name" class="font-medium" style="color: var(--halo-text);"></span>
       </p>
 
       <!-- Score Circle -->
       <div class="relative w-40 h-40 mx-auto mb-4">
         <svg class="w-40 h-40 -rotate-90" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="45" fill="none" stroke="#1e1e2e" stroke-width="6" />
+          <circle cx="50" cy="50" r="45" fill="none" stroke="var(--halo-border)" stroke-width="6" />
           <circle
             id="score-circle"
             cx="50" cy="50" r="45"
@@ -137,8 +179,8 @@
 
       <!-- Summary line -->
       <p class="text-halo-muted text-sm">
-        <span id="total-violations" class="text-white font-semibold">--</span> violation(s) found across
-        <span id="total-files" class="text-white font-semibold">--</span> files
+        <span id="total-violations" class="font-semibold" style="color: var(--halo-text);">--</span> violation(s) found across
+        <span id="total-files" class="font-semibold" style="color: var(--halo-text);">--</span> files
       </p>
     </div>
 
@@ -190,7 +232,7 @@
       <div class="bg-gradient-to-br from-halo-accent/10 to-halo-surface border border-halo-accent/30 rounded-xl p-8 text-center">
         <h3 class="text-xl font-bold mb-2">See All Violations</h3>
         <p class="text-halo-muted text-sm mb-6">
-          Create a free account to view all <span id="hidden-count" class="text-white font-semibold">--</span> remaining violations with fix suggestions.
+          Create a free account to view all <span id="hidden-count" class="font-semibold" style="color: var(--halo-text);">--</span> remaining violations with fix suggestions.
         </p>
 
         <!-- Email signup -->
@@ -291,9 +333,9 @@
     <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
       <span>&copy; 2026 Mindful Media. All rights reserved.</span>
       <div class="flex gap-4">
-        <a href="/privacy.html" class="hover:text-white transition-colors">Privacy</a>
-        <a href="/terms.html" class="hover:text-white transition-colors">Terms</a>
-        <a href="https://github.com/runhalo/halo" class="hover:text-white transition-colors">GitHub</a>
+        <a href="/privacy.html" class="hover:text-halo-accent transition-colors">Privacy</a>
+        <a href="/terms.html" class="hover:text-halo-accent transition-colors">Terms</a>
+        <a href="https://github.com/runhalo/halo" class="hover:text-halo-accent transition-colors">GitHub</a>
       </div>
     </div>
   </footer>
@@ -302,6 +344,21 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <script>
+    // ==================== Theme Toggle ====================
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      localStorage.setItem('halo-theme', isDark ? 'light' : 'dark');
+      updateThemeIcons();
+    }
+    function updateThemeIcons() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.getElementById('sun-icon')?.classList.toggle('hidden', !isDark);
+      document.getElementById('moon-icon')?.classList.toggle('hidden', isDark);
+    }
+    updateThemeIcons();
+
     // ==================== Config ====================
     const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
@@ -489,7 +546,7 @@
             <span class="px-2 py-0.5 rounded text-xs font-medium ${cfg.bg} ${cfg.text}">${v.severity}</span>
             <code class="text-xs text-halo-muted font-mono">${v.ruleId}</code>
           </div>
-          <p class="text-sm text-white mb-1">${v.ruleName || v.message}</p>
+          <p class="text-sm mb-1" style="color: var(--halo-text);">${v.ruleName || v.message}</p>
           <p class="text-xs text-halo-muted mb-2">${v.message}</p>
           <div class="flex items-center justify-between">
             <p class="text-xs text-halo-subtle font-mono">${v.file}:${v.line}</p>
@@ -591,7 +648,7 @@
                 <span class="px-2 py-0.5 rounded text-xs font-medium ${cfg.bg} ${cfg.text}">${v.severity}</span>
                 <code class="text-xs text-halo-muted font-mono">${v.ruleId}</code>
               </div>
-              <p class="text-sm text-white truncate">${v.ruleName || v.message}</p>
+              <p class="text-sm truncate" style="color: var(--halo-text);">${v.ruleName || v.message}</p>
               ${filePath ? `<p class="text-xs text-halo-subtle font-mono mt-0.5">${filePath}:${v.line || ''}</p>` : ''}
               ${snippet ? `<p class="text-xs text-halo-muted font-mono mt-1 truncate">${snippet}</p>` : ''}
             </div>
