@@ -214,60 +214,60 @@
       </div>
     </section>
 
-    <!-- AI Review Board (Pro+) -->
+    <!-- Halo AI Review Board (Pro+) -->
     <section data-tier-min="pro" class="hidden mt-8 animate-slide-up">
-      <h2 class="text-lg font-bold mb-4">AI Review Board</h2>
+      <h2 class="text-lg font-bold mb-4">Halo AI Review Board</h2>
       <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
-        <p class="text-sm text-halo-muted mb-4">Three AI agents verify every finding before it reaches you.</p>
+        <p class="text-sm text-halo-muted mb-4">AI-powered verification eliminates false positives so you only see real compliance issues.</p>
         <div class="grid grid-cols-3 gap-4 mb-4">
           <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
-            <div class="text-xs text-halo-muted mb-1">Knox (Regulatory)</div>
-            <div id="ai-knox-count" class="text-xl font-bold text-halo-accent">--</div>
-            <div class="text-xs text-halo-subtle">confirmed</div>
+            <div class="text-xs text-halo-muted mb-1">Confirmed Violations</div>
+            <div id="ai-confirmed-count" class="text-xl font-bold text-halo-accent">--</div>
+            <div class="text-xs text-halo-subtle">verified issues</div>
           </div>
           <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
-            <div class="text-xs text-halo-muted mb-1">Trace (Code)</div>
-            <div id="ai-trace-count" class="text-xl font-bold text-halo-accent">--</div>
-            <div class="text-xs text-halo-subtle">confirmed</div>
+            <div class="text-xs text-halo-muted mb-1">False Positives Removed</div>
+            <div id="ai-dismissed-count" class="text-xl font-bold text-halo-green">--</div>
+            <div class="text-xs text-halo-subtle">noise eliminated</div>
           </div>
           <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
-            <div class="text-xs text-halo-muted mb-1">Reese (Defense)</div>
-            <div id="ai-reese-count" class="text-xl font-bold text-halo-green">--</div>
-            <div class="text-xs text-halo-subtle">dismissed</div>
+            <div class="text-xs text-halo-muted mb-1">Accuracy Rate</div>
+            <div id="ai-accuracy" class="text-xl font-bold text-halo-accent">--</div>
+            <div class="text-xs text-halo-subtle">precision</div>
           </div>
         </div>
         <div class="flex items-center justify-between text-xs text-halo-muted">
-          <span>Based on your latest Pro scan</span>
-          <span id="ai-fp-rate" class="font-medium">--% false positives caught</span>
+          <span>Based on your latest scan with AI verification</span>
+          <span id="ai-fp-rate" class="font-medium">~85% false positives caught</span>
         </div>
       </div>
     </section>
 
-    <!-- AI Review Board - LOCKED for Free -->
+    <!-- Halo AI Review Board - LOCKED for Free -->
     <section data-tier-locked="pro" class="mt-8 animate-slide-up">
-      <h2 class="text-lg font-bold mb-4 text-halo-muted">AI Review Board</h2>
+      <h2 class="text-lg font-bold mb-4 text-halo-muted">Halo AI Review Board</h2>
       <div class="bg-halo-surface border border-halo-border rounded-xl p-6 relative overflow-hidden">
         <div class="absolute inset-0 bg-halo-bg/60 backdrop-blur-[2px] flex items-center justify-center z-10">
           <div class="text-center">
             <div class="text-2xl mb-2">🔒</div>
-            <p class="text-sm font-medium" style="color: var(--halo-text);">AI Review Board</p>
-            <p class="text-xs text-halo-muted mt-1">Three AI agents verify your findings and catch false positives</p>
+            <p class="text-sm font-medium" style="color: var(--halo-text);">Halo AI Review Board</p>
+            <p class="text-xs text-halo-muted mt-1">AI-powered verification removes ~85% of false positives from your scan</p>
             <a href="/#pricing" class="inline-block mt-3 px-4 py-2 bg-halo-accent text-white text-xs font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Upgrade to Pro — $29/mo</a>
           </div>
         </div>
         <div class="opacity-30 pointer-events-none">
           <div class="grid grid-cols-3 gap-4">
             <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
-              <div class="text-xs text-halo-muted mb-1">Knox</div>
+              <div class="text-xs text-halo-muted mb-1">Confirmed</div>
+              <div class="text-xl font-bold">8</div>
+            </div>
+            <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
+              <div class="text-xs text-halo-muted mb-1">Removed</div>
               <div class="text-xl font-bold">12</div>
             </div>
             <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
-              <div class="text-xs text-halo-muted mb-1">Trace</div>
-              <div class="text-xl font-bold">12</div>
-            </div>
-            <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
-              <div class="text-xs text-halo-muted mb-1">Reese</div>
-              <div class="text-xl font-bold text-halo-green">8</div>
+              <div class="text-xs text-halo-muted mb-1">Accuracy</div>
+              <div class="text-xl font-bold text-halo-green">85%</div>
             </div>
           </div>
         </div>
