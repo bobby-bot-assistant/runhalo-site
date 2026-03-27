@@ -301,6 +301,29 @@
             <div class="text-xs text-halo-subtle">precision</div>
           </div>
         </div>
+        <!-- Regulatory Exposure + Fix Coverage (AI Review Board insights) -->
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div class="p-3 rounded-lg bg-halo-red/5 border border-halo-red/20">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-medium" style="color: var(--halo-red);">⚠ Estimated Regulatory Exposure</span>
+              <span class="info-tooltip"><span class="info-icon" style="width:14px;height:14px;font-size:8px;">i</span>
+                <span class="info-popup"><span class="info-popup-title">How is this calculated?</span>Based on confirmed violations × applicable penalty rates from FTC, ICO, and state AG enforcement precedent. This is an estimate — actual exposure depends on factors like user base and intent.</span>
+              </span>
+            </div>
+            <div id="regulatory-exposure" class="text-lg font-bold" style="color: var(--halo-red);">--</div>
+            <div class="text-xs text-halo-muted mt-1">based on confirmed violations × enforcement precedent</div>
+          </div>
+          <div class="p-3 rounded-lg bg-halo-green/5 border border-halo-green/20">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-medium" style="color: var(--halo-green);">🔧 Fix Coverage</span>
+              <span class="info-tooltip"><span class="info-icon" style="width:14px;height:14px;font-size:8px;">i</span>
+                <span class="info-popup"><span class="info-popup-title">What is fix coverage?</span>The percentage of your violations that have automated fix suggestions available. Halo can generate code patches for common compliance issues — apply them with one click in VS Code or review the diff in your terminal.</span>
+              </span>
+            </div>
+            <div id="fix-coverage" class="text-lg font-bold" style="color: var(--halo-green);">--</div>
+            <div class="text-xs text-halo-muted mt-1">of violations have fix suggestions available</div>
+          </div>
+        </div>
         <div class="flex items-center justify-between text-xs text-halo-muted">
           <span>Based on your latest scan with AI verification</span>
           <span id="ai-fp-rate" class="font-medium">~85% false positives caught</span>
