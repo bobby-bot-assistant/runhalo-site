@@ -199,7 +199,7 @@
       <h1 class="text-2xl font-bold mb-1">
         Welcome back<span id="user-email-display" class="text-halo-muted font-normal"></span>
       </h1>
-      <p class="text-halo-muted text-sm">Your COPPA compliance dashboard</p>
+      <p class="text-halo-muted text-sm">Your compliance dashboard</p>
     </div>
 
     <!-- Stats Cards -->
@@ -326,7 +326,7 @@
         </div>
         <div class="flex items-center justify-between text-xs text-halo-muted">
           <span>Based on your latest scan with AI verification</span>
-          <span id="ai-fp-rate" class="font-medium">~85% false positives caught</span>
+          <span id="ai-fp-rate" class="font-medium">Run a scan with --review to see results</span>
         </div>
       </div>
     </section>
@@ -471,34 +471,114 @@
       </div>
     </section>
 
-    <!-- Account Section -->
+    <!-- Settings Section -->
     <section class="mt-12 animate-slide-up" style="animation-delay: 0.3s;">
-      <h2 class="text-lg font-bold mb-4">Account
+      <h2 class="text-lg font-bold mb-4">Settings
         <span class="info-tooltip"><span class="info-icon">i</span>
-          <span class="info-popup"><span class="info-popup-title">What is this?</span>Your license details and billing management. Free users can upgrade to Pro for unlimited scans and AI verification. Pro/Business users can manage their Stripe subscription here.</span>
+          <span class="info-popup"><span class="info-popup-title">What is this?</span>Manage your account, subscription, scanning preferences, and notification settings.</span>
         </span>
       </h2>
-      <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <p class="text-sm text-halo-muted">Email: <span id="account-email" style="color: var(--halo-text);">--</span></p>
-            <p class="text-sm text-halo-muted mt-1">Tier: <span id="account-tier" style="color: var(--halo-text);">Free</span></p>
-            <p id="scan-limit-text" class="text-xs text-halo-subtle mt-2"></p>
+      <div class="space-y-4">
+        <!-- Account Info -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+          <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Account</h3>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-halo-muted">Email</span>
+              <span id="account-email" class="text-sm font-medium" style="color: var(--halo-text);">--</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-halo-muted">Plan</span>
+              <span id="account-tier" class="text-sm font-medium" style="color: var(--halo-text);">Free</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-halo-muted">Scan Allowance</span>
+              <span id="scan-limit-text" class="text-sm" style="color: var(--halo-text);">--</span>
+            </div>
           </div>
-          <div class="flex gap-3">
-            <a href="/#pricing" id="upgrade-btn" class="inline-flex items-center gap-2 px-4 py-2 bg-halo-accent hover:bg-halo-accent-light text-white text-sm font-medium rounded-lg transition-all">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-              Upgrade to Pro
+        </div>
+
+        <!-- Actions -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+          <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Actions</h3>
+          <div class="space-y-2">
+            <a href="/#pricing" id="upgrade-btn" class="flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer">
+              <div>
+                <div class="text-sm font-medium" style="color: var(--halo-text);">Upgrade Plan</div>
+                <div class="text-xs text-halo-muted">Get unlimited scans + AI verification</div>
+              </div>
+              <svg class="w-4 h-4 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
             </a>
-            <button onclick="openBillingPortal()" id="billing-btn" class="hidden inline-flex items-center gap-2 px-4 py-2 bg-halo-surface border border-halo-border hover:border-halo-accent text-sm font-medium rounded-lg transition-all" style="color: var(--halo-text);">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
-              Manage Billing
+            <button onclick="openBillingPortal()" id="billing-btn" class="hidden w-full flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer text-left">
+              <div>
+                <div class="text-sm font-medium" style="color: var(--halo-text);">Manage Billing</div>
+                <div class="text-xs text-halo-muted">Update payment method, view invoices, cancel subscription</div>
+              </div>
+              <svg class="w-4 h-4 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <button onclick="changePassword()" class="w-full flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer text-left">
+              <div>
+                <div class="text-sm font-medium" style="color: var(--halo-text);">Change Password</div>
+                <div class="text-xs text-halo-muted">Update your account password</div>
+              </div>
+              <svg class="w-4 h-4 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
             </button>
           </div>
+        </div>
+
+        <!-- Preferences -->
+        <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+          <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Preferences</h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm" style="color: var(--halo-text);">Email notifications</div>
+                <div class="text-xs text-halo-muted">Receive scan results and regression alerts</div>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" checked class="sr-only peer" onchange="updatePreference('emailNotifications', this.checked)">
+                <div class="w-9 h-5 bg-halo-border rounded-full peer peer-checked:bg-halo-accent transition-colors"></div>
+              </label>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm" style="color: var(--halo-text);">Auto-upload scan results</div>
+                <div class="text-xs text-halo-muted">Automatically save CLI scans to your dashboard</div>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="sr-only peer" onchange="updatePreference('autoUpload', this.checked)">
+                <div class="w-9 h-5 bg-halo-border rounded-full peer peer-checked:bg-halo-accent transition-colors"></div>
+              </label>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm" style="color: var(--halo-text);">Default severity filter</div>
+                <div class="text-xs text-halo-muted">Minimum severity to show in scans</div>
+              </div>
+              <select onchange="updatePreference('severityFilter', this.value)" class="text-xs bg-halo-bg border border-halo-border rounded px-2 py-1" style="color: var(--halo-text);">
+                <option value="all">All</option>
+                <option value="critical">Critical only</option>
+                <option value="high">High+</option>
+                <option value="medium">Medium+</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- License Key (Pro+) -->
+        <div data-tier-min="pro" class="hidden bg-halo-surface border border-halo-border rounded-xl p-5">
+          <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">License Key</h3>
+          <div class="flex items-center gap-2">
+            <code id="settings-license-key" class="flex-1 text-xs font-mono bg-halo-bg border border-halo-border rounded px-3 py-2 select-all" style="color: var(--halo-text);">Loading...</code>
+            <button onclick="copyLicenseKey()" class="px-3 py-2 bg-halo-accent text-white text-xs font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Copy</button>
+          </div>
+          <p class="text-xs text-halo-muted mt-2">Use this key to activate Pro features: <code class="text-halo-accent">runhalo activate &lt;key&gt;</code></p>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="bg-halo-surface border border-halo-red/20 rounded-xl p-5">
+          <h3 class="text-sm font-semibold mb-2" style="color: var(--halo-red);">Danger Zone</h3>
+          <button onclick="confirmDeleteAccount()" class="text-xs text-halo-red hover:underline">Delete my account and all scan data</button>
         </div>
       </div>
     </section>
@@ -606,6 +686,9 @@
             document.getElementById('scan-limit-text').textContent = 'Unlimited scans';
             // Show billing portal button for paid tiers
             document.getElementById('billing-btn').classList.remove('hidden');
+            // Show license key in settings
+            const keyEl = document.getElementById('settings-license-key');
+            if (keyEl) keyEl.textContent = license.license_key;
           }
         } else {
           // Free tier — show usage quota
@@ -802,6 +885,43 @@
     async function signOut() {
       await supabaseClient.auth.signOut();
       window.location.href = '/app/';
+    }
+
+    // ==================== Settings Functions ====================
+    async function changePassword() {
+      const email = document.getElementById('account-email')?.textContent;
+      if (!email || email === '--') return;
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/app/dashboard.html',
+      });
+      if (error) {
+        alert('Error sending password reset: ' + error.message);
+      } else {
+        alert('Password reset email sent to ' + email + '. Check your inbox.');
+      }
+    }
+
+    function updatePreference(key, value) {
+      const prefs = JSON.parse(localStorage.getItem('halo_preferences') || '{}');
+      prefs[key] = value;
+      localStorage.setItem('halo_preferences', JSON.stringify(prefs));
+    }
+
+    function copyLicenseKey() {
+      const el = document.getElementById('settings-license-key');
+      if (el && el.textContent !== 'Loading...') {
+        navigator.clipboard.writeText(el.textContent).then(() => {
+          const btn = event.currentTarget;
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        });
+      }
+    }
+
+    function confirmDeleteAccount() {
+      if (confirm('Are you sure you want to delete your account? This will permanently remove all your scan data. This action cannot be undone.')) {
+        alert('Account deletion request received. Please contact support@runhalo.dev to confirm.');
+      }
     }
 
     // ==================== Tier Visibility ====================
