@@ -364,7 +364,7 @@
     const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let currentScan = null;
     let allViolations = [];
@@ -397,7 +397,7 @@
       }
 
       // Check auth state
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await supabaseClient.auth.getSession();
       isAuthenticated = !!session;
 
       if (isAuthenticated) {
@@ -417,7 +417,7 @@
 
         if (isAuthenticated) {
           // Authenticated: fetch via user_id (RLS handles it)
-          const { data, error } = await supabase
+          const { data, error } = await supabaseClient
             .from('halo_scans')
             .select('*')
             .eq('id', scanId)
