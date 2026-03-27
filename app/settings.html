@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | Halo</title>
+  <meta name="description" content="Manage your Halo account settings, preferences, and license key.">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            halo: {
+              bg: 'var(--halo-bg)',
+              surface: 'var(--halo-surface)',
+              border: 'var(--halo-border)',
+              accent: 'var(--halo-accent)',
+              'accent-light': 'var(--halo-accent-light)',
+              green: 'var(--halo-green)',
+              'green-dim': 'var(--halo-green-dim)',
+              red: 'var(--halo-red)',
+              'red-dim': 'var(--halo-red-dim)',
+              yellow: 'var(--halo-yellow)',
+              'yellow-dim': 'var(--halo-yellow-dim)',
+              orange: '#f97316',
+              muted: 'var(--halo-muted)',
+              subtle: 'var(--halo-subtle)',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+            slideUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --halo-bg: #ffffff;
+      --halo-surface: #f9fafb;
+      --halo-border: #e5e7eb;
+      --halo-accent: #4f46e5;
+      --halo-accent-light: #6366f1;
+      --halo-text: #111827;
+      --halo-text-secondary: #4b5563;
+      --halo-muted: #6b7280;
+      --halo-subtle: #9ca3af;
+      --halo-green: #16a34a;
+      --halo-green-dim: #dcfce7;
+      --halo-red: #dc2626;
+      --halo-red-dim: #fef2f2;
+      --halo-yellow: #ca8a04;
+      --halo-yellow-dim: #fefce8;
+    }
+    [data-theme="dark"] {
+      --halo-bg: #0a0a0f;
+      --halo-surface: #12121a;
+      --halo-border: #1e1e2e;
+      --halo-accent: #6366f1;
+      --halo-accent-light: #818cf8;
+      --halo-text: #f9fafb;
+      --halo-text-secondary: #d1d5db;
+      --halo-muted: #6b7280;
+      --halo-subtle: #374151;
+      --halo-green: #22c55e;
+      --halo-green-dim: #166534;
+      --halo-red: #ef4444;
+      --halo-red-dim: #7f1d1d;
+      --halo-yellow: #eab308;
+      --halo-yellow-dim: #713f12;
+    }
+    body { background: var(--halo-bg); color: var(--halo-text); }
+  </style>
+  <script>
+    const savedTheme = localStorage.getItem('halo-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+</head>
+<body class="font-sans min-h-screen" style="color: var(--halo-text);">
+
+  <!-- Nav -->
+  <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm sticky top-0 z-50">
+    <div class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/app/" class="flex items-center gap-2 hover:text-halo-accent-light transition-colors" style="color: var(--halo-text);">
+        <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
+          <circle cx="12" cy="12" r="4" fill="currentColor" />
+        </svg>
+        <span class="font-bold text-lg">Halo</span>
+      </a>
+      <div class="flex items-center gap-4 text-sm">
+        <a href="/app/dashboard.html" class="text-halo-muted hover:text-halo-accent transition-colors">Dashboard</a>
+        <button onclick="signOut()" class="text-halo-muted hover:text-halo-red transition-colors">Sign Out</button>
+        <button onclick="toggleTheme()" id="theme-toggle" class="text-halo-muted hover:text-halo-accent transition-colors" aria-label="Toggle theme">
+          <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Loading -->
+  <div id="loading-state" class="max-w-3xl mx-auto px-6 pt-12">
+    <div class="animate-pulse space-y-4">
+      <div class="h-6 bg-halo-surface rounded w-48"></div>
+      <div class="h-24 bg-halo-surface rounded-lg"></div>
+      <div class="h-24 bg-halo-surface rounded-lg"></div>
+    </div>
+  </div>
+
+  <!-- Settings Content -->
+  <main id="settings-content" class="hidden max-w-3xl mx-auto px-6 pt-8 pb-24">
+
+    <div class="mb-8 animate-fade-in">
+      <h1 class="text-2xl font-bold mb-1">Settings</h1>
+      <p class="text-halo-muted text-sm">Manage your account, subscription, and preferences.</p>
+    </div>
+
+    <div class="space-y-4 animate-slide-up">
+      <!-- Account Info -->
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+        <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Account</h3>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-halo-muted">Email</span>
+            <span id="account-email" class="text-sm font-medium" style="color: var(--halo-text);">--</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-halo-muted">Plan</span>
+            <span id="account-tier" class="text-sm font-medium" style="color: var(--halo-text);">Free</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-halo-muted">Scan Allowance</span>
+            <span id="scan-limit-text" class="text-sm" style="color: var(--halo-text);">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+        <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Actions</h3>
+        <div class="space-y-2">
+          <a href="/#pricing" id="upgrade-btn" class="flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer">
+            <div>
+              <div class="text-sm font-medium" style="color: var(--halo-text);">Upgrade Plan</div>
+              <div class="text-xs text-halo-muted">Get unlimited scans + AI verification</div>
+            </div>
+            <svg class="w-4 h-4 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+          </a>
+          <div id="billing-btn" class="hidden">
+            <button onclick="openBillingPortal()" class="w-full flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer text-left">
+              <div>
+                <div class="text-sm font-medium" style="color: var(--halo-text);">Manage Billing</div>
+                <div class="text-xs text-halo-muted">Update payment method, view invoices, cancel subscription</div>
+              </div>
+              <svg class="w-4 h-4 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <div id="billing-message" class="hidden mt-2 p-3 rounded-lg bg-halo-bg border border-halo-border text-sm text-halo-muted"></div>
+          </div>
+          <div>
+            <button onclick="changePassword()" class="w-full flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer text-left">
+              <div>
+                <div class="text-sm font-medium" style="color: var(--halo-text);">Change Password</div>
+                <div class="text-xs text-halo-muted">Update your account password</div>
+              </div>
+              <svg class="w-4 h-4 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <div id="password-message" class="hidden mt-2 p-3 rounded-lg bg-halo-bg border border-halo-border text-sm"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preferences -->
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
+        <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Preferences</h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm" style="color: var(--halo-text);">Email notifications</div>
+              <div class="text-xs text-halo-muted">Receive scan results and regression alerts</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked class="sr-only peer" onchange="updatePreference('emailNotifications', this.checked)">
+              <div class="w-9 h-5 bg-halo-border rounded-full peer peer-checked:bg-halo-accent transition-colors"></div>
+            </label>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm" style="color: var(--halo-text);">Auto-upload scan results</div>
+              <div class="text-xs text-halo-muted">Automatically save CLI scans to your dashboard</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer" onchange="updatePreference('autoUpload', this.checked)">
+              <div class="w-9 h-5 bg-halo-border rounded-full peer peer-checked:bg-halo-accent transition-colors"></div>
+            </label>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm" style="color: var(--halo-text);">Default severity filter</div>
+              <div class="text-xs text-halo-muted">Minimum severity to show in scans</div>
+            </div>
+            <select onchange="updatePreference('severityFilter', this.value)" class="text-xs bg-halo-bg border border-halo-border rounded px-2 py-1" style="color: var(--halo-text);">
+              <option value="all">All</option>
+              <option value="critical">Critical only</option>
+              <option value="high">High+</option>
+              <option value="medium">Medium+</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- License Key (Pro+) -->
+      <div id="license-key-section" class="hidden bg-halo-surface border border-halo-border rounded-xl p-5">
+        <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">License Key</h3>
+        <div class="flex items-center gap-2">
+          <code id="settings-license-key" class="flex-1 text-xs font-mono bg-halo-bg border border-halo-border rounded px-3 py-2 select-all" style="color: var(--halo-text);">Loading...</code>
+          <button onclick="copyLicenseKey()" class="px-3 py-2 bg-halo-accent text-white text-xs font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Copy</button>
+        </div>
+        <p class="text-xs text-halo-muted mt-2">Use this key to activate Pro features: <code class="text-halo-accent">runhalo activate &lt;key&gt;</code></p>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="bg-halo-surface border border-halo-red/20 rounded-xl p-5">
+        <h3 class="text-sm font-semibold mb-2" style="color: var(--halo-red);">Danger Zone</h3>
+        <button onclick="confirmDeleteAccount()" class="text-xs text-halo-red hover:underline">Delete my account and all scan data</button>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-halo-border py-8">
+    <div class="max-w-3xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
+      <span>&copy; 2026 Mindful Media. All rights reserved.</span>
+      <div class="flex gap-4">
+        <a href="/privacy.html" class="hover:text-halo-accent transition-colors">Privacy</a>
+        <a href="/terms.html" class="hover:text-halo-accent transition-colors">Terms</a>
+        <a href="https://github.com/runhalo/halo" class="hover:text-halo-accent transition-colors">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+    // ==================== Theme Toggle ====================
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      localStorage.setItem('halo-theme', isDark ? 'light' : 'dark');
+      updateThemeIcons();
+    }
+    function updateThemeIcons() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.getElementById('sun-icon')?.classList.toggle('hidden', !isDark);
+      document.getElementById('moon-icon')?.classList.toggle('hidden', isDark);
+    }
+    updateThemeIcons();
+
+    // ==================== Config ====================
+    const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentLicenseKey = null;
+    let currentTier = 'free';
+    let currentUserEmail = null;
+
+    // ==================== Init ====================
+    async function init() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+
+      if (!session) {
+        window.location.href = '/app/login.html?redirect=settings';
+        return;
+      }
+
+      const user = session.user;
+      currentUserEmail = user.email;
+
+      // Show user info
+      document.getElementById('account-email').textContent = user.email;
+
+      // Check license/tier
+      await checkTier(user.email);
+
+      // Show settings
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('settings-content').classList.remove('hidden');
+    }
+
+    async function checkTier(email) {
+      try {
+        const { data: licenses } = await supabaseClient
+          .from('halo_licenses')
+          .select('license_key, tier, status')
+          .eq('email', email)
+          .in('status', ['active', 'trialing'])
+          .limit(1);
+
+        if (licenses && licenses.length > 0) {
+          const license = licenses[0];
+          currentLicenseKey = license.license_key;
+          currentTier = license.tier;
+          const tierLabel = license.tier.charAt(0).toUpperCase() + license.tier.slice(1);
+          document.getElementById('account-tier').textContent = `${tierLabel} (${license.status})`;
+
+          if (['pro', 'business', 'enterprise'].includes(license.tier)) {
+            document.getElementById('upgrade-btn').classList.add('hidden');
+            document.getElementById('scan-limit-text').textContent = 'Unlimited scans';
+            // Show billing button
+            document.getElementById('billing-btn').classList.remove('hidden');
+            // Show license key section
+            document.getElementById('license-key-section').classList.remove('hidden');
+            const keyEl = document.getElementById('settings-license-key');
+            if (keyEl) keyEl.textContent = license.license_key;
+          }
+        } else {
+          // Free tier
+          document.getElementById('scan-limit-text').textContent = '5 scans per day on Free tier';
+        }
+      } catch (err) {
+        console.warn('License check error:', err);
+      }
+    }
+
+    // ==================== Actions ====================
+    async function openBillingPortal() {
+      const msgEl = document.getElementById('billing-message');
+      msgEl.classList.remove('hidden');
+      msgEl.innerHTML = 'Billing is managed through Stripe. Check your email for invoice links, or contact <a href="mailto:support@runhalo.dev" class="text-halo-accent hover:underline">support@runhalo.dev</a>.';
+    }
+
+    async function changePassword() {
+      const email = currentUserEmail;
+      if (!email || email === '--') return;
+
+      const msgEl = document.getElementById('password-message');
+      msgEl.classList.remove('hidden');
+
+      // Check for test email
+      if (email.endsWith('@halo-qa.test')) {
+        msgEl.style.color = 'var(--halo-red)';
+        msgEl.textContent = 'Password reset is not available for test accounts. Use a real email address.';
+        return;
+      }
+
+      try {
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + '/app/settings.html',
+        });
+        if (error) {
+          msgEl.style.color = 'var(--halo-red)';
+          msgEl.textContent = 'Error sending password reset: ' + error.message;
+        } else {
+          msgEl.style.color = 'var(--halo-green)';
+          msgEl.textContent = 'Password reset email sent to ' + email + '. Check your inbox.';
+        }
+      } catch (err) {
+        msgEl.style.color = 'var(--halo-red)';
+        msgEl.textContent = 'Failed to send password reset email. Please try again.';
+      }
+    }
+
+    async function signOut() {
+      await supabaseClient.auth.signOut();
+      window.location.href = '/app/';
+    }
+
+    function updatePreference(key, value) {
+      const prefs = JSON.parse(localStorage.getItem('halo_preferences') || '{}');
+      prefs[key] = value;
+      localStorage.setItem('halo_preferences', JSON.stringify(prefs));
+    }
+
+    function copyLicenseKey() {
+      const el = document.getElementById('settings-license-key');
+      if (el && el.textContent !== 'Loading...') {
+        navigator.clipboard.writeText(el.textContent).then(() => {
+          const btn = event.currentTarget;
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        });
+      }
+    }
+
+    function confirmDeleteAccount() {
+      if (confirm('Are you sure you want to delete your account? This will permanently remove all your scan data. This action cannot be undone.')) {
+        alert('Account deletion request received. Please contact support@runhalo.dev to confirm.');
+      }
+    }
+
+    // ==================== Start ====================
+    init();
+  </script>
+
+</body>
+</html>

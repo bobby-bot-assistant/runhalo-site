@@ -139,8 +139,7 @@
         Getting Started with Halo
       </h1>
       <p class="text-halo-muted text-base md:text-lg max-w-xl mx-auto leading-relaxed">
-        Preventive mental health infrastructure at the code level.
-        Set up in under 60 seconds.
+        Scan your codebase for children's privacy violations across 13 jurisdictions.
       </p>
     </section>
 
@@ -191,7 +190,7 @@
                   </svg>
                 </button>
               </div>
-              <p class="text-halo-subtle text-xs mt-2">Free tier: 5 scans/day, 25 COPPA 2.0 rules. <a href="https://runhalo.dev/#pricing" class="text-halo-accent hover:underline">Upgrade for unlimited scans + 160 rules.</a></p>
+              <p class="text-halo-subtle text-xs mt-2">Free tier: 5 scans/day, 25 COPPA 2.0 rules. <a href="https://runhalo.dev/#pricing" class="text-halo-accent hover:underline">Upgrade for unlimited scans + 180 rules.</a></p>
             </div>
           </div>
         </div>
@@ -333,6 +332,87 @@
       document.getElementById('moon-icon')?.classList.toggle('hidden', isDark);
     }
     updateThemeIcons();
+  </script>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    (async function() {
+      const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
+      const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) return; // Not logged in, keep default view
+
+      const user = session.user;
+      const email = user.email;
+
+      // Fetch license key
+      let licenseKey = null;
+      try {
+        const { data: licenses } = await supabaseClient
+          .from('halo_licenses')
+          .select('license_key, tier')
+          .eq('email', email)
+          .in('status', ['active', 'trialing'])
+          .limit(1);
+        if (licenses && licenses.length > 0) {
+          licenseKey = licenses[0].license_key;
+        }
+      } catch (e) { /* ignore */ }
+
+      // Fix 5: Transform page for returning users
+      const heroH1 = document.querySelector('section.pt-12 h1');
+      const heroP = document.querySelector('section.pt-12 p');
+      if (heroH1) heroH1.textContent = 'Run a New Scan';
+
+      // Hide steps 1 and 2, show simplified scan command
+      const setupSection = document.getElementById('setup');
+      if (setupSection) {
+        const scanCmd = licenseKey
+          ? `halo scan . --key ${licenseKey}`
+          : 'halo scan .';
+
+        setupSection.innerHTML = `
+          <div class="space-y-4">
+            <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
+              <div class="flex items-start gap-4">
+                <div class="flex-1">
+                  <h3 class="font-semibold text-lg mb-2">Scan your project</h3>
+                  <p class="text-halo-muted text-sm mb-3">Point Halo at your project root. You'll get a compliance score, severity breakdown, and fix suggestions in 10-30 seconds.</p>
+                  <div class="flex items-center bg-halo-bg border border-halo-border rounded-lg px-4 py-3 gap-2">
+                    <span class="text-halo-green font-mono text-sm">$</span>
+                    <code class="text-halo-accent-light font-mono text-sm flex-1">${scanCmd}</code>
+                    <button onclick="copyText('${scanCmd}', this)" class="text-halo-muted hover:text-halo-accent transition-colors p-1" title="Copy">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      </svg>
+                    </button>
+                  </div>
+                  ${licenseKey ? `<p class="text-halo-subtle text-xs mt-2">License key: <code class="text-halo-muted">${licenseKey}</code></p>` : '<p class="text-halo-subtle text-xs mt-2">Or use npx for a one-time scan: <code class="text-halo-muted">npx @runhalo/cli scan .</code></p>'}
+                </div>
+              </div>
+            </div>
+            <div class="text-center">
+              <a href="/app/dashboard.html" class="text-halo-accent hover:text-halo-accent-light text-sm transition-colors">View your dashboard &rarr;</a>
+            </div>
+          </div>
+        `;
+      }
+
+      // Update nav for logged-in state
+      const navLinks = document.querySelector('nav .flex.items-center.gap-4');
+      if (navLinks) {
+        // Add dashboard link before existing links
+        const dashLink = document.createElement('a');
+        dashLink.href = '/app/dashboard.html';
+        dashLink.className = 'text-halo-accent hover:text-halo-accent-light transition-colors font-medium';
+        dashLink.textContent = 'Dashboard';
+        navLinks.insertBefore(dashLink, navLinks.firstChild);
+      }
+    })();
   </script>
 
 </body>

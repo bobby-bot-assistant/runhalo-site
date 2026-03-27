@@ -169,6 +169,13 @@
           </svg>
           New Scan
         </a>
+        <a href="/app/settings.html" class="text-halo-muted hover:text-halo-accent transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          Settings
+        </a>
         <button onclick="signOut()" class="text-halo-muted hover:text-halo-red transition-colors">Sign Out</button>
         <button onclick="toggleTheme()" id="theme-toggle" class="text-halo-muted hover:text-halo-accent transition-colors" aria-label="Toggle theme">
           <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -471,118 +478,6 @@
       </div>
     </section>
 
-    <!-- Settings Section -->
-    <section class="mt-12 animate-slide-up" style="animation-delay: 0.3s;">
-      <h2 class="text-lg font-bold mb-4">Settings
-        <span class="info-tooltip"><span class="info-icon">i</span>
-          <span class="info-popup"><span class="info-popup-title">What is this?</span>Manage your account, subscription, scanning preferences, and notification settings.</span>
-        </span>
-      </h2>
-      <div class="space-y-4">
-        <!-- Account Info -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
-          <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Account</h3>
-          <div class="space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-sm text-halo-muted">Email</span>
-              <span id="account-email" class="text-sm font-medium" style="color: var(--halo-text);">--</span>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="text-sm text-halo-muted">Plan</span>
-              <span id="account-tier" class="text-sm font-medium" style="color: var(--halo-text);">Free</span>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="text-sm text-halo-muted">Scan Allowance</span>
-              <span id="scan-limit-text" class="text-sm" style="color: var(--halo-text);">--</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Actions -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
-          <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Actions</h3>
-          <div class="space-y-2">
-            <a href="/#pricing" id="upgrade-btn" class="flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer">
-              <div>
-                <div class="text-sm font-medium" style="color: var(--halo-text);">Upgrade Plan</div>
-                <div class="text-xs text-halo-muted">Get unlimited scans + AI verification</div>
-              </div>
-              <svg class="w-4 h-4 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
-            </a>
-            <button onclick="openBillingPortal()" id="billing-btn" class="hidden w-full flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer text-left">
-              <div>
-                <div class="text-sm font-medium" style="color: var(--halo-text);">Manage Billing</div>
-                <div class="text-xs text-halo-muted">Update payment method, view invoices, cancel subscription</div>
-              </div>
-              <svg class="w-4 h-4 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
-            <button onclick="changePassword()" class="w-full flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer text-left">
-              <div>
-                <div class="text-sm font-medium" style="color: var(--halo-text);">Change Password</div>
-                <div class="text-xs text-halo-muted">Update your account password</div>
-              </div>
-              <svg class="w-4 h-4 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Preferences -->
-        <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
-          <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Preferences</h3>
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-sm" style="color: var(--halo-text);">Email notifications</div>
-                <div class="text-xs text-halo-muted">Receive scan results and regression alerts</div>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" checked class="sr-only peer" onchange="updatePreference('emailNotifications', this.checked)">
-                <div class="w-9 h-5 bg-halo-border rounded-full peer peer-checked:bg-halo-accent transition-colors"></div>
-              </label>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-sm" style="color: var(--halo-text);">Auto-upload scan results</div>
-                <div class="text-xs text-halo-muted">Automatically save CLI scans to your dashboard</div>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" class="sr-only peer" onchange="updatePreference('autoUpload', this.checked)">
-                <div class="w-9 h-5 bg-halo-border rounded-full peer peer-checked:bg-halo-accent transition-colors"></div>
-              </label>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-sm" style="color: var(--halo-text);">Default severity filter</div>
-                <div class="text-xs text-halo-muted">Minimum severity to show in scans</div>
-              </div>
-              <select onchange="updatePreference('severityFilter', this.value)" class="text-xs bg-halo-bg border border-halo-border rounded px-2 py-1" style="color: var(--halo-text);">
-                <option value="all">All</option>
-                <option value="critical">Critical only</option>
-                <option value="high">High+</option>
-                <option value="medium">Medium+</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- License Key (Pro+) -->
-        <div data-tier-min="pro" class="hidden bg-halo-surface border border-halo-border rounded-xl p-5">
-          <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">License Key</h3>
-          <div class="flex items-center gap-2">
-            <code id="settings-license-key" class="flex-1 text-xs font-mono bg-halo-bg border border-halo-border rounded px-3 py-2 select-all" style="color: var(--halo-text);">Loading...</code>
-            <button onclick="copyLicenseKey()" class="px-3 py-2 bg-halo-accent text-white text-xs font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Copy</button>
-          </div>
-          <p class="text-xs text-halo-muted mt-2">Use this key to activate Pro features: <code class="text-halo-accent">runhalo activate &lt;key&gt;</code></p>
-        </div>
-
-        <!-- Danger Zone -->
-        <div class="bg-halo-surface border border-halo-red/20 rounded-xl p-5">
-          <h3 class="text-sm font-semibold mb-2" style="color: var(--halo-red);">Danger Zone</h3>
-          <button onclick="confirmDeleteAccount()" class="text-xs text-halo-red hover:underline">Delete my account and all scan data</button>
-        </div>
-      </div>
-    </section>
-
   </main>
 
   <footer class="border-t border-halo-border py-8">
@@ -648,7 +543,6 @@
 
       // Show user info
       document.getElementById('user-email-display').textContent = `, ${user.email}`;
-      document.getElementById('account-email').textContent = user.email;
 
       // Check license/tier
       await checkTier(user.email);
@@ -679,20 +573,6 @@
           currentTier = license.tier;
           const tierLabel = license.tier.charAt(0).toUpperCase() + license.tier.slice(1);
           document.getElementById('stat-tier').textContent = tierLabel;
-          document.getElementById('account-tier').textContent = `${tierLabel} (${license.status})`;
-
-          if (['pro', 'business', 'enterprise'].includes(license.tier)) {
-            document.getElementById('upgrade-btn').classList.add('hidden');
-            document.getElementById('scan-limit-text').textContent = 'Unlimited scans';
-            // Show billing portal button for paid tiers
-            document.getElementById('billing-btn').classList.remove('hidden');
-            // Show license key in settings
-            const keyEl = document.getElementById('settings-license-key');
-            if (keyEl) keyEl.textContent = license.license_key;
-          }
-        } else {
-          // Free tier — show usage quota
-          await showFreeUsage(email);
         }
       } catch (err) {
         console.warn('License check error:', err);
@@ -816,112 +696,9 @@
       });
     }
 
-    async function showFreeUsage(email) {
-      try {
-        // Get today's scan count from halo_events
-        const today = new Date();
-        today.setUTCHours(0, 0, 0, 0);
-
-        // Check localStorage license key for quota lookup
-        const storedLicense = JSON.parse(localStorage.getItem('halo_license') || '{}');
-        const licenseKey = storedLicense.key || currentLicenseKey;
-
-        let usedToday = 0;
-        if (licenseKey) {
-          const { count } = await supabaseClient
-            .from('halo_events')
-            .select('id', { count: 'exact', head: true })
-            .eq('event_type', 'scan')
-            .eq('actor_license_key', licenseKey)
-            .gte('created_at', today.toISOString());
-          usedToday = count || 0;
-        }
-
-        const remaining = Math.max(0, 5 - usedToday);
-        const limitEl = document.getElementById('scan-limit-text');
-        limitEl.innerHTML = `
-          <span class="${remaining === 0 ? 'text-halo-red' : 'text-halo-muted'}">${usedToday}/5 scans used today</span>
-          ${remaining === 0 ? ' · <a href="/#pricing" class="text-halo-accent hover:text-halo-accent-light underline underline-offset-2">Upgrade for unlimited</a>' : ''}
-        `;
-      } catch (err) {
-        document.getElementById('scan-limit-text').textContent = '5 scans per day on Free tier';
-      }
-    }
-
-    async function openBillingPortal() {
-      if (!currentLicenseKey) {
-        alert('No license found. Please contact support.');
-        return;
-      }
-
-      const btn = document.getElementById('billing-btn');
-      btn.textContent = 'Opening...';
-      btn.disabled = true;
-
-      try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/create-portal-session`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({
-            license_key: currentLicenseKey,
-            return_url: window.location.href,
-          }),
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to open billing portal');
-
-        window.location.href = data.url;
-      } catch (err) {
-        alert(err.message || 'Failed to open billing portal. Please try again.');
-        btn.innerHTML = `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg> Manage Billing`;
-        btn.disabled = false;
-      }
-    }
-
     async function signOut() {
       await supabaseClient.auth.signOut();
       window.location.href = '/app/';
-    }
-
-    // ==================== Settings Functions ====================
-    async function changePassword() {
-      const email = document.getElementById('account-email')?.textContent;
-      if (!email || email === '--') return;
-      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/app/dashboard.html',
-      });
-      if (error) {
-        alert('Error sending password reset: ' + error.message);
-      } else {
-        alert('Password reset email sent to ' + email + '. Check your inbox.');
-      }
-    }
-
-    function updatePreference(key, value) {
-      const prefs = JSON.parse(localStorage.getItem('halo_preferences') || '{}');
-      prefs[key] = value;
-      localStorage.setItem('halo_preferences', JSON.stringify(prefs));
-    }
-
-    function copyLicenseKey() {
-      const el = document.getElementById('settings-license-key');
-      if (el && el.textContent !== 'Loading...') {
-        navigator.clipboard.writeText(el.textContent).then(() => {
-          const btn = event.currentTarget;
-          btn.textContent = 'Copied!';
-          setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
-        });
-      }
-    }
-
-    function confirmDeleteAccount() {
-      if (confirm('Are you sure you want to delete your account? This will permanently remove all your scan data. This action cannot be undone.')) {
-        alert('Account deletion request received. Please contact support@runhalo.dev to confirm.');
-      }
     }
 
     // ==================== Tier Visibility ====================
@@ -964,7 +741,135 @@
     }
 
     async function downloadReport(format) {
-      alert('Report download coming soon. Use CLI: runhalo scan . --format ' + format);
+      // Get the latest scan data for report generation
+      const tbody = document.getElementById('scan-table-body');
+      const rows = tbody?.querySelectorAll('tr');
+      if (!rows || rows.length === 0) {
+        alert('No scan data available. Run a scan first.');
+        return;
+      }
+
+      // Gather scan summary from stats on the page
+      const totalScans = document.getElementById('stat-total-scans')?.textContent || '0';
+      const avgScore = document.getElementById('stat-avg-score')?.textContent || '--';
+      const totalViolations = document.getElementById('stat-total-violations')?.textContent || '0';
+      const tier = document.getElementById('stat-tier')?.textContent || 'Free';
+      const timestamp = new Date().toISOString();
+
+      if (format === 'html') {
+        // Open the latest scan's results page in a new tab
+        const latestViewLink = tbody.querySelector('a[href*="results.html"]');
+        if (latestViewLink) {
+          window.open(latestViewLink.href, '_blank');
+        }
+        return;
+      }
+
+      if (format === 'pdf') {
+        // Generate a text-based scan summary report
+        const lines = [
+          '===============================================',
+          '  HALO COMPLIANCE SCAN REPORT',
+          '===============================================',
+          '',
+          `Generated: ${new Date().toLocaleString()}`,
+          `Account Tier: ${tier}`,
+          '',
+          '--- SUMMARY ---',
+          `Total Scans: ${totalScans}`,
+          `Average Score: ${avgScore}`,
+          `Total Violations: ${totalViolations}`,
+          '',
+          '--- SCAN HISTORY ---',
+        ];
+
+        rows.forEach(row => {
+          const cells = row.querySelectorAll('td');
+          if (cells.length >= 6) {
+            const repo = cells[0]?.textContent?.trim() || '';
+            const score = cells[1]?.textContent?.trim() || '';
+            const grade = cells[2]?.textContent?.trim() || '';
+            const violations = cells[3]?.textContent?.trim() || '';
+            const source = cells[4]?.textContent?.trim() || '';
+            const date = cells[5]?.textContent?.trim() || '';
+            lines.push(`  ${repo} | Score: ${score} | Grade: ${grade} | Violations: ${violations} | Source: ${source} | ${date}`);
+          }
+        });
+
+        lines.push('', '===============================================');
+        lines.push('Report generated by Halo (https://runhalo.dev)');
+        lines.push('===============================================');
+
+        const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `halo-report-${new Date().toISOString().split('T')[0]}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+        return;
+      }
+
+      if (format === 'sarif') {
+        // Generate SARIF 2.1.0 JSON
+        const results = [];
+        rows.forEach(row => {
+          const cells = row.querySelectorAll('td');
+          if (cells.length >= 6) {
+            const repo = cells[0]?.textContent?.trim() || '';
+            const score = cells[1]?.textContent?.trim() || '';
+            const grade = cells[2]?.textContent?.trim() || '';
+            const violations = parseInt(cells[3]?.textContent?.trim() || '0', 10);
+            const date = cells[5]?.textContent?.trim() || '';
+            results.push({
+              ruleId: 'halo-scan-summary',
+              level: violations > 0 ? 'warning' : 'note',
+              message: {
+                text: `Scan of ${repo}: Score ${score}/100 (Grade ${grade}), ${violations} violation(s). Scanned on ${date}.`
+              },
+              properties: {
+                score: parseInt(score, 10),
+                grade: grade,
+                violations: violations,
+                repository: repo,
+              }
+            });
+          }
+        });
+
+        const sarif = {
+          "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+          version: "2.1.0",
+          runs: [{
+            tool: {
+              driver: {
+                name: "Halo",
+                informationUri: "https://runhalo.dev",
+                version: "1.1.0",
+                rules: [{
+                  id: "halo-scan-summary",
+                  shortDescription: { text: "Halo COPPA compliance scan summary" },
+                  helpUri: "https://runhalo.dev/app/"
+                }]
+              }
+            },
+            results: results,
+            invocations: [{
+              executionSuccessful: true,
+              startTimeUtc: timestamp
+            }]
+          }]
+        };
+
+        const blob = new Blob([JSON.stringify(sarif, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `halo-report-${new Date().toISOString().split('T')[0]}.sarif.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        return;
+      }
     }
 
     async function inviteMember() {

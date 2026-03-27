@@ -500,7 +500,23 @@
       // Top 3 violations
       const top3 = getTop3(allViolations);
       const topContainer = document.getElementById('top-violations');
-      topContainer.innerHTML = top3.map(v => renderViolationCard(v)).join('');
+      if (allViolations.length === 0) {
+        // Fallback: show summary card when no detailed violations in scan_json
+        const gradeLabel = grade || 'N/A';
+        const scoreLabel = score !== undefined ? score : '--';
+        const violCount = scan.total_violations || 0;
+        topContainer.innerHTML = `
+          <div class="bg-halo-surface border border-halo-border rounded-xl p-6 text-center">
+            <div class="text-3xl font-bold mb-2" style="color: var(--halo-text);">${scoreLabel}/100</div>
+            <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold mb-3 ${(GRADE_COLORS[gradeLabel] || GRADE_COLORS.F).bg} ${(GRADE_COLORS[gradeLabel] || GRADE_COLORS.F).text}">${gradeLabel}</div>
+            <p class="text-halo-muted text-sm mb-2">${violCount} violation(s) detected</p>
+            <p class="text-halo-subtle text-xs">Detailed findings available in CLI output.</p>
+            <p class="text-halo-subtle text-xs mt-1">Run <code class="text-halo-accent">halo scan . --format json</code> to see full violation details.</p>
+          </div>
+        `;
+      } else {
+        topContainer.innerHTML = top3.map(v => renderViolationCard(v)).join('');
+      }
 
       // Update share link
       const shareUrl = `${window.location.origin}/app/score.html?t=${scan.share_token}`;
