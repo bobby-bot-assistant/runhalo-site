@@ -86,6 +86,63 @@
       --halo-yellow-dim: #713f12;
     }
     body { background: var(--halo-bg); color: var(--halo-text); }
+
+    /* Info tooltip system */
+    .info-tooltip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      cursor: help;
+    }
+    .info-tooltip .info-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--halo-border);
+      color: var(--halo-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      font-style: normal;
+      margin-left: 6px;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .info-tooltip:hover .info-icon {
+      background: var(--halo-accent);
+      color: white;
+    }
+    .info-tooltip .info-popup {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 280px;
+      padding: 12px 14px;
+      background: var(--halo-surface);
+      border: 1px solid var(--halo-border);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      z-index: 50;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--halo-text);
+    }
+    .info-tooltip:hover .info-popup,
+    .info-tooltip:focus-within .info-popup {
+      display: block;
+    }
+    .info-popup-title {
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--halo-muted);
+      margin-bottom: 4px;
+    }
   </style>
   <script>
     const savedTheme = localStorage.getItem('halo-theme') || 'light';
@@ -173,7 +230,11 @@
     <!-- Scan History Table -->
     <section class="animate-slide-up" style="animation-delay: 0.2s;">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-bold">Scan History</h2>
+        <h2 class="text-lg font-bold">Scan History
+          <span class="info-tooltip"><span class="info-icon">i</span>
+            <span class="info-popup"><span class="info-popup-title">What is this?</span>Every scan you run is saved here. Track which repos you've scanned, your compliance grade, and how many violations were found. Click "View" to see the full breakdown for any scan.</span>
+          </span>
+        </h2>
         <a href="/app/" class="text-halo-accent hover:text-halo-accent-light text-sm flex items-center gap-1">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path d="M12 4v16m8-8H4" />
@@ -216,7 +277,11 @@
 
     <!-- Halo AI Review Board (Pro+) -->
     <section data-tier-min="pro" class="hidden mt-8 animate-slide-up">
-      <h2 class="text-lg font-bold mb-4">Halo AI Review Board</h2>
+      <h2 class="text-lg font-bold mb-4">Halo AI Review Board
+        <span class="info-tooltip"><span class="info-icon">i</span>
+          <span class="info-popup"><span class="info-popup-title">What is this?</span>When you run a Pro scan, Halo's AI analyzes every finding to separate real violations from false alarms. "Confirmed" means the AI verified it's a genuine compliance issue. "Removed" means the AI determined it was a false positive — saving you time on issues that don't matter.</span>
+        </span>
+      </h2>
       <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
         <p class="text-sm text-halo-muted mb-4">AI-powered verification eliminates false positives so you only see real compliance issues.</p>
         <div class="grid grid-cols-3 gap-4 mb-4">
@@ -276,7 +341,11 @@
 
     <!-- Compliance Trend (Pro+) -->
     <section data-tier-min="pro" class="hidden mt-8 animate-slide-up">
-      <h2 class="text-lg font-bold mb-4">Compliance Trend</h2>
+      <h2 class="text-lg font-bold mb-4">Compliance Trend
+        <span class="info-tooltip"><span class="info-icon">i</span>
+          <span class="info-popup"><span class="info-popup-title">What is this?</span>Your compliance score over your last 10 scans. Higher bars = better compliance. Green means you're improving, yellow means moderate risk, red means critical issues need attention. Track progress as you fix violations.</span>
+        </span>
+      </h2>
       <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
         <div id="trend-chart" class="h-48 flex items-end gap-1">
           <!-- Filled dynamically with bar chart -->
@@ -312,7 +381,11 @@
 
     <!-- Report Downloads (Pro+) -->
     <section data-tier-min="pro" class="hidden mt-8 animate-slide-up">
-      <h2 class="text-lg font-bold mb-4">Reports</h2>
+      <h2 class="text-lg font-bold mb-4">Reports
+        <span class="info-tooltip"><span class="info-icon">i</span>
+          <span class="info-popup"><span class="info-popup-title">What is this?</span>Download your scan results in different formats. PDF for sharing with legal/compliance teams. SARIF for GitHub Code Scanning integration. HTML for a shareable web report anyone can view.</span>
+        </span>
+      </h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <button onclick="downloadReport('pdf')" class="bg-halo-surface border border-halo-border rounded-xl p-5 text-left hover:border-halo-accent transition-colors">
           <div class="text-halo-accent text-lg mb-2">📄</div>
@@ -335,7 +408,11 @@
     <!-- Team Management (Business+) -->
     <section data-tier-min="business" class="hidden mt-8 animate-slide-up">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-bold">Team</h2>
+        <h2 class="text-lg font-bold">Team
+          <span class="info-tooltip"><span class="info-icon">i</span>
+            <span class="info-popup"><span class="info-popup-title">What is this?</span>Manage your team's access to Halo. Invite developers, assign roles (admin, member, viewer), and see who's running scans. Business tier supports up to 5 team members.</span>
+          </span>
+        </h2>
         <button onclick="inviteMember()" class="text-halo-accent hover:text-halo-accent-light text-sm flex items-center gap-1">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
           Invite Member
@@ -359,7 +436,11 @@
 
     <!-- Audit Trail (Business+) -->
     <section data-tier-min="business" class="hidden mt-8 animate-slide-up">
-      <h2 class="text-lg font-bold mb-4">Audit Trail</h2>
+      <h2 class="text-lg font-bold mb-4">Audit Trail
+        <span class="info-tooltip"><span class="info-icon">i</span>
+          <span class="info-popup"><span class="info-popup-title">What is this?</span>An immutable log of every action taken — scans run, reports generated, team changes, and compliance decisions. Required for regulatory audits. If a state AG asks "when did you last check?", this is your proof.</span>
+        </span>
+      </h2>
       <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
         <div id="audit-trail" class="space-y-3 max-h-64 overflow-y-auto">
           <p class="text-sm text-halo-muted">Loading audit trail...</p>
@@ -369,7 +450,11 @@
 
     <!-- Account Section -->
     <section class="mt-12 animate-slide-up" style="animation-delay: 0.3s;">
-      <h2 class="text-lg font-bold mb-4">Account</h2>
+      <h2 class="text-lg font-bold mb-4">Account
+        <span class="info-tooltip"><span class="info-icon">i</span>
+          <span class="info-popup"><span class="info-popup-title">What is this?</span>Your license details and billing management. Free users can upgrade to Pro for unlimited scans and AI verification. Pro/Business users can manage their Stripe subscription here.</span>
+        </span>
+      </h2>
       <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
