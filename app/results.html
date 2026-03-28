@@ -254,27 +254,79 @@
       </div>
     </section>
 
+    <!-- AI Review CTA (shown for scans with 10+ violations) -->
+    <div id="ai-review-cta" class="hidden mb-8 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-xl p-6 text-center animate-slide-up">
+      <h3 class="text-lg font-bold mb-2" style="color: var(--halo-text);">Remove False Positives with AI</h3>
+      <p class="text-sm text-halo-muted mb-4">The AI Review Board can analyze these findings and remove false positives — typically reducing violations by 85%.</p>
+      <button onclick="runAIReview()" id="ai-review-btn" class="px-6 py-2.5 bg-halo-accent text-white text-sm font-medium rounded-lg hover:bg-halo-accent-light transition-colors">
+        Run AI Review Board
+      </button>
+      <p class="text-xs text-halo-muted mt-2">Requires Pro plan ($29/mo) · ~10 seconds</p>
+    </div>
+
     <!-- Full Violations (authenticated users only) -->
     <section id="full-violations" class="hidden animate-slide-up">
-      <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
-        <svg class="w-5 h-5 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-        </svg>
-        All Violations
-        <span id="full-count" class="text-sm font-normal text-halo-muted"></span>
-      </h2>
-
-      <!-- Filters -->
-      <div class="flex flex-wrap gap-2 mb-4">
-        <button onclick="filterViolations('all')" class="filter-btn active px-3 py-1 rounded-full text-xs font-medium bg-halo-accent/20 text-halo-accent-light border border-halo-accent/30" data-filter="all">All</button>
-        <button onclick="filterViolations('critical')" class="filter-btn px-3 py-1 rounded-full text-xs font-medium bg-halo-surface text-halo-muted border border-halo-border hover:border-red-500/50" data-filter="critical">Critical</button>
-        <button onclick="filterViolations('high')" class="filter-btn px-3 py-1 rounded-full text-xs font-medium bg-halo-surface text-halo-muted border border-halo-border hover:border-orange-500/50" data-filter="high">High</button>
-        <button onclick="filterViolations('medium')" class="filter-btn px-3 py-1 rounded-full text-xs font-medium bg-halo-surface text-halo-muted border border-halo-border hover:border-yellow-500/50" data-filter="medium">Medium</button>
-        <button onclick="filterViolations('low')" class="filter-btn px-3 py-1 rounded-full text-xs font-medium bg-halo-surface text-halo-muted border border-halo-border hover:border-blue-500/50" data-filter="low">Low</button>
+      <!-- View toggle header -->
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold" style="color: var(--halo-text);">
+          All Violations <span id="full-count" class="text-halo-muted font-normal text-base">(0)</span>
+        </h3>
+        <div class="flex gap-2">
+          <button onclick="setView('severity')" id="view-severity" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-halo-accent/20 text-halo-accent border border-halo-accent/30">By Severity</button>
+          <button onclick="setView('file')" id="view-file" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-halo-surface text-halo-muted border border-halo-border hover:border-halo-accent/30">By File</button>
+        </div>
       </div>
 
-      <div id="all-violations-list" class="space-y-3">
-        <!-- Filled dynamically -->
+      <!-- Severity-grouped violations -->
+      <div id="severity-groups">
+        <!-- Critical -->
+        <div class="severity-group mb-4" data-severity="critical">
+          <button onclick="toggleSeverityGroup('critical')" class="w-full flex items-center justify-between p-3 bg-red-500/10 border border-red-500/20 rounded-lg hover:bg-red-500/15 transition-colors">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-red-500"></span>
+              <span class="text-sm font-semibold" style="color: var(--halo-text);">Critical</span>
+              <span id="critical-count" class="text-xs text-red-400 font-mono">0</span>
+            </div>
+            <span class="text-xs text-halo-muted">Fix these first — highest regulatory risk</span>
+          </button>
+          <div id="critical-violations" class="mt-2 space-y-2"></div>
+        </div>
+        <!-- High -->
+        <div class="severity-group mb-4" data-severity="high">
+          <button onclick="toggleSeverityGroup('high')" class="w-full flex items-center justify-between p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg hover:bg-orange-500/15 transition-colors">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+              <span class="text-sm font-semibold" style="color: var(--halo-text);">High</span>
+              <span id="high-count" class="text-xs text-orange-400 font-mono">0</span>
+            </div>
+            <span class="text-xs text-halo-muted">Fix these next</span>
+          </button>
+          <div id="high-violations" class="mt-2 space-y-2 hidden"></div>
+        </div>
+        <!-- Medium -->
+        <div class="severity-group mb-4" data-severity="medium">
+          <button onclick="toggleSeverityGroup('medium')" class="w-full flex items-center justify-between p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg hover:bg-yellow-500/15 transition-colors">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+              <span class="text-sm font-semibold" style="color: var(--halo-text);">Medium</span>
+              <span id="medium-count" class="text-xs text-yellow-400 font-mono">0</span>
+            </div>
+            <span class="text-xs text-halo-muted">Address when possible</span>
+          </button>
+          <div id="medium-violations" class="mt-2 space-y-2 hidden"></div>
+        </div>
+        <!-- Low -->
+        <div class="severity-group mb-4" data-severity="low">
+          <button onclick="toggleSeverityGroup('low')" class="w-full flex items-center justify-between p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg hover:bg-blue-500/15 transition-colors">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+              <span class="text-sm font-semibold" style="color: var(--halo-text);">Low</span>
+              <span id="low-count" class="text-xs text-blue-400 font-mono">0</span>
+            </div>
+            <span class="text-xs text-halo-muted">Informational</span>
+          </button>
+          <div id="low-violations" class="mt-2 space-y-2 hidden"></div>
+        </div>
       </div>
     </section>
 
@@ -533,8 +585,11 @@
         // Show all violations
         document.getElementById('paywall-gate').classList.add('hidden');
         document.getElementById('full-violations').classList.remove('hidden');
-        document.getElementById('full-count').textContent = `(${allViolations.length})`;
         renderAllViolations(allViolations);
+        // Show AI Review CTA for scans with 10+ violations
+        if (allViolations.length >= 10) {
+          document.getElementById('ai-review-cta').classList.remove('hidden');
+        }
         // Sprint 25: Render feedback section (uncertainty-weighted top 5)
         renderFeedbackSection(allViolations);
       } else if (scan.total_violations > 3) {
@@ -557,44 +612,155 @@
 
     function renderViolationCard(v) {
       const cfg = SEVERITY_CONFIG[v.severity] || SEVERITY_CONFIG.low;
+      const codeSnippet = v.codeSnippet
+        ? `<pre class="mt-2 text-xs font-mono bg-gray-900 text-gray-300 rounded-lg p-3 overflow-x-auto whitespace-pre"><code>${escapeHtml(v.codeSnippet)}</code></pre>`
+        : '';
+      const fixBadge = v.fixSuggestion
+        ? `<span class="text-xs text-halo-green bg-halo-green/10 px-2 py-0.5 rounded-full">Fix available</span>`
+        : '';
       return `
-        <div class="bg-halo-surface border border-halo-border rounded-lg p-4 hover:border-halo-accent/30 transition-colors">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="px-2 py-0.5 rounded text-xs font-medium ${cfg.bg} ${cfg.text}">${v.severity}</span>
-            <code class="text-xs text-halo-muted font-mono">${v.ruleId}</code>
+        <div class="violation-card bg-halo-surface border border-halo-border rounded-lg p-4 hover:border-halo-accent/30 transition-colors" data-severity="${v.severity}" data-file="${v.file || ''}">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-xs font-medium ${cfg.bg} ${cfg.text}">${v.severity}</span>
+              <code class="text-xs text-halo-muted font-mono">${v.ruleId}</code>
+              ${fixBadge}
+            </div>
+            <button onclick="copyPath('${(v.file || '').replace(/'/g, "\\'")}:${v.line || ''}')" class="text-xs text-halo-muted hover:text-halo-accent transition-colors" title="Copy file path">
+              <svg class="w-3.5 h-3.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+              </svg>
+              ${v.file || 'unknown'}:${v.line || '?'}
+            </button>
           </div>
-          <p class="text-sm mb-1" style="color: var(--halo-text);">${v.ruleName || v.message}</p>
-          <p class="text-xs text-halo-muted mb-2">${v.message}</p>
-          <div class="flex items-center justify-between">
-            <p class="text-xs text-halo-subtle font-mono">${v.file}:${v.line}</p>
-            ${v.fixSuggestion ? `<p class="text-xs text-halo-accent">${truncate(v.fixSuggestion, 60)}</p>` : ''}
-          </div>
+          <p class="text-sm mb-1" style="color: var(--halo-text);">${v.name || v.ruleName || v.ruleId}</p>
+          <p class="text-xs text-halo-muted">${v.description || v.message || ''}</p>
+          ${codeSnippet}
+          ${v.fixSuggestion ? `<div class="mt-2 p-2 bg-halo-green/5 border border-halo-green/20 rounded text-xs text-halo-muted"><span class="text-halo-green font-medium">Fix:</span> ${v.fixSuggestion}</div>` : ''}
         </div>
       `;
     }
 
     function renderAllViolations(violations) {
-      const container = document.getElementById('all-violations-list');
-      container.innerHTML = violations.map(v => renderViolationCard(v)).join('');
+      document.getElementById('full-count').textContent = `(${violations.length})`;
+      renderBySeverity(violations);
     }
 
-    function filterViolations(severity) {
-      // Update active button
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        const isActive = btn.dataset.filter === severity;
-        btn.className = `filter-btn px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-          isActive
-            ? 'bg-halo-accent/20 text-halo-accent-light border border-halo-accent/30'
-            : 'bg-halo-surface text-halo-muted border border-halo-border hover:border-halo-accent/30'
-        }`;
+    // Toggle severity group visibility
+    function toggleSeverityGroup(severity) {
+      const el = document.getElementById(`${severity}-violations`);
+      el.classList.toggle('hidden');
+    }
+
+    // View toggle (severity vs file)
+    let currentView = 'severity';
+    function setView(view) {
+      currentView = view;
+      document.getElementById('view-severity').className = view === 'severity'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-medium bg-halo-accent/20 text-halo-accent border border-halo-accent/30'
+        : 'px-3 py-1.5 rounded-lg text-xs font-medium bg-halo-surface text-halo-muted border border-halo-border hover:border-halo-accent/30';
+      document.getElementById('view-file').className = view === 'file'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-medium bg-halo-accent/20 text-halo-accent border border-halo-accent/30'
+        : 'px-3 py-1.5 rounded-lg text-xs font-medium bg-halo-surface text-halo-muted border border-halo-border hover:border-halo-accent/30';
+
+      if (view === 'severity') {
+        renderBySeverity(allViolations);
+      } else {
+        renderByFile(allViolations);
+      }
+    }
+
+    // Render violations grouped by severity
+    function renderBySeverity(violations) {
+      document.getElementById('severity-groups').classList.remove('hidden');
+      document.getElementById('file-groups')?.classList.add('hidden');
+
+      const groups = { critical: [], high: [], medium: [], low: [] };
+      for (const v of violations) {
+        (groups[v.severity] || groups.low).push(v);
+      }
+
+      for (const [sev, items] of Object.entries(groups)) {
+        document.getElementById(`${sev}-count`).textContent = items.length;
+        document.getElementById(`${sev}-violations`).innerHTML = items.map(v => renderViolationCard(v)).join('');
+      }
+
+      // Auto-expand critical if any exist
+      if (groups.critical.length > 0) {
+        document.getElementById('critical-violations').classList.remove('hidden');
+      }
+    }
+
+    // Render violations grouped by file
+    function renderByFile(violations) {
+      document.getElementById('severity-groups').classList.add('hidden');
+
+      let fileGroupsEl = document.getElementById('file-groups');
+      if (!fileGroupsEl) {
+        fileGroupsEl = document.createElement('div');
+        fileGroupsEl.id = 'file-groups';
+        document.getElementById('severity-groups').parentNode.appendChild(fileGroupsEl);
+      }
+      fileGroupsEl.classList.remove('hidden');
+
+      const byFile = {};
+      for (const v of violations) {
+        const file = v.file || 'unknown';
+        if (!byFile[file]) byFile[file] = [];
+        byFile[file].push(v);
+      }
+
+      // Sort by violation count descending
+      const sorted = Object.entries(byFile).sort((a, b) => b[1].length - a[1].length);
+
+      fileGroupsEl.innerHTML = sorted.map(([file, items]) => {
+        const critCount = items.filter(v => v.severity === 'critical').length;
+        const highCount = items.filter(v => v.severity === 'high').length;
+        return `
+          <div class="mb-4">
+            <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="w-full flex items-center justify-between p-3 bg-halo-surface border border-halo-border rounded-lg hover:border-halo-accent/30 transition-colors">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <code class="text-xs font-mono" style="color: var(--halo-text);">${file}</code>
+                <span class="text-xs text-halo-muted">${items.length} violation${items.length !== 1 ? 's' : ''}</span>
+              </div>
+              <div class="flex gap-1">
+                ${critCount > 0 ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/20 text-red-400">${critCount} crit</span>` : ''}
+                ${highCount > 0 ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-orange-500/20 text-orange-400">${highCount} high</span>` : ''}
+              </div>
+            </button>
+            <div class="mt-2 space-y-2 hidden">
+              ${items.map(v => renderViolationCard(v)).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Copy file path to clipboard
+    function copyPath(path) {
+      navigator.clipboard.writeText(path).then(() => {
+        // Brief visual feedback
       });
+    }
 
-      const filtered = severity === 'all'
-        ? allViolations
-        : allViolations.filter(v => v.severity === severity);
+    // Escape HTML for code snippets
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
 
-      renderAllViolations(filtered);
-      document.getElementById('full-count').textContent = `(${filtered.length})`;
+    // AI Review button handler
+    async function runAIReview() {
+      const btn = document.getElementById('ai-review-btn');
+      btn.disabled = true;
+      btn.textContent = 'Running AI Review...';
+      // This would call the ai-review edge function
+      // For now, show upgrade prompt
+      alert('AI Review Board requires a Pro license. Upgrade at runhalo.dev/#pricing');
+      btn.disabled = false;
+      btn.textContent = 'Run AI Review Board';
     }
 
     // ==================== Share ====================
