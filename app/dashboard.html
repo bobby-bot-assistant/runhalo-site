@@ -558,6 +558,47 @@
     </div>
   </div>
 
+  <!-- Create Organization Modal -->
+  <div id="create-org-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="bg-halo-surface border border-halo-border rounded-xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold" style="color: var(--halo-text);">Create Organization</h3>
+        <button onclick="document.getElementById('create-org-modal').classList.add('hidden')" class="text-halo-muted hover:text-halo-accent">&times;</button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="text-xs text-halo-muted mb-1 block">Organization Name</label>
+          <input id="create-org-name" type="text" placeholder="e.g. Acme Corp" class="w-full bg-halo-bg text-sm font-mono px-3 py-2 rounded border border-halo-border focus:border-halo-accent focus:outline-none" style="color: var(--halo-text);" />
+        </div>
+        <button onclick="submitCreateOrganization()" class="w-full px-4 py-2 bg-halo-accent text-white text-sm font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Invite Member Modal -->
+  <div id="invite-member-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="bg-halo-surface border border-halo-border rounded-xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold" style="color: var(--halo-text);">Invite Team Member</h3>
+        <button onclick="document.getElementById('invite-member-modal').classList.add('hidden')" class="text-halo-muted hover:text-halo-accent">&times;</button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="text-xs text-halo-muted mb-1 block">Email Address</label>
+          <input id="invite-member-email" type="email" placeholder="colleague@company.com" class="w-full bg-halo-bg text-sm font-mono px-3 py-2 rounded border border-halo-border focus:border-halo-accent focus:outline-none" style="color: var(--halo-text);" />
+        </div>
+        <div>
+          <label class="text-xs text-halo-muted mb-1 block">Role</label>
+          <select id="invite-member-role" class="w-full bg-halo-bg text-sm px-3 py-2 rounded border border-halo-border focus:border-halo-accent focus:outline-none" style="color: var(--halo-text);">
+            <option value="member">Member</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button onclick="submitInviteMember()" class="w-full px-4 py-2 bg-halo-accent text-white text-sm font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Send Invite</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="border-t border-halo-border py-8">
     <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
       <span>&copy; 2026 Mindful Media. All rights reserved.</span>
@@ -898,64 +939,27 @@
       }
 
       if (format === 'pdf') {
-        // Get the latest scan ID from the first row's View link
-        const latestLink = tbody.querySelector('a[href*="results.html"]');
-        const scanId = latestLink ? new URL(latestLink.href, window.location).searchParams.get('id') : null;
-
-        if (!scanId) {
-          // Fallback: fetch latest scan from Supabase
-          const { data: session } = await supabaseClient.auth.getSession();
-          if (!session?.session) { showToast('Please log in to download reports.', 'error'); return; }
-
-          const { data: scans } = await supabaseClient
-            .from('halo_scans')
-            .select('id')
-            .eq('user_id', session.session.user.id)
-            .order('created_at', { ascending: false })
-            .limit(1);
-
-          if (!scans || scans.length === 0) { showToast('No scans available for report.', 'info'); return; }
-
-          const latestScanId = scans[0].id;
-          // Call the edge function
-          try {
-            const resp = await fetch('https://wrfwcmyxxbafcdvxlmug.supabase.co/functions/v1/generate-compliance-report', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.session.access_token}`,
-              },
-              body: JSON.stringify({ scan_id: latestScanId, report_type: 'scan' }),
-            });
-
-            if (resp.ok) {
-              const pdfBlob = await resp.blob();
-              const url = URL.createObjectURL(pdfBlob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = `halo-compliance-report-${new Date().toISOString().split('T')[0]}.pdf`;
-              a.click();
-              URL.revokeObjectURL(url);
-            } else {
-              const err = await resp.text();
-              showToast('Report generation failed: ' + err, 'error');
-            }
-          } catch (e) {
-            showToast('Failed to generate report. Please try again.', 'error');
-          }
+        if (!currentLicenseKey) {
+          showToast('License key not found. Please log in again.', 'error');
           return;
         }
 
-        // Use scan ID from link
-        const { data: session } = await supabaseClient.auth.getSession();
+        // Get scan ID from the first row's View link
+        const latestLink = tbody.querySelector('a[href*="results.html"]');
+        const scanId = latestLink ? new URL(latestLink.href, window.location).searchParams.get('id') : null;
+
         try {
-          const resp = await fetch('https://wrfwcmyxxbafcdvxlmug.supabase.co/functions/v1/generate-compliance-report', {
+          const reqBody = { license_key: currentLicenseKey, report_type: 'scan' };
+          if (scanId) reqBody.scan_id = scanId;
+
+          const resp = await fetch(`${SUPABASE_URL}/functions/v1/generate-compliance-report`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session?.session?.access_token || ''}`,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'apikey': SUPABASE_ANON_KEY,
             },
-            body: JSON.stringify({ scan_id: scanId, report_type: 'scan' }),
+            body: JSON.stringify(reqBody),
           });
 
           if (resp.ok) {
@@ -967,10 +971,11 @@
             a.click();
             URL.revokeObjectURL(url);
           } else {
-            showToast('Report generation failed. Try: runhalo scan . --format pdf', 'error');
+            const err = await resp.text();
+            showToast('Report generation failed: ' + err, 'error');
           }
         } catch (e) {
-          showToast('Failed to generate report. Use CLI: runhalo scan . --format pdf', 'error');
+          showToast('Failed to generate report. Please try again.', 'error');
         }
         return;
       }
@@ -1208,6 +1213,7 @@
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${session.access_token}`,
+            'apikey': SUPABASE_ANON_KEY,
           },
           body: JSON.stringify({ action: 'list_members' }),
         });
@@ -1255,9 +1261,16 @@
       }
     }
 
-    async function createOrganization() {
-      const name = prompt('Enter your organization name:');
-      if (!name) return;
+    function createOrganization() {
+      document.getElementById('create-org-name').value = '';
+      document.getElementById('create-org-modal').classList.remove('hidden');
+    }
+
+    async function submitCreateOrganization() {
+      const name = document.getElementById('create-org-name').value.trim();
+      if (!name) { showToast('Please enter an organization name.', 'error'); return; }
+
+      document.getElementById('create-org-modal').classList.add('hidden');
 
       try {
         const { data: { session } } = await supabaseClient.auth.getSession();
@@ -1266,6 +1279,7 @@
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${session.access_token}`,
+            'apikey': SUPABASE_ANON_KEY,
           },
           body: JSON.stringify({ action: 'create_org', name }),
         });
@@ -1282,21 +1296,31 @@
       }
     }
 
-    async function inviteMember() {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if (!session) { showToast('Please log in to invite members.', 'error'); return; }
+    function inviteMember() {
+      document.getElementById('invite-member-email').value = '';
+      document.getElementById('invite-member-role').value = 'member';
+      document.getElementById('invite-member-modal').classList.remove('hidden');
+    }
 
-      const email = prompt('Enter team member email:');
-      if (!email) return;
+    async function submitInviteMember() {
+      const email = document.getElementById('invite-member-email').value.trim();
+      const role = document.getElementById('invite-member-role').value;
+      if (!email) { showToast('Please enter an email address.', 'error'); return; }
+
+      document.getElementById('invite-member-modal').classList.add('hidden');
 
       try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) { showToast('Please log in to invite members.', 'error'); return; }
+
         const res = await fetch(`${SUPABASE_URL}/functions/v1/org-invite`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${session.access_token}`,
+            'apikey': SUPABASE_ANON_KEY,
           },
-          body: JSON.stringify({ action: 'invite', email, role: 'member' }),
+          body: JSON.stringify({ action: 'invite', email, role }),
         });
 
         if (!res.ok) {
