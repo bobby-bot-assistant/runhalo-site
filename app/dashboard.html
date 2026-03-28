@@ -163,7 +163,7 @@
         <span class="text-halo-muted text-sm font-normal ml-1">Dashboard</span>
       </a>
       <div class="flex items-center gap-4 text-sm">
-        <a href="/app/" class="text-halo-muted hover:text-halo-accent transition-colors flex items-center gap-1.5">
+        <a href="#" onclick="showNewScanModal(); return false;" class="text-halo-muted hover:text-halo-accent transition-colors flex items-center gap-1.5">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
@@ -296,7 +296,8 @@
         </span>
       </h2>
       <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
-        <p class="text-sm text-halo-muted mb-4">AI-powered verification eliminates false positives so you only see real compliance issues.</p>
+        <p class="text-sm text-halo-muted mb-2">AI-powered verification eliminates false positives so you only see real compliance issues.</p>
+        <p id="ai-review-context" class="text-xs text-halo-subtle mb-4"></p>
         <div class="grid grid-cols-3 gap-4 mb-4">
           <div class="text-center p-3 rounded-lg bg-halo-bg border border-halo-border">
             <div class="text-xs text-halo-muted mb-1">Confirmed Violations</div>
@@ -383,8 +384,18 @@
         </span>
       </h2>
       <div class="bg-halo-surface border border-halo-border rounded-xl p-6">
-        <div id="trend-chart" class="h-48 flex items-end gap-1">
-          <!-- Filled dynamically with bar chart -->
+        <p id="trend-narrative" class="text-sm text-halo-muted mb-3"></p>
+        <div class="relative">
+          <!-- Grade B threshold line -->
+          <div class="absolute w-full border-t border-dashed border-halo-muted/30" style="bottom: 80%; pointer-events: none;">
+            <span class="absolute right-0 -top-4 text-[9px] text-halo-muted">Grade B (80)</span>
+          </div>
+          <div id="trend-chart" class="h-48 flex items-end gap-1">
+            <!-- Filled dynamically with bar chart -->
+          </div>
+        </div>
+        <div id="trend-empty" class="hidden h-48 flex items-center justify-center text-sm text-halo-muted">
+          Run at least 2 scans to see your compliance trend.
         </div>
         <div class="flex justify-between text-xs text-halo-muted mt-3">
           <span>Last 10 scans</span>
@@ -415,8 +426,8 @@
       </div>
     </section>
 
-    <!-- Report Downloads (Pro+) -->
-    <section data-tier-min="pro" class="hidden mt-8 animate-slide-up">
+    <!-- Report Downloads (Pro+ — visible but locked for Free) -->
+    <section data-tier-locked="pro" class="mt-8 animate-slide-up">
       <h2 class="text-lg font-bold mb-4">Reports
         <span class="info-tooltip"><span class="info-icon">i</span>
           <span class="info-popup"><span class="info-popup-title">What is this?</span>Download your scan results in different formats. PDF for sharing with legal/compliance teams. SARIF for GitHub Code Scanning integration. HTML for a shareable web report anyone can view.</span>
@@ -486,6 +497,47 @@
 
   </main>
 
+  <!-- New Scan Modal -->
+  <div id="new-scan-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="bg-halo-surface border border-halo-border rounded-xl p-6 max-w-lg w-full shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold" style="color: var(--halo-text);">Run a New Scan</h3>
+        <button onclick="document.getElementById('new-scan-modal').classList.add('hidden')" class="text-halo-muted hover:text-halo-accent">&times;</button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <p class="text-xs text-halo-muted mb-2">1. Install the CLI (if you haven't already)</p>
+          <div class="flex items-center gap-2">
+            <code class="flex-1 bg-halo-bg text-sm font-mono px-3 py-2 rounded border border-halo-border" style="color: var(--halo-text);">npm install -g @runhalo/cli</code>
+            <button onclick="navigator.clipboard.writeText('npm install -g @runhalo/cli');showToast('Copied!','success')" class="px-2 py-2 text-xs text-halo-muted hover:text-halo-accent border border-halo-border rounded">Copy</button>
+          </div>
+        </div>
+        <div id="scan-modal-activate" class="hidden">
+          <p class="text-xs text-halo-muted mb-2">2. Activate your license</p>
+          <div class="flex items-center gap-2">
+            <code id="scan-modal-activate-cmd" class="flex-1 bg-halo-bg text-sm font-mono px-3 py-2 rounded border border-halo-border" style="color: var(--halo-text);">halo activate --key YOUR_KEY</code>
+            <button onclick="navigator.clipboard.writeText(document.getElementById('scan-modal-activate-cmd').textContent);showToast('Copied!','success')" class="px-2 py-2 text-xs text-halo-muted hover:text-halo-accent border border-halo-border rounded">Copy</button>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs text-halo-muted mb-2" id="scan-modal-step-label">2. Run a scan in your project directory</p>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <code class="flex-1 bg-halo-bg text-sm font-mono px-3 py-2 rounded border border-halo-border" style="color: var(--halo-text);">halo scan .</code>
+              <button onclick="navigator.clipboard.writeText('halo scan .');showToast('Copied!','success')" class="px-2 py-2 text-xs text-halo-muted hover:text-halo-accent border border-halo-border rounded">Copy</button>
+            </div>
+            <div id="scan-modal-review" class="hidden flex items-center gap-2">
+              <code class="flex-1 bg-halo-bg text-sm font-mono px-3 py-2 rounded border border-halo-border" style="color: var(--halo-text);">halo scan . --review</code>
+              <button onclick="navigator.clipboard.writeText('halo scan . --review');showToast('Copied!','success')" class="px-2 py-2 text-xs text-halo-muted hover:text-halo-accent border border-halo-border rounded">Copy</button>
+              <span class="text-xs text-halo-accent whitespace-nowrap">+ AI Review</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-halo-subtle">Results will appear in your dashboard automatically after the scan completes.</p>
+      </div>
+    </div>
+  </div>
+
   <footer class="border-t border-halo-border py-8">
     <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
       <span>&copy; 2026 Mindful Media. All rights reserved.</span>
@@ -538,27 +590,54 @@
 
     // ==================== Init ====================
     async function init() {
-      const { data: { session } } = await supabaseClient.auth.getSession();
+      try {
+        // Wrap in timeout to prevent infinite spinner
+        const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 15000));
+        const load = async () => {
+          const { data: { session } } = await supabaseClient.auth.getSession();
 
-      if (!session) {
-        window.location.href = '/app/login.html?redirect=dashboard';
-        return;
+          if (!session) {
+            window.location.href = '/app/login.html?redirect=dashboard';
+            return;
+          }
+
+          const user = session.user;
+
+          // Show user info
+          document.getElementById('user-email-display').textContent = `, ${user.email}`;
+
+          // Check license/tier
+          await checkTier(user.email);
+
+          // Load scan history
+          await loadScans(user.id);
+
+          // Load tier-specific data
+          if (currentTier !== 'free') {
+            loadAIReviewStats(user.id);
+          }
+          if (currentTier === 'business' || currentTier === 'enterprise') {
+            loadTeamMembers();
+            loadAuditTrail(user.email);
+          }
+
+          // Show dashboard
+          document.getElementById('loading-state').classList.add('hidden');
+          document.getElementById('dashboard-content').classList.remove('hidden');
+        };
+
+        await Promise.race([load(), timeout]);
+      } catch (err) {
+        console.error('Dashboard init error:', err);
+        document.getElementById('loading-state').innerHTML = `
+          <div class="text-center py-12">
+            <p class="text-halo-muted mb-4">${err.message === 'timeout' ? 'Loading timed out. Please check your connection.' : 'Failed to load dashboard. Please try again.'}</p>
+            <button onclick="window.location.reload()" class="px-4 py-2 bg-halo-accent text-white text-sm font-medium rounded-lg hover:bg-halo-accent-light transition-colors">
+              Retry
+            </button>
+          </div>
+        `;
       }
-
-      const user = session.user;
-
-      // Show user info
-      document.getElementById('user-email-display').textContent = `, ${user.email}`;
-
-      // Check license/tier
-      await checkTier(user.email);
-
-      // Load scan history
-      await loadScans(user.id);
-
-      // Show dashboard
-      document.getElementById('loading-state').classList.add('hidden');
-      document.getElementById('dashboard-content').classList.remove('hidden');
     }
 
     let currentLicenseKey = null;
@@ -733,15 +812,42 @@
 
     function renderTrendChart(scans) {
       const chart = document.getElementById('trend-chart');
-      if (!chart || !scans || scans.length === 0) return;
+      const narrative = document.getElementById('trend-narrative');
+      const emptyState = document.getElementById('trend-empty');
+      if (!chart) return;
+
+      if (!scans || scans.length < 2) {
+        chart.classList.add('hidden');
+        if (emptyState) emptyState.classList.remove('hidden');
+        if (narrative) narrative.textContent = '';
+        return;
+      }
 
       const recent = scans.slice(0, 10).reverse();
+
+      // Compute trend narrative from last 5 scans
+      if (narrative && recent.length >= 2) {
+        const recentScores = recent.slice(-5).map(s => s.score);
+        const first = recentScores[0];
+        const last = recentScores[recentScores.length - 1];
+        const diff = last - first;
+        if (diff > 5) {
+          narrative.innerHTML = '<span class="text-green-400 font-medium">&#8593; Improving</span> — Your compliance posture is trending up. Keep scanning after each fix.';
+        } else if (diff < -5) {
+          narrative.innerHTML = '<span class="text-red-400 font-medium">&#8595; Attention needed</span> — Your compliance score is declining. Review recent violations.';
+        } else {
+          narrative.innerHTML = '<span class="text-halo-muted font-medium">&#8594; Stable</span> — Your compliance posture is holding steady.';
+        }
+      }
+
       chart.innerHTML = recent.map(scan => {
         const height = scan.score;
         const color = scan.score >= 80 ? 'bg-halo-green' : scan.score >= 60 ? 'bg-halo-yellow' : 'bg-halo-red';
+        const date = new Date(scan.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         return `<div class="flex-1 group relative">
+          <div class="text-[9px] text-halo-subtle text-center mb-1 opacity-0 group-hover:opacity-100 transition-opacity">${scan.score}</div>
           <div class="${color} rounded-t transition-all hover:opacity-80 cursor-pointer" style="height: ${height}%;" title="${scan.repo_name}: ${scan.score}/100 (${scan.grade})"></div>
-          <div class="text-[9px] text-halo-subtle text-center mt-1 truncate">${scan.repo_name?.substring(0, 6) || '?'}</div>
+          <div class="text-[9px] text-halo-subtle text-center mt-1 truncate">${date}</div>
         </div>`;
       }).join('');
     }
@@ -751,7 +857,7 @@
       const tbody = document.getElementById('scan-table-body');
       const rows = tbody?.querySelectorAll('tr');
       if (!rows || rows.length === 0) {
-        alert('No scan data available. Run a scan first.');
+        showToast('No scan data available. Run a scan first.', 'info');
         return;
       }
 
@@ -779,7 +885,7 @@
         if (!scanId) {
           // Fallback: fetch latest scan from Supabase
           const { data: session } = await supabaseClient.auth.getSession();
-          if (!session?.session) { alert('Please log in to download reports.'); return; }
+          if (!session?.session) { showToast('Please log in to download reports.', 'error'); return; }
 
           const { data: scans } = await supabaseClient
             .from('halo_scans')
@@ -788,7 +894,7 @@
             .order('created_at', { ascending: false })
             .limit(1);
 
-          if (!scans || scans.length === 0) { alert('No scans available for report.'); return; }
+          if (!scans || scans.length === 0) { showToast('No scans available for report.', 'info'); return; }
 
           const latestScanId = scans[0].id;
           // Call the edge function
@@ -812,10 +918,10 @@
               URL.revokeObjectURL(url);
             } else {
               const err = await resp.text();
-              alert('Report generation failed: ' + err);
+              showToast('Report generation failed: ' + err, 'error');
             }
           } catch (e) {
-            alert('Failed to generate report. Please try again.');
+            showToast('Failed to generate report. Please try again.', 'error');
           }
           return;
         }
@@ -841,10 +947,10 @@
             a.click();
             URL.revokeObjectURL(url);
           } else {
-            alert('Report generation failed. Try: runhalo scan . --format pdf');
+            showToast('Report generation failed. Try: runhalo scan . --format pdf', 'error');
           }
         } catch (e) {
-          alert('Failed to generate report. Use CLI: runhalo scan . --format pdf');
+          showToast('Failed to generate report. Use CLI: runhalo scan . --format pdf', 'error');
         }
         return;
       }
@@ -911,15 +1017,286 @@
       }
     }
 
+    // ==================== New Scan Modal ====================
+    function showNewScanModal() {
+      const modal = document.getElementById('new-scan-modal');
+      modal.classList.remove('hidden');
+      // Show license activation step if user has a license key
+      if (currentLicenseKey && currentTier !== 'free') {
+        document.getElementById('scan-modal-activate').classList.remove('hidden');
+        document.getElementById('scan-modal-activate-cmd').textContent = `halo activate --key ${currentLicenseKey}`;
+        document.getElementById('scan-modal-step-label').textContent = '3. Run a scan in your project directory';
+        document.getElementById('scan-modal-review').classList.remove('hidden');
+      }
+    }
+
+    // ==================== Toast ====================
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      const colors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-blue-600' };
+      toast.className = `fixed bottom-6 right-6 ${colors[type] || colors.info} text-white px-6 py-3 rounded-lg shadow-lg text-sm z-50 transition-opacity duration-300`;
+      toast.textContent = message;
+      toast.style.opacity = '1';
+      toast.classList.remove('hidden');
+      setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.classList.add('hidden'), 300); }, 4000);
+    }
+
+    // ==================== AI Review Board Stats (P0 #2) ====================
+    async function loadAIReviewStats(userId) {
+      try {
+        // Get latest scan that has been AI-reviewed (scan_json should have ai_review data)
+        const { data: scans } = await supabaseClient
+          .from('halo_scans')
+          .select('id, scan_json, total_violations')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        if (!scans || scans.length === 0) {
+          setAIReviewEmptyState();
+          return;
+        }
+
+        // Look for scan with AI review data in scan_json
+        let reviewData = null;
+        let reviewScan = null;
+        for (const scan of scans) {
+          if (scan.scan_json?.ai_review) {
+            reviewData = scan.scan_json.ai_review;
+            reviewScan = scan;
+            break;
+          }
+        }
+
+        if (!reviewData) {
+          setAIReviewEmptyState();
+          return;
+        }
+
+        // Populate stats
+        const confirmed = reviewData.confirmed || reviewData.summary?.confirmed || 0;
+        const dismissed = reviewData.dismissed || reviewData.summary?.dismissed || 0;
+        const total = reviewData.total || reviewData.summary?.total || (confirmed + dismissed);
+        const accuracy = total > 0 ? Math.round((confirmed / total) * 100) : 0;
+
+        document.getElementById('ai-confirmed-count').textContent = confirmed;
+        document.getElementById('ai-dismissed-count').textContent = dismissed;
+        document.getElementById('ai-accuracy').textContent = accuracy + '%';
+
+        // Regulatory exposure estimate
+        const exposure = reviewData.risk_summary?.total_exposure_usd || (confirmed * 5000);
+        document.getElementById('regulatory-exposure').textContent = exposure > 0 ? '$' + exposure.toLocaleString() : '$0';
+
+        // Fix coverage: count violations with fixSuggestion
+        if (reviewScan.scan_json?.violations) {
+          const withFix = reviewScan.scan_json.violations.filter(v => v.fixSuggestion).length;
+          const totalV = reviewScan.scan_json.violations.length;
+          const coverage = totalV > 0 ? Math.round((withFix / totalV) * 100) : 0;
+          document.getElementById('fix-coverage').textContent = coverage + '%';
+        }
+
+        // Add context line
+        const contextEl = document.getElementById('ai-review-context');
+        if (contextEl) {
+          contextEl.textContent = `AI Review removed ${dismissed} false positive${dismissed !== 1 ? 's' : ''}, saving ~${Math.ceil(dismissed * 0.5)}h of manual triage.`;
+        }
+
+      } catch (err) {
+        console.warn('AI Review stats error:', err);
+        setAIReviewEmptyState();
+      }
+    }
+
+    function setAIReviewEmptyState() {
+      document.getElementById('ai-confirmed-count').innerHTML = '<span class="text-sm text-halo-muted font-normal">—</span>';
+      document.getElementById('ai-dismissed-count').innerHTML = '<span class="text-sm text-halo-muted font-normal">—</span>';
+      document.getElementById('ai-accuracy').innerHTML = '<span class="text-sm text-halo-muted font-normal">—</span>';
+      document.getElementById('regulatory-exposure').innerHTML = '<span class="text-sm text-halo-muted font-normal">—</span>';
+      document.getElementById('fix-coverage').innerHTML = '<span class="text-sm text-halo-muted font-normal">—</span>';
+      // Add helpful empty state
+      const contextEl = document.getElementById('ai-review-context');
+      if (contextEl) {
+        contextEl.innerHTML = 'No AI reviews yet. Run: <code class="bg-halo-bg px-1.5 py-0.5 rounded text-xs font-mono">halo scan . --review</code>';
+      }
+    }
+
+    // ==================== Audit Trail (P0 #5) ====================
+    async function loadAuditTrail(email) {
+      const trail = document.getElementById('audit-trail');
+      try {
+        const { data: events, error } = await supabaseClient
+          .from('halo_events')
+          .select('event_type, actor_email, metadata, created_at')
+          .eq('actor_email', email)
+          .order('created_at', { ascending: false })
+          .limit(20);
+
+        if (error) throw error;
+
+        if (!events || events.length === 0) {
+          trail.innerHTML = '<p class="text-sm text-halo-muted">No events recorded yet. Events are logged when scans run, reports are generated, or team changes are made.</p>';
+          return;
+        }
+
+        const eventLabels = {
+          scan: 'Compliance scan completed',
+          signup: 'Account created',
+          activation: 'License activated',
+          scan_error: 'Scan failed',
+          fp_report: 'False positive reported',
+          subscription_created: 'Subscription started',
+          subscription_canceled: 'Subscription canceled',
+          license_expired: 'License expired',
+          suppression: 'Violations suppressed',
+          account_deletion_requested: 'Account deletion requested',
+          pack_published: 'Rule pack published',
+          rule_updated: 'Rule updated',
+        };
+
+        trail.innerHTML = events.map(e => {
+          const label = eventLabels[e.event_type] || e.event_type.replace(/_/g, ' ');
+          const time = new Date(e.created_at).toLocaleString('en-US', {
+            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+          });
+          const detail = e.metadata?.repo || e.metadata?.repo_name || e.metadata?.scan_id?.slice(0, 8) || '';
+          return `<div class="flex items-center justify-between py-2 border-b border-halo-border/30 last:border-0">
+            <div>
+              <span class="text-sm font-medium" style="color: var(--halo-text);">${label}</span>
+              ${detail ? `<span class="text-xs text-halo-muted ml-2">${detail}</span>` : ''}
+            </div>
+            <span class="text-xs text-halo-subtle whitespace-nowrap ml-4">${time}</span>
+          </div>`;
+        }).join('');
+
+      } catch (err) {
+        console.warn('Audit trail error:', err);
+        trail.innerHTML = '<p class="text-sm text-halo-muted">Unable to load audit trail. Please try again later.</p>';
+      }
+    }
+
+    // ==================== Team Management (P0 #4) ====================
+    async function loadTeamMembers() {
+      const tbody = document.getElementById('team-members-body');
+      try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) return;
+
+        // Call org-invite edge function to list members
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/org-invite`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ action: 'list_members' }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          // If no org exists, show create org prompt
+          if (res.status === 404 || err.error?.includes('no org') || err.error?.includes('not found')) {
+            tbody.innerHTML = `<tr><td colspan="3" class="py-6 text-center">
+              <p class="text-sm text-halo-muted mb-3">Create your organization to invite team members.</p>
+              <button onclick="createOrganization()" class="px-4 py-2 bg-halo-accent text-white text-sm font-medium rounded-lg hover:bg-halo-accent-light transition-colors">
+                Create Organization
+              </button>
+            </td></tr>`;
+            return;
+          }
+          throw new Error(err.error || 'Failed to load team');
+        }
+
+        const data = await res.json();
+        const members = data.members || [];
+
+        if (members.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-sm text-halo-muted">No team members yet. Click "Invite Member" to add your first team member.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = members.map(m => {
+          const statusColors = {
+            active: 'text-green-400 bg-green-500/10',
+            invited: 'text-yellow-400 bg-yellow-500/10',
+            deactivated: 'text-red-400 bg-red-500/10',
+          };
+          const sc = statusColors[m.status] || statusColors.invited;
+          return `<tr class="border-b border-halo-border/50">
+            <td class="px-4 py-3 text-sm">${m.email}</td>
+            <td class="px-4 py-3 text-center"><span class="text-xs text-halo-muted">${m.role}</span></td>
+            <td class="px-4 py-3 text-center"><span class="px-2 py-0.5 rounded text-xs ${sc}">${m.status}</span></td>
+          </tr>`;
+        }).join('');
+
+      } catch (err) {
+        console.warn('Team load error:', err);
+        tbody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-sm text-halo-muted">Unable to load team members. Please try again later.</td></tr>`;
+      }
+    }
+
+    async function createOrganization() {
+      const name = prompt('Enter your organization name:');
+      if (!name) return;
+
+      try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/org-invite`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ action: 'create_org', name }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || 'Failed to create organization');
+        }
+
+        showToast('Organization created! You can now invite team members.', 'success');
+        await loadTeamMembers();
+      } catch (err) {
+        showToast('Failed to create organization: ' + err.message, 'error');
+      }
+    }
+
     async function inviteMember() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) { showToast('Please log in to invite members.', 'error'); return; }
+
       const email = prompt('Enter team member email:');
       if (!email) return;
-      alert('Invite sent to ' + email + ' (coming soon)');
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/org-invite`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ action: 'invite', email, role: 'member' }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || 'Failed to send invite');
+        }
+
+        showToast('Invite sent to ' + email, 'success');
+        await loadTeamMembers();
+      } catch (err) {
+        showToast('Invite failed: ' + err.message, 'error');
+      }
     }
 
     // ==================== Start ====================
     init();
   </script>
+
+  <!-- Toast notification -->
+  <div id="toast" class="hidden fixed bottom-6 right-6 text-white px-6 py-3 rounded-lg shadow-lg text-sm z-50"></div>
 
 </body>
 </html>

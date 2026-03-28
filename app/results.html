@@ -229,27 +229,43 @@
         </div>
       </div>
 
-      <!-- Signup CTA Card -->
+      <!-- AI Review FOMO (shown to authenticated Free users) -->
+      <div id="ai-review-fomo" class="hidden mb-4 p-4 bg-halo-accent/5 border border-halo-accent/20 rounded-lg"></div>
+
+      <!-- Signup/Upgrade CTA Card -->
       <div class="bg-gradient-to-br from-halo-accent/10 to-halo-surface border border-halo-accent/30 rounded-xl p-8 text-center">
-        <h3 class="text-xl font-bold mb-2">See All Violations</h3>
-        <p class="text-halo-muted text-sm mb-6">
+        <h3 class="text-xl font-bold mb-2" id="paywall-title">See All Violations</h3>
+        <p class="text-halo-muted text-sm mb-6" id="paywall-description">
           Create a free account to view all <span id="hidden-count" class="font-semibold" style="color: var(--halo-text);">--</span> remaining violations with fix suggestions.
         </p>
 
-        <!-- Email signup -->
+        <!-- CTA buttons -->
         <div class="max-w-sm mx-auto space-y-3">
-          <a href="/app/login.html?redirect=results&scan_id=" id="signup-cta-link"
-             class="block w-full bg-halo-accent hover:bg-halo-accent-light text-white font-semibold py-3 px-6 rounded-lg transition-all text-center">
-            Sign Up Free
-          </a>
-          <p class="text-halo-subtle text-xs">
-            Already have an account?
-            <a href="/app/login.html?tab=login" class="text-halo-accent hover:text-halo-accent-light underline underline-offset-2">Log in</a>
-          </p>
-          <p class="text-halo-subtle text-xs">
-            Have a Pro license?
-            <a href="/app/login.html?tab=license" class="text-halo-accent hover:text-halo-accent-light underline underline-offset-2">Enter it here</a>
-          </p>
+          <!-- Unauthenticated: signup -->
+          <div id="signup-cta" class="space-y-3">
+            <a href="/app/login.html?redirect=results&scan_id=" id="signup-cta-link"
+               class="block w-full bg-halo-accent hover:bg-halo-accent-light text-white font-semibold py-3 px-6 rounded-lg transition-all text-center">
+              Sign Up Free
+            </a>
+            <p class="text-halo-subtle text-xs">
+              Already have an account?
+              <a href="/app/login.html?tab=login" class="text-halo-accent hover:text-halo-accent-light underline underline-offset-2">Log in</a>
+            </p>
+            <p class="text-halo-subtle text-xs">
+              Have a Pro license?
+              <a href="/app/login.html?tab=license" class="text-halo-accent hover:text-halo-accent-light underline underline-offset-2">Enter it here</a>
+            </p>
+          </div>
+          <!-- Authenticated Free: upgrade -->
+          <div id="upgrade-cta" class="hidden space-y-3">
+            <a href="/#pricing"
+               class="block w-full bg-halo-accent hover:bg-halo-accent-light text-white font-semibold py-3 px-6 rounded-lg transition-all text-center">
+              Upgrade to Pro
+            </a>
+            <p class="text-halo-subtle text-xs">
+              Pro includes AI Review Board, full violation access, PDF reports, and priority support.
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -261,7 +277,7 @@
       <button onclick="runAIReview()" id="ai-review-btn" class="px-6 py-2.5 bg-halo-accent text-white text-sm font-medium rounded-lg hover:bg-halo-accent-light transition-colors">
         Run AI Review Board
       </button>
-      <p class="text-xs text-halo-muted mt-2">Requires Pro plan ($29/mo) · ~10 seconds</p>
+      <p class="text-xs text-halo-muted mt-2" id="ai-review-plan-note">Requires Pro plan ($29/mo) · ~10 seconds</p>
     </div>
 
     <!-- Full Violations (authenticated users only) -->
@@ -421,6 +437,8 @@
     let currentScan = null;
     let allViolations = [];
     let isAuthenticated = false;
+    let currentTier = 'free';
+    let currentLicenseKey = null;
 
     // ==================== Severity Config ====================
     const SEVERITY_CONFIG = {
@@ -455,6 +473,24 @@
       if (isAuthenticated) {
         document.getElementById('auth-link').textContent = 'Dashboard';
         document.getElementById('auth-link').href = '/app/dashboard.html';
+        // Check tier
+        const email = session.user?.email;
+        if (email) {
+          try {
+            const { data: licenses } = await supabaseClient
+              .from('halo_licenses')
+              .select('license_key, tier, status')
+              .eq('email', email)
+              .in('status', ['active', 'trialing'])
+              .limit(1);
+            if (licenses && licenses.length > 0) {
+              currentTier = licenses[0].tier;
+              currentLicenseKey = licenses[0].license_key;
+            }
+          } catch (err) {
+            console.warn('License check error:', err);
+          }
+        }
       }
 
       // Fetch scan data
@@ -580,22 +616,44 @@
         signupLink.href = `/app/login.html?redirect=results&scan_id=${scan.id}`;
       }
 
-      // Show paywall or full violations
-      if (isAuthenticated) {
-        // Show all violations
+      // Show paywall or full violations based on TIER (not just auth)
+      const isPaidTier = isAuthenticated && currentTier !== 'free';
+      if (isPaidTier) {
+        // Pro/Business/Enterprise: show all violations
         document.getElementById('paywall-gate').classList.add('hidden');
         document.getElementById('full-violations').classList.remove('hidden');
         renderAllViolations(allViolations);
         // Show AI Review CTA for scans with 10+ violations
         if (allViolations.length >= 10) {
           document.getElementById('ai-review-cta').classList.remove('hidden');
+          // Update note for paid users
+          const planNote = document.getElementById('ai-review-plan-note');
+          if (planNote) planNote.textContent = 'Included with your ' + currentTier.charAt(0).toUpperCase() + currentTier.slice(1) + ' plan · ~10 seconds';
         }
         // Sprint 25: Render feedback section (uncertainty-weighted top 5)
         renderFeedbackSection(allViolations);
       } else if (scan.total_violations > 3) {
-        // Show paywall
+        // Free tier (authenticated or not): show paywall after top 3
         document.getElementById('paywall-gate').classList.remove('hidden');
         document.getElementById('hidden-count').textContent = scan.total_violations - 3;
+
+        if (isAuthenticated) {
+          // Authenticated Free user: show upgrade CTA instead of signup
+          document.getElementById('paywall-title').textContent = 'Unlock All Violations';
+          document.getElementById('paywall-description').innerHTML =
+            `Upgrade to Pro to view all <span class="font-semibold" style="color: var(--halo-text);">${scan.total_violations - 3}</span> remaining violations with AI-powered false positive removal.`;
+          document.getElementById('signup-cta').classList.add('hidden');
+          document.getElementById('upgrade-cta').classList.remove('hidden');
+
+          // Show AI Review FOMO for Free users with 10+ violations
+          if (allViolations.length >= 10) {
+            const fomoEl = document.getElementById('ai-review-fomo');
+            if (fomoEl) {
+              fomoEl.innerHTML = `<p class="text-sm text-halo-muted">AI Review Board would analyze <strong class="text-halo-accent">${allViolations.length} violations</strong> and typically removes 20-30% as false positives. <a href="/#pricing" class="text-halo-accent hover:underline font-medium">Upgrade to Pro</a></p>`;
+              fomoEl.classList.remove('hidden');
+            }
+          }
+        }
       }
     }
 
@@ -610,6 +668,23 @@
       return unique.slice(0, 3);
     }
 
+    // Regulatory context for "Why This Matters" (Socket-inspired)
+    const REGULATORY_CONTEXT = {
+      'coppa': 'COPPA 2.0 requires verifiable parental consent before collecting data from children under 13. FTC actively enforces with fines up to $50,120/violation.',
+      'aadc': 'UK Age Appropriate Design Code (AADC) mandates data protection impact assessments for services likely accessed by children. ICO can fine up to 4% of global revenue.',
+      'caloppa': 'CalOPPA requires privacy policies to disclose data collection practices. California AG enforces with 30-day cure period before penalties.',
+      'ferpa': 'FERPA protects student education records. Violations can result in loss of federal funding.',
+      'kosa': 'Kids Online Safety Act requires platforms to prevent harm to minors. FTC enforcement with substantial penalties.',
+      'asaa': 'App Store Accountability Act (TX/AL/LA/UT) requires age verification and content filtering for minors.',
+      'gdpr-k': 'GDPR Article 8 requires parental consent for data processing of children under 16. Fines up to 4% of global annual revenue.',
+    };
+
+    function getWhyThisMatters(ruleId) {
+      if (!ruleId) return '';
+      const prefix = ruleId.split('-')[0];
+      return REGULATORY_CONTEXT[prefix] || '';
+    }
+
     function renderViolationCard(v) {
       const cfg = SEVERITY_CONFIG[v.severity] || SEVERITY_CONFIG.low;
       const codeSnippet = v.codeSnippet
@@ -617,6 +692,10 @@
         : '';
       const fixBadge = v.fixSuggestion
         ? `<span class="text-xs text-halo-green bg-halo-green/10 px-2 py-0.5 rounded-full">Fix available</span>`
+        : '';
+      const whyMatters = getWhyThisMatters(v.ruleId);
+      const whyHtml = whyMatters
+        ? `<div class="mt-2 p-2 bg-halo-accent/5 border border-halo-accent/15 rounded text-xs text-halo-muted"><span class="text-halo-accent font-medium">Why this matters:</span> ${whyMatters}</div>`
         : '';
       return `
         <div class="violation-card bg-halo-surface border border-halo-border rounded-lg p-4 hover:border-halo-accent/30 transition-colors" data-severity="${v.severity}" data-file="${v.file || ''}">
@@ -637,6 +716,7 @@
           <p class="text-xs text-halo-muted">${v.description || v.message || ''}</p>
           ${codeSnippet}
           ${v.fixSuggestion ? `<div class="mt-2 p-2 bg-halo-green/5 border border-halo-green/20 rounded text-xs text-halo-muted"><span class="text-halo-green font-medium">Fix:</span> ${v.fixSuggestion}</div>` : ''}
+          ${whyHtml}
         </div>
       `;
     }
@@ -741,8 +821,13 @@
 
     // Copy file path to clipboard
     function copyPath(path) {
+      const btn = event && event.currentTarget;
       navigator.clipboard.writeText(path).then(() => {
-        // Brief visual feedback
+        if (btn) {
+          const originalHTML = btn.innerHTML;
+          btn.innerHTML = '<span class="text-halo-green">&#10003; Copied</span>';
+          setTimeout(() => { btn.innerHTML = originalHTML; }, 1500);
+        }
       });
     }
 
@@ -751,16 +836,155 @@
       return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    // AI Review button handler
+    // AI Review button handler — calls ai-review edge function
     async function runAIReview() {
       const btn = document.getElementById('ai-review-btn');
+      const licenseKey = currentLicenseKey || localStorage.getItem('halo_license_key');
+
+      if (!licenseKey || currentTier === 'free') {
+        showToast('AI Review Board requires a Pro license. Upgrade at runhalo.dev/#pricing', 'info');
+        return;
+      }
+
+      if (!currentScan || !allViolations.length) {
+        showToast('No violations to review.', 'info');
+        return;
+      }
+
+      // Cap at 50 violations per API limit
+      const violationsToReview = allViolations.slice(0, 50).map(v => ({
+        ruleId: v.ruleId,
+        severity: v.severity,
+        line: v.line || 0,
+        message: v.description || v.message || v.name || '',
+        filePath: v.file || v.filePath || '',
+        codeSnippet: v.codeSnippet || '',
+        ruleName: v.name || v.ruleName || '',
+        category: v.category || '',
+      }));
+
       btn.disabled = true;
-      btn.textContent = 'Running AI Review...';
-      // This would call the ai-review edge function
-      // For now, show upgrade prompt
-      alert('AI Review Board requires a Pro license. Upgrade at runhalo.dev/#pricing');
-      btn.disabled = false;
-      btn.textContent = 'Run AI Review Board';
+      btn.innerHTML = '<span class="inline-block animate-spin mr-2">&#9696;</span> Running AI Review... (~10s)';
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-review`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${licenseKey}`,
+          },
+          body: JSON.stringify({
+            license_key: licenseKey,
+            scan_id: currentScan.id,
+            violations: violationsToReview,
+          }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || `AI Review failed (${res.status})`);
+        }
+
+        const data = await res.json();
+        const summary = data.summary;
+
+        // Update CTA with results summary
+        const ctaEl = document.getElementById('ai-review-cta');
+        ctaEl.innerHTML = `
+          <h3 class="text-lg font-bold mb-3" style="color: var(--halo-text);">AI Review Complete</h3>
+          <div class="flex items-center justify-center gap-6 mb-3">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-400">${summary.confirmed}</div>
+              <div class="text-xs text-halo-muted">Confirmed</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-red-400">${summary.dismissed}</div>
+              <div class="text-xs text-halo-muted">False Positives</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-yellow-400">${summary.downgraded || 0}</div>
+              <div class="text-xs text-halo-muted">Downgraded</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-orange-400">${summary.escalated || 0}</div>
+              <div class="text-xs text-halo-muted">Escalated</div>
+            </div>
+          </div>
+          ${data.risk_summary ? `<p class="text-sm text-halo-muted">Estimated regulatory exposure: <strong class="text-red-400">$${data.risk_summary.total_exposure_usd.toLocaleString()}</strong></p>` : ''}
+          <p class="text-xs text-halo-subtle mt-2">Reviewed ${summary.total} violations in ${(data.latency_ms / 1000).toFixed(1)}s · Cost: $${data.cost.estimated_usd.toFixed(3)}</p>
+        `;
+
+        // Apply verdicts to violation cards
+        if (data.results && data.results.length > 0) {
+          applyAIVerdicts(data.results);
+        }
+
+        showToast(`AI Review complete: ${summary.dismissed} false positives removed`, 'success');
+
+      } catch (err) {
+        console.error('[ai-review] Error:', err);
+        btn.disabled = false;
+        btn.innerHTML = `
+          Run AI Review Board
+          <span class="block text-xs text-red-400 mt-1">${err.message} — click to retry</span>
+        `;
+        showToast(`AI Review failed: ${err.message}`, 'error');
+      }
+    }
+
+    // Apply AI Review verdicts to violation cards
+    function applyAIVerdicts(results) {
+      const verdictMap = new Map();
+      for (const r of results) {
+        verdictMap.set(r.ruleId, r);
+      }
+
+      const cards = document.querySelectorAll('.violation-card');
+      for (const card of cards) {
+        const ruleCode = card.querySelector('code');
+        if (!ruleCode) continue;
+        const ruleId = ruleCode.textContent.trim();
+        const result = verdictMap.get(ruleId);
+        if (!result) continue;
+
+        const verdictColors = {
+          confirmed: { bg: 'bg-green-500/10', text: 'text-green-400', label: 'Confirmed' },
+          dismissed: { bg: 'bg-red-500/10', text: 'text-red-400', label: 'False Positive' },
+          downgraded: { bg: 'bg-yellow-500/10', text: 'text-yellow-400', label: 'Downgraded' },
+          escalated: { bg: 'bg-orange-500/10', text: 'text-orange-400', label: 'Escalated' },
+        };
+        const vc = verdictColors[result.verdict] || verdictColors.confirmed;
+
+        // Add verdict badge
+        const header = card.querySelector('.flex.items-center.justify-between');
+        if (header) {
+          const badgeGroup = header.querySelector('.flex.items-center.gap-2');
+          if (badgeGroup) {
+            badgeGroup.insertAdjacentHTML('beforeend',
+              `<span class="px-2 py-0.5 rounded text-xs font-medium ${vc.bg} ${vc.text}">${vc.label}</span>`
+            );
+          }
+        }
+
+        // Dim dismissed cards
+        if (result.verdict === 'dismissed') {
+          card.style.opacity = '0.5';
+          card.insertAdjacentHTML('beforeend',
+            `<div class="mt-2 p-2 bg-red-500/5 border border-red-500/20 rounded text-xs text-halo-muted">
+              <span class="text-red-400 font-medium">Dismissed:</span> ${result.fpReason || result.clinicalContext || 'Identified as false positive by AI Review Board'}
+            </div>`
+          );
+        }
+
+        // Add clinical context for confirmed findings
+        if (result.verdict === 'confirmed' && result.clinicalContext) {
+          card.insertAdjacentHTML('beforeend',
+            `<div class="mt-2 p-2 bg-green-500/5 border border-green-500/20 rounded text-xs text-halo-muted">
+              <span class="text-green-400 font-medium">AI Analysis:</span> ${result.clinicalContext}
+            </div>`
+          );
+        }
+      }
     }
 
     // ==================== Share ====================
@@ -910,9 +1134,31 @@
       }
     }
 
+    // ==================== Toast ====================
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      const colors = {
+        success: 'bg-green-600',
+        error: 'bg-red-600',
+        info: 'bg-blue-600',
+      };
+      toast.className = `fixed bottom-6 right-6 ${colors[type] || colors.info} text-white px-6 py-3 rounded-lg shadow-lg text-sm z-50 transition-opacity duration-300`;
+      toast.textContent = message;
+      toast.style.opacity = '1';
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.classList.add('hidden'), 300);
+      }, 4000);
+    }
+
     // ==================== Start ====================
     init();
   </script>
+
+  <!-- Toast notification -->
+  <div id="toast" class="hidden fixed bottom-6 right-6 text-white px-6 py-3 rounded-lg shadow-lg text-sm z-50"></div>
 
 </body>
 </html>
