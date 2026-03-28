@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support | Halo</title>
+  <meta name="description" content="Get help with Halo COPPA compliance scanning. Browse FAQs or submit a support ticket.">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            halo: {
+              bg: 'var(--halo-bg)',
+              surface: 'var(--halo-surface)',
+              border: 'var(--halo-border)',
+              accent: 'var(--halo-accent)',
+              'accent-light': 'var(--halo-accent-light)',
+              green: 'var(--halo-green)',
+              'green-dim': 'var(--halo-green-dim)',
+              red: 'var(--halo-red)',
+              'red-dim': 'var(--halo-red-dim)',
+              yellow: 'var(--halo-yellow)',
+              'yellow-dim': 'var(--halo-yellow-dim)',
+              orange: '#f97316',
+              muted: 'var(--halo-muted)',
+              subtle: 'var(--halo-subtle)',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+            slideUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --halo-bg: #ffffff;
+      --halo-surface: #f9fafb;
+      --halo-border: #e5e7eb;
+      --halo-accent: #4f46e5;
+      --halo-accent-light: #6366f1;
+      --halo-text: #111827;
+      --halo-text-secondary: #4b5563;
+      --halo-muted: #6b7280;
+      --halo-subtle: #9ca3af;
+      --halo-green: #16a34a;
+      --halo-green-dim: #dcfce7;
+      --halo-red: #dc2626;
+      --halo-red-dim: #fef2f2;
+      --halo-yellow: #ca8a04;
+      --halo-yellow-dim: #fefce8;
+    }
+    [data-theme="dark"] {
+      --halo-bg: #0a0a0f;
+      --halo-surface: #12121a;
+      --halo-border: #1e1e2e;
+      --halo-accent: #6366f1;
+      --halo-accent-light: #818cf8;
+      --halo-text: #f9fafb;
+      --halo-text-secondary: #d1d5db;
+      --halo-muted: #6b7280;
+      --halo-subtle: #374151;
+      --halo-green: #22c55e;
+      --halo-green-dim: #166534;
+      --halo-red: #ef4444;
+      --halo-red-dim: #7f1d1d;
+      --halo-yellow: #eab308;
+      --halo-yellow-dim: #713f12;
+    }
+    body { background: var(--halo-bg); color: var(--halo-text); }
+
+    .faq-item { border-bottom: 1px solid var(--halo-border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease-out; }
+    .faq-answer.open { max-height: 300px; padding-top: 8px; padding-bottom: 16px; }
+    .faq-toggle { transition: transform 0.2s; }
+    .faq-toggle.open { transform: rotate(180deg); }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 100;
+      padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500;
+      transform: translateY(100px); opacity: 0; transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast-success { background: var(--halo-green); color: white; }
+    .toast-error { background: var(--halo-red); color: white; }
+    .toast-info { background: var(--halo-accent); color: white; }
+
+    .status-badge {
+      display: inline-flex; align-items: center; padding: 2px 8px;
+      border-radius: 9999px; font-size: 11px; font-weight: 600; text-transform: uppercase;
+    }
+    .status-open { background: var(--halo-yellow-dim); color: var(--halo-yellow); }
+    .status-in_progress { background: rgba(99,102,241,0.1); color: var(--halo-accent); }
+    .status-resolved { background: var(--halo-green-dim); color: var(--halo-green); }
+    .status-closed { background: var(--halo-border); color: var(--halo-muted); }
+  </style>
+  <script>
+    const savedTheme = localStorage.getItem('halo-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+</head>
+<body class="font-sans min-h-screen" style="color: var(--halo-text);">
+
+  <!-- Nav -->
+  <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/app/" class="flex items-center gap-2 hover:text-halo-accent-light transition-colors" style="color: var(--halo-text);">
+        <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
+          <circle cx="12" cy="12" r="4" fill="currentColor" />
+        </svg>
+        <span class="font-bold text-lg">Halo</span>
+        <span class="text-halo-muted text-sm font-normal ml-1">Support</span>
+      </a>
+      <div class="flex items-center gap-4 text-sm">
+        <a href="/app/dashboard.html" class="text-halo-muted hover:text-halo-accent transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4" />
+          </svg>
+          Dashboard
+        </a>
+        <a href="/app/" class="text-halo-muted hover:text-halo-accent transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          New Scan
+        </a>
+        <a href="/app/settings.html" class="text-halo-muted hover:text-halo-accent transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          Settings
+        </a>
+        <button id="auth-btn" onclick="handleAuthAction()" class="text-halo-muted hover:text-halo-accent transition-colors">Sign In</button>
+        <button onclick="toggleTheme()" id="theme-toggle" class="text-halo-muted hover:text-halo-accent transition-colors" aria-label="Toggle theme">
+          <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-6 pt-8 pb-24">
+
+    <!-- Header -->
+    <div class="mb-8 animate-fade-in">
+      <h1 class="text-2xl font-bold mb-1">Help & Support</h1>
+      <p class="text-halo-muted text-sm">Browse FAQs or submit a support ticket</p>
+    </div>
+
+    <!-- FAQ Search -->
+    <section class="mb-10 animate-slide-up">
+      <div class="relative mb-4">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input type="text" id="faq-search" placeholder="Search FAQs..." oninput="filterFaqs()"
+          class="w-full pl-10 pr-4 py-3 rounded-xl border border-halo-border bg-halo-surface text-sm focus:outline-none focus:border-halo-accent transition-colors"
+          style="color: var(--halo-text);" />
+      </div>
+
+      <div id="faq-list" class="bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
+        <!-- FAQ items rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Contact Support Form -->
+    <section class="mb-10 animate-slide-up" style="animation-delay: 0.1s;">
+      <h2 class="text-lg font-bold mb-4">Contact Support</h2>
+
+      <!-- Upgrade CTA (shown for free users) -->
+      <div id="upgrade-cta" class="hidden bg-halo-surface border border-halo-border rounded-xl p-6 text-center">
+        <div class="text-2xl mb-2">🔒</div>
+        <p class="text-sm font-medium" style="color: var(--halo-text);">Priority Support</p>
+        <p class="text-xs text-halo-muted mt-1">Support tickets are available for Pro, Business, and Enterprise users.</p>
+        <a href="/#pricing" class="inline-block mt-3 px-4 py-2 bg-halo-accent text-white text-xs font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Upgrade to Pro — $29/mo</a>
+      </div>
+
+      <!-- Auth CTA (shown for logged-out users) -->
+      <div id="auth-cta" class="hidden bg-halo-surface border border-halo-border rounded-xl p-6 text-center">
+        <p class="text-sm text-halo-muted mb-3">Sign in to submit a support ticket</p>
+        <a href="/app/login.html?redirect=support" class="inline-block px-4 py-2 bg-halo-accent text-white text-xs font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Sign In</a>
+      </div>
+
+      <!-- Support Form (shown for Pro+ users) -->
+      <form id="support-form" class="hidden bg-halo-surface border border-halo-border rounded-xl p-6 space-y-4" onsubmit="submitTicket(event)">
+        <div>
+          <label class="block text-xs font-medium text-halo-muted mb-1">Category</label>
+          <select id="ticket-category" required
+            class="w-full px-3 py-2 rounded-lg border border-halo-border bg-halo-bg text-sm focus:outline-none focus:border-halo-accent transition-colors"
+            style="color: var(--halo-text);">
+            <option value="">Select a category...</option>
+            <option value="bug">Bug Report</option>
+            <option value="billing">Billing</option>
+            <option value="feature_request">Feature Request</option>
+            <option value="how_to">How-To Question</option>
+            <option value="compliance_question">Compliance Question</option>
+            <option value="account">Account Issue</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-halo-muted mb-1">Subject</label>
+          <input type="text" id="ticket-subject" required maxlength="200" placeholder="Brief summary of your issue"
+            class="w-full px-3 py-2 rounded-lg border border-halo-border bg-halo-bg text-sm focus:outline-none focus:border-halo-accent transition-colors"
+            style="color: var(--halo-text);" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-halo-muted mb-1">Description</label>
+          <textarea id="ticket-description" required maxlength="5000" rows="5" placeholder="Describe your issue in detail..."
+            class="w-full px-3 py-2 rounded-lg border border-halo-border bg-halo-bg text-sm focus:outline-none focus:border-halo-accent transition-colors resize-y"
+            style="color: var(--halo-text);"></textarea>
+        </div>
+        <button type="submit" id="submit-btn"
+          class="w-full py-2.5 bg-halo-accent text-white text-sm font-medium rounded-lg hover:bg-halo-accent-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          Submit Ticket
+        </button>
+      </form>
+
+      <!-- AI Response (shown after submission if FAQ matched) -->
+      <div id="ai-response-box" class="hidden mt-4 bg-halo-accent/5 border border-halo-accent/20 rounded-xl p-5">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs font-semibold text-halo-accent uppercase tracking-wide">Quick Answer</span>
+        </div>
+        <p id="ai-response-text" class="text-sm" style="color: var(--halo-text);"></p>
+        <p class="text-xs text-halo-muted mt-3">If this doesn't resolve your issue, our team will follow up within 24 hours.</p>
+      </div>
+    </section>
+
+    <!-- Ticket History -->
+    <section class="animate-slide-up" style="animation-delay: 0.2s;">
+      <h2 class="text-lg font-bold mb-4">Your Tickets</h2>
+      <div id="tickets-loading" class="hidden text-center py-8">
+        <div class="animate-pulse space-y-3">
+          <div class="h-12 bg-halo-surface rounded-lg"></div>
+          <div class="h-12 bg-halo-surface rounded-lg"></div>
+        </div>
+      </div>
+      <div id="tickets-empty" class="hidden text-center py-8 bg-halo-surface border border-halo-border rounded-xl">
+        <p class="text-sm text-halo-muted">No support tickets yet</p>
+      </div>
+      <div id="tickets-auth-required" class="hidden text-center py-8 bg-halo-surface border border-halo-border rounded-xl">
+        <p class="text-sm text-halo-muted">Sign in to view your ticket history</p>
+      </div>
+      <div id="tickets-table" class="hidden bg-halo-surface border border-halo-border rounded-xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-halo-border text-halo-muted text-xs">
+                <th class="text-left px-4 py-3 font-medium">Subject</th>
+                <th class="text-center px-4 py-3 font-medium">Category</th>
+                <th class="text-center px-4 py-3 font-medium">Status</th>
+                <th class="text-left px-4 py-3 font-medium">Created</th>
+              </tr>
+            </thead>
+            <tbody id="tickets-body">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-halo-border py-8">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
+      <span>&copy; 2026 Mindful Media. All rights reserved.</span>
+      <div class="flex gap-4">
+        <a href="/privacy.html" class="hover:text-halo-accent transition-colors">Privacy</a>
+        <a href="/terms.html" class="hover:text-halo-accent transition-colors">Terms</a>
+        <a href="https://github.com/runhalo/halo" class="hover:text-halo-accent transition-colors">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast container -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+    // ==================== Theme Toggle ====================
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      localStorage.setItem('halo-theme', isDark ? 'light' : 'dark');
+      updateThemeIcons();
+    }
+    function updateThemeIcons() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.getElementById('sun-icon')?.classList.toggle('hidden', !isDark);
+      document.getElementById('moon-icon')?.classList.toggle('hidden', isDark);
+    }
+    updateThemeIcons();
+
+    // ==================== Toast ====================
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast toast-${type} show`;
+      setTimeout(() => toast.classList.remove('show'), 4000);
+    }
+
+    // ==================== Config ====================
+    const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    let currentTier = 'free';
+
+    // ==================== FAQ Data ====================
+    const FAQ_DATA = [
+      { q: 'How do I install Halo?', a: 'Install Halo CLI globally with <code>npm install -g @runhalo/cli</code>. Then run <code>halo scan &lt;repo-url&gt;</code> to scan any public GitHub repository. For private repos, use <code>halo scan .</code> inside your project directory.', tags: 'install setup npm cli getting started' },
+      { q: 'How do I run a scan?', a: 'Use <code>halo scan &lt;github-url&gt;</code> for public repos, or <code>halo scan .</code> for local projects. Add <code>--review</code> for AI-powered false positive filtering (Pro+). Results are saved to your dashboard automatically.', tags: 'scan run start how to' },
+      { q: 'How do I report a false positive?', a: 'Use <code>halo report-fp --rule &lt;rule-id&gt;</code> from the CLI, or click the "Report FP" button on any finding in the web results. Our team reviews every report and updates rules within 48 hours.', tags: 'false positive fp wrong incorrect' },
+      { q: 'What are the pricing tiers?', a: 'Free: 3 scans/month, basic rules. Pro ($29/mo): unlimited scans, AI review, PDF reports. Business ($99/mo): team access, audit trail, SARIF export. Enterprise: custom pricing with SLA and dedicated support.', tags: 'pricing cost plan free pro business enterprise' },
+      { q: 'How do I cancel my subscription?', a: 'Go to Settings &gt; Manage Billing in your dashboard. You can cancel anytime from the Stripe billing portal. Your access continues until the end of the current billing period.', tags: 'cancel subscription unsubscribe stop billing' },
+      { q: 'Can I get a refund?', a: 'We offer a 14-day money-back guarantee on all paid plans. Contact support with your account email and we will process your refund within 2 business days.', tags: 'refund money back charge overcharged' },
+      { q: 'How do I integrate Halo with CI/CD?', a: 'Generate an API key from Settings &gt; API Keys. Use it in your CI pipeline: <code>HALO_API_KEY=your-key halo scan . --ci</code>. We provide GitHub Action, GitLab CI, and Jenkins examples in our docs.', tags: 'api key integration ci cd github action' },
+      { q: 'What regulations does Halo check for?', a: 'Halo checks for COPPA (US), COPPA 2.0, AADC (UK Age-Appropriate Design Code), CalOPPA, state AG guidelines, and emerging children\'s privacy regulations across 13 jurisdictions. We update rules as regulations change.', tags: 'coppa compliance regulation law children privacy' },
+      { q: 'How do I add team members?', a: 'Team management is available on Business+ plans. Go to your dashboard and click "Invite Member" in the Team section. Members can be assigned admin, member, or viewer roles.', tags: 'team invite member organization org' },
+      { q: 'How do I export scan reports?', a: 'Pro+ users can download reports in PDF, SARIF, and HTML formats from the Reports section in the dashboard. SARIF exports integrate directly with GitHub Code Scanning.', tags: 'report pdf sarif export download' },
+      { q: 'How is the compliance score calculated?', a: 'Your score (0-100) is based on the number and severity of violations found relative to your codebase size. Grade A (90-100), B (80-89), C (70-79), D (60-69), F (&lt;60). AI review can adjust scores by removing false positives.', tags: 'score grade rating how scored calculation' },
+      { q: 'Is there a VS Code extension?', a: 'Yes! Search for "Halo" in the VS Code marketplace or install with <code>code --install-extension runhalo.halo-vscode</code>. It provides inline violation highlighting, one-click fixes, and scan results directly in your editor.', tags: 'vscode extension ide editor' },
+      { q: 'Is my code stored or shared?', a: 'For public GitHub repos, we scan via the GitHub API and do not store your source code. For CLI scans, analysis runs locally and only metadata (violation counts, rule IDs) is sent to our servers. No source code is uploaded unless you explicitly use the upload feature.', tags: 'data privacy security code sent upload' },
+      { q: 'I cannot sign in or need to reset my password.', a: 'Go to the login page and click "Forgot Password" to receive a reset link via email. If your account is locked, contact support and we will unlock it within 1 business day.', tags: 'password reset login sign in account locked' },
+      { q: 'How do I get a compliance badge for my repo?', a: 'After achieving a Grade A or B on a scan, you can embed a compliance badge in your README. Go to your scan results and click "Get Badge" to copy the markdown snippet. The badge updates automatically with each scan.', tags: 'badge compliance shield verified' },
+    ];
+
+    // ==================== FAQ Rendering ====================
+    function renderFaqs(filter = '') {
+      const container = document.getElementById('faq-list');
+      const search = filter.toLowerCase();
+      const filtered = FAQ_DATA.filter(f =>
+        !search || f.q.toLowerCase().includes(search) || f.tags.includes(search) || f.a.toLowerCase().includes(search)
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="p-6 text-center text-sm text-halo-muted">No matching FAQs found</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map((faq, i) => `
+        <div class="faq-item">
+          <button onclick="toggleFaq(${i})" class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-halo-border/20 transition-colors">
+            <span class="text-sm font-medium pr-4" style="color: var(--halo-text);">${faq.q}</span>
+            <svg id="faq-toggle-${i}" class="faq-toggle w-4 h-4 text-halo-muted flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div id="faq-answer-${i}" class="faq-answer px-5">
+            <p class="text-sm text-halo-muted leading-relaxed">${faq.a}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleFaq(index) {
+      const answer = document.getElementById(`faq-answer-${index}`);
+      const toggle = document.getElementById(`faq-toggle-${index}`);
+      answer?.classList.toggle('open');
+      toggle?.classList.toggle('open');
+    }
+
+    function filterFaqs() {
+      const search = document.getElementById('faq-search')?.value || '';
+      renderFaqs(search);
+    }
+
+    // ==================== Auth & Init ====================
+    async function init() {
+      renderFaqs();
+
+      const { data: { session } } = await supabaseClient.auth.getSession();
+
+      if (!session) {
+        document.getElementById('auth-btn').textContent = 'Sign In';
+        document.getElementById('auth-cta').classList.remove('hidden');
+        document.getElementById('tickets-auth-required').classList.remove('hidden');
+        return;
+      }
+
+      currentUser = session.user;
+      document.getElementById('auth-btn').textContent = 'Sign Out';
+
+      // Check tier
+      await checkTier(currentUser.email);
+
+      // Show appropriate form state
+      if (['pro', 'business', 'enterprise'].includes(currentTier)) {
+        document.getElementById('support-form').classList.remove('hidden');
+      } else {
+        document.getElementById('upgrade-cta').classList.remove('hidden');
+      }
+
+      // Load ticket history
+      await loadTickets();
+    }
+
+    async function checkTier(email) {
+      try {
+        const { data: licenses } = await supabaseClient
+          .from('halo_licenses')
+          .select('license_key, tier, status')
+          .eq('email', email)
+          .in('status', ['active', 'trialing'])
+          .limit(1);
+
+        if (licenses && licenses.length > 0) {
+          currentTier = licenses[0].tier;
+        }
+      } catch (err) {
+        console.warn('License check error:', err);
+      }
+    }
+
+    function handleAuthAction() {
+      if (currentUser) {
+        supabaseClient.auth.signOut().then(() => {
+          window.location.href = '/app/';
+        });
+      } else {
+        window.location.href = '/app/login.html?redirect=support';
+      }
+    }
+
+    // ==================== Submit Ticket ====================
+    async function submitTicket(e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      const category = document.getElementById('ticket-category').value;
+      const subject = document.getElementById('ticket-subject').value.trim();
+      const description = document.getElementById('ticket-description').value.trim();
+
+      if (!category || !subject || !description) {
+        showToast('Please fill in all fields', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Submit Ticket';
+        return;
+      }
+
+      try {
+        const resp = await fetch(`${SUPABASE_URL}/functions/v1/create-support-ticket`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: currentUser.email,
+            category,
+            subject,
+            description,
+          }),
+        });
+
+        const result = await resp.json();
+
+        if (!resp.ok) {
+          showToast(result.error || 'Failed to create ticket', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Submit Ticket';
+          return;
+        }
+
+        showToast('Ticket submitted successfully!', 'success');
+
+        // Show AI response if available
+        if (result.aiResponse) {
+          document.getElementById('ai-response-text').textContent = result.aiResponse;
+          document.getElementById('ai-response-box').classList.remove('hidden');
+        }
+
+        // Reset form
+        document.getElementById('support-form').reset();
+        btn.disabled = false;
+        btn.textContent = 'Submit Ticket';
+
+        // Reload tickets
+        await loadTickets();
+      } catch (err) {
+        console.error('Submit ticket error:', err);
+        showToast('Network error. Please try again.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Submit Ticket';
+      }
+    }
+
+    // ==================== Ticket History ====================
+    async function loadTickets() {
+      if (!currentUser) return;
+
+      document.getElementById('tickets-loading').classList.remove('hidden');
+      document.getElementById('tickets-empty').classList.add('hidden');
+      document.getElementById('tickets-table').classList.add('hidden');
+      document.getElementById('tickets-auth-required').classList.add('hidden');
+
+      try {
+        const { data: tickets, error } = await supabaseClient
+          .from('halo_support_tickets')
+          .select('id, subject, category, status, created_at')
+          .eq('email', currentUser.email)
+          .order('created_at', { ascending: false })
+          .limit(20);
+
+        document.getElementById('tickets-loading').classList.add('hidden');
+
+        if (error) throw error;
+
+        if (!tickets || tickets.length === 0) {
+          document.getElementById('tickets-empty').classList.remove('hidden');
+          return;
+        }
+
+        const categoryLabels = {
+          bug: 'Bug', billing: 'Billing', feature_request: 'Feature', how_to: 'How-To',
+          compliance_question: 'Compliance', account: 'Account', other: 'Other',
+        };
+
+        document.getElementById('tickets-table').classList.remove('hidden');
+        document.getElementById('tickets-body').innerHTML = tickets.map(t => {
+          const date = new Date(t.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+          const statusClass = `status-${t.status || 'open'}`;
+          const statusLabel = (t.status || 'open').replace('_', ' ');
+          return `
+            <tr class="border-b border-halo-border/50 hover:bg-halo-border/20 transition-colors">
+              <td class="px-4 py-3">
+                <span class="font-medium text-sm" style="color: var(--halo-text);">${t.subject}</span>
+              </td>
+              <td class="px-4 py-3 text-center">
+                <span class="text-xs text-halo-muted">${categoryLabels[t.category] || t.category}</span>
+              </td>
+              <td class="px-4 py-3 text-center">
+                <span class="status-badge ${statusClass}">${statusLabel}</span>
+              </td>
+              <td class="px-4 py-3 text-halo-muted text-xs">${date}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error('Load tickets error:', err);
+        document.getElementById('tickets-loading').classList.add('hidden');
+        document.getElementById('tickets-empty').classList.remove('hidden');
+      }
+    }
+
+    // ==================== Start ====================
+    init();
+  </script>
+
+</body>
+</html>

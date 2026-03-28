@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings | Halo</title>
-  <meta name="description" content="Manage your Halo account settings, preferences, and license key.">
+  <meta name="description" content="Manage your Halo account settings, preferences, and billing.">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -86,6 +86,32 @@
       --halo-yellow-dim: #713f12;
     }
     body { background: var(--halo-bg); color: var(--halo-text); }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 100;
+      padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500;
+      transform: translateY(100px); opacity: 0; transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast-success { background: var(--halo-green); color: white; }
+    .toast-error { background: var(--halo-red); color: white; }
+    .toast-info { background: var(--halo-accent); color: white; }
+
+    /* Toggle switch */
+    .toggle-track {
+      width: 40px; height: 22px; border-radius: 11px;
+      background: var(--halo-border); position: relative;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .toggle-track.active { background: var(--halo-accent); }
+    .toggle-thumb {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: white; position: absolute; top: 2px; left: 2px;
+      transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .toggle-track.active .toggle-thumb { transform: translateX(18px); }
   </style>
   <script>
     const savedTheme = localStorage.getItem('halo-theme') || 'light';
@@ -96,16 +122,35 @@
 
   <!-- Nav -->
   <nav class="border-b border-halo-border bg-halo-bg/80 backdrop-blur-sm sticky top-0 z-50">
-    <div class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <a href="/app/" class="flex items-center gap-2 hover:text-halo-accent-light transition-colors" style="color: var(--halo-text);">
         <svg class="w-7 h-7 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
           <circle cx="12" cy="12" r="4" fill="currentColor" />
         </svg>
         <span class="font-bold text-lg">Halo</span>
+        <span class="text-halo-muted text-sm font-normal ml-1">Settings</span>
       </a>
       <div class="flex items-center gap-4 text-sm">
-        <a href="/app/dashboard.html" class="text-halo-muted hover:text-halo-accent transition-colors">Dashboard</a>
+        <a href="/app/dashboard.html" class="text-halo-muted hover:text-halo-accent transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4" />
+          </svg>
+          Dashboard
+        </a>
+        <a href="/app/" class="text-halo-muted hover:text-halo-accent transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          New Scan
+        </a>
+        <a href="/app/settings.html" class="text-halo-accent flex items-center gap-1.5 font-medium">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          Settings
+        </a>
         <button onclick="signOut()" class="text-halo-muted hover:text-halo-red transition-colors">Sign Out</button>
         <button onclick="toggleTheme()" id="theme-toggle" class="text-halo-muted hover:text-halo-accent transition-colors" aria-label="Toggle theme">
           <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -119,133 +164,187 @@
   <div id="loading-state" class="max-w-3xl mx-auto px-6 pt-12">
     <div class="animate-pulse space-y-4">
       <div class="h-6 bg-halo-surface rounded w-48"></div>
-      <div class="h-24 bg-halo-surface rounded-lg"></div>
-      <div class="h-24 bg-halo-surface rounded-lg"></div>
+      <div class="h-32 bg-halo-surface rounded-lg"></div>
+      <div class="h-32 bg-halo-surface rounded-lg"></div>
+      <div class="h-32 bg-halo-surface rounded-lg"></div>
     </div>
   </div>
 
   <!-- Settings Content -->
   <main id="settings-content" class="hidden max-w-3xl mx-auto px-6 pt-8 pb-24">
 
+    <!-- Header -->
     <div class="mb-8 animate-fade-in">
       <h1 class="text-2xl font-bold mb-1">Settings</h1>
-      <p class="text-halo-muted text-sm">Manage your account, subscription, and preferences.</p>
+      <p class="text-halo-muted text-sm">Manage your account, preferences, and billing</p>
     </div>
 
-    <div class="space-y-4 animate-slide-up">
-      <!-- Account Info -->
-      <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
-        <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Account</h3>
-        <div class="space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-sm text-halo-muted">Email</span>
-            <span id="account-email" class="text-sm font-medium" style="color: var(--halo-text);">--</span>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-sm text-halo-muted">Plan</span>
-            <span id="account-tier" class="text-sm font-medium" style="color: var(--halo-text);">Free</span>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-sm text-halo-muted">Scan Allowance</span>
-            <span id="scan-limit-text" class="text-sm" style="color: var(--halo-text);">--</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
-        <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Actions</h3>
-        <div class="space-y-2">
-          <a href="/#pricing" id="upgrade-btn" class="flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer">
-            <div>
-              <div class="text-sm font-medium" style="color: var(--halo-text);">Upgrade Plan</div>
-              <div class="text-xs text-halo-muted">Get unlimited scans + AI verification</div>
-            </div>
-            <svg class="w-4 h-4 text-halo-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
-          </a>
-          <div id="billing-btn" class="hidden">
-            <button onclick="openBillingPortal()" class="w-full flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer text-left">
-              <div>
-                <div class="text-sm font-medium" style="color: var(--halo-text);">Manage Billing</div>
-                <div class="text-xs text-halo-muted">Update payment method, view invoices, cancel subscription</div>
-              </div>
-              <svg class="w-4 h-4 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
-            <div id="billing-message" class="hidden mt-2 p-3 rounded-lg bg-halo-bg border border-halo-border text-sm text-halo-muted"></div>
-          </div>
+    <!-- Account Info -->
+    <section class="mb-6 animate-slide-up">
+      <h2 class="text-lg font-bold mb-3">Account</h2>
+      <div class="bg-halo-surface border border-halo-border rounded-xl p-5 space-y-4">
+        <div class="flex items-center justify-between">
           <div>
-            <button onclick="changePassword()" class="w-full flex items-center justify-between p-3 rounded-lg border border-halo-border hover:border-halo-accent transition-colors cursor-pointer text-left">
-              <div>
-                <div class="text-sm font-medium" style="color: var(--halo-text);">Change Password</div>
-                <div class="text-xs text-halo-muted">Update your account password</div>
-              </div>
-              <svg class="w-4 h-4 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
-            <div id="password-message" class="hidden mt-2 p-3 rounded-lg bg-halo-bg border border-halo-border text-sm"></div>
+            <p class="text-xs text-halo-muted mb-0.5">Email</p>
+            <p id="account-email" class="text-sm font-medium">--</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-xs text-halo-muted mb-0.5">Plan</p>
+            <p id="account-plan" class="text-sm font-medium">Free</p>
+          </div>
+          <a href="/#pricing" class="text-xs text-halo-accent hover:text-halo-accent-light transition-colors">Upgrade</a>
+        </div>
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-xs text-halo-muted mb-0.5">Scan Allowance</p>
+            <p id="account-scans" class="text-sm font-medium">3 scans / month</p>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Preferences -->
+    <!-- Actions -->
+    <section class="mb-6 animate-slide-up" style="animation-delay: 0.1s;">
+      <h2 class="text-lg font-bold mb-3">Actions</h2>
+      <div class="bg-halo-surface border border-halo-border rounded-xl divide-y divide-halo-border">
+        <!-- Manage Billing -->
+        <button onclick="openBilling()" class="w-full flex items-center justify-between px-5 py-4 hover:bg-halo-border/20 transition-colors text-left">
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+            <div>
+              <p class="text-sm font-medium" style="color: var(--halo-text);">Manage Billing</p>
+              <p class="text-xs text-halo-muted">View invoices, update payment method, or cancel</p>
+            </div>
+          </div>
+          <svg class="w-4 h-4 text-halo-subtle" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <!-- Change Password -->
+        <button onclick="showPasswordChange()" class="w-full flex items-center justify-between px-5 py-4 hover:bg-halo-border/20 transition-colors text-left">
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-halo-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <div>
+              <p class="text-sm font-medium" style="color: var(--halo-text);">Change Password</p>
+              <p class="text-xs text-halo-muted">Update your account password</p>
+            </div>
+          </div>
+          <svg class="w-4 h-4 text-halo-subtle" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- Password Change Form (hidden by default) -->
+      <div id="password-form" class="hidden mt-3 bg-halo-surface border border-halo-border rounded-xl p-5 space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-halo-muted mb-1">New Password</label>
+          <input type="password" id="new-password" minlength="8" placeholder="Minimum 8 characters"
+            class="w-full px-3 py-2 rounded-lg border border-halo-border bg-halo-bg text-sm focus:outline-none focus:border-halo-accent transition-colors"
+            style="color: var(--halo-text);" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-halo-muted mb-1">Confirm Password</label>
+          <input type="password" id="confirm-password" minlength="8" placeholder="Re-enter new password"
+            class="w-full px-3 py-2 rounded-lg border border-halo-border bg-halo-bg text-sm focus:outline-none focus:border-halo-accent transition-colors"
+            style="color: var(--halo-text);" />
+        </div>
+        <div class="flex gap-2">
+          <button onclick="changePassword()" id="password-btn"
+            class="px-4 py-2 bg-halo-accent text-white text-sm font-medium rounded-lg hover:bg-halo-accent-light transition-colors disabled:opacity-50">
+            Update Password
+          </button>
+          <button onclick="hidePasswordChange()" class="px-4 py-2 text-sm text-halo-muted hover:text-halo-accent transition-colors">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Preferences -->
+    <section class="mb-6 animate-slide-up" style="animation-delay: 0.15s;">
+      <h2 class="text-lg font-bold mb-3">Preferences</h2>
+      <div class="bg-halo-surface border border-halo-border rounded-xl divide-y divide-halo-border">
+        <!-- Email Notifications -->
+        <div class="flex items-center justify-between px-5 py-4">
+          <div>
+            <p class="text-sm font-medium" style="color: var(--halo-text);">Email Notifications</p>
+            <p class="text-xs text-halo-muted">Receive scan results and compliance alerts via email</p>
+          </div>
+          <div id="toggle-notifications" class="toggle-track" onclick="togglePref('notifications')">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+        <!-- Auto-Upload -->
+        <div class="flex items-center justify-between px-5 py-4">
+          <div>
+            <p class="text-sm font-medium" style="color: var(--halo-text);">Auto-Upload Scan Results</p>
+            <p class="text-xs text-halo-muted">Automatically sync CLI scan results to the dashboard</p>
+          </div>
+          <div id="toggle-autoupload" class="toggle-track" onclick="togglePref('autoupload')">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+        <!-- Severity Filter -->
+        <div class="flex items-center justify-between px-5 py-4">
+          <div>
+            <p class="text-sm font-medium" style="color: var(--halo-text);">Default Severity Filter</p>
+            <p class="text-xs text-halo-muted">Minimum severity level shown in scan results</p>
+          </div>
+          <select id="severity-filter" onchange="savePref('severity', this.value)"
+            class="px-3 py-1.5 rounded-lg border border-halo-border bg-halo-bg text-sm focus:outline-none focus:border-halo-accent transition-colors"
+            style="color: var(--halo-text);">
+            <option value="all">All</option>
+            <option value="low">Low+</option>
+            <option value="medium">Medium+</option>
+            <option value="high">High+</option>
+            <option value="critical">Critical Only</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- License Key (Pro+) -->
+    <section id="license-section" class="hidden mb-6 animate-slide-up" style="animation-delay: 0.2s;">
+      <h2 class="text-lg font-bold mb-3">License Key</h2>
       <div class="bg-halo-surface border border-halo-border rounded-xl p-5">
-        <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">Preferences</h3>
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-sm" style="color: var(--halo-text);">Email notifications</div>
-              <div class="text-xs text-halo-muted">Receive scan results and regression alerts</div>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" checked class="sr-only peer" onchange="updatePreference('emailNotifications', this.checked)">
-              <div class="w-9 h-5 bg-halo-border rounded-full peer peer-checked:bg-halo-accent transition-colors"></div>
-            </label>
-          </div>
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-sm" style="color: var(--halo-text);">Auto-upload scan results</div>
-              <div class="text-xs text-halo-muted">Automatically save CLI scans to your dashboard</div>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" class="sr-only peer" onchange="updatePreference('autoUpload', this.checked)">
-              <div class="w-9 h-5 bg-halo-border rounded-full peer peer-checked:bg-halo-accent transition-colors"></div>
-            </label>
-          </div>
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-sm" style="color: var(--halo-text);">Default severity filter</div>
-              <div class="text-xs text-halo-muted">Minimum severity to show in scans</div>
-            </div>
-            <select onchange="updatePreference('severityFilter', this.value)" class="text-xs bg-halo-bg border border-halo-border rounded px-2 py-1" style="color: var(--halo-text);">
-              <option value="all">All</option>
-              <option value="critical">Critical only</option>
-              <option value="high">High+</option>
-              <option value="medium">Medium+</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- License Key (Pro+) -->
-      <div id="license-key-section" class="hidden bg-halo-surface border border-halo-border rounded-xl p-5">
-        <h3 class="text-sm font-semibold mb-3" style="color: var(--halo-text);">License Key</h3>
+        <p class="text-xs text-halo-muted mb-2">Use this key with the CLI or VS Code extension</p>
         <div class="flex items-center gap-2">
-          <code id="settings-license-key" class="flex-1 text-xs font-mono bg-halo-bg border border-halo-border rounded px-3 py-2 select-all" style="color: var(--halo-text);">Loading...</code>
-          <button onclick="copyLicenseKey()" class="px-3 py-2 bg-halo-accent text-white text-xs font-medium rounded-lg hover:bg-halo-accent-light transition-colors">Copy</button>
+          <code id="license-key-display" class="flex-1 px-3 py-2 rounded-lg bg-halo-bg border border-halo-border text-sm font-mono truncate" style="color: var(--halo-text);">
+            --
+          </code>
+          <button onclick="copyLicenseKey()" class="px-3 py-2 bg-halo-accent text-white text-xs font-medium rounded-lg hover:bg-halo-accent-light transition-colors flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+            </svg>
+            Copy
+          </button>
         </div>
-        <p class="text-xs text-halo-muted mt-2">Use this key to activate Pro features: <code class="text-halo-accent">runhalo activate &lt;key&gt;</code></p>
       </div>
+    </section>
 
-      <!-- Danger Zone -->
-      <div class="bg-halo-surface border border-halo-red/20 rounded-xl p-5">
-        <h3 class="text-sm font-semibold mb-2" style="color: var(--halo-red);">Danger Zone</h3>
-        <button onclick="confirmDeleteAccount()" class="text-xs text-halo-red hover:underline">Delete my account and all scan data</button>
+    <!-- Danger Zone -->
+    <section class="animate-slide-up" style="animation-delay: 0.25s;">
+      <h2 class="text-lg font-bold mb-3" style="color: var(--halo-red);">Danger Zone</h2>
+      <div class="border border-halo-red/30 rounded-xl p-5 bg-halo-red-dim/30">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium" style="color: var(--halo-text);">Delete Account</p>
+            <p class="text-xs text-halo-muted">Permanently delete your account and all associated data. This action cannot be undone.</p>
+          </div>
+          <button onclick="deleteAccount()" class="px-4 py-2 border border-halo-red/50 text-sm font-medium rounded-lg hover:bg-halo-red hover:text-white transition-colors flex-shrink-0" style="color: var(--halo-red);">
+            Delete Account
+          </button>
+        </div>
       </div>
-    </div>
+    </section>
 
   </main>
 
   <footer class="border-t border-halo-border py-8">
-    <div class="max-w-3xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-halo-muted text-xs">
       <span>&copy; 2026 Mindful Media. All rights reserved.</span>
       <div class="flex gap-4">
         <a href="/privacy.html" class="hover:text-halo-accent transition-colors">Privacy</a>
@@ -254,6 +353,9 @@
       </div>
     </div>
   </footer>
+
+  <!-- Toast container -->
+  <div id="toast" class="toast"></div>
 
   <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -274,15 +376,198 @@
     }
     updateThemeIcons();
 
+    // ==================== Toast ====================
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast toast-${type} show`;
+      setTimeout(() => toast.classList.remove('show'), 4000);
+    }
+
     // ==================== Config ====================
     const SUPABASE_URL = 'https://wrfwcmyxxbafcdvxlmug.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZndjbXl4eGJhZmNkdnhsbXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDc5MzIsImV4cCI6MjA4NzkyMzkzMn0.6Wj58QDuojPAY_ArVbZvjhcFVuX5VvzqjaEg0FkoYJI';
-
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let currentLicenseKey = null;
+    let currentUser = null;
     let currentTier = 'free';
-    let currentUserEmail = null;
+    let currentLicenseKey = null;
+    let stripeCustomerId = null;
+
+    const SCAN_ALLOWANCES = {
+      free: '3 scans / month',
+      pro: 'Unlimited scans',
+      business: 'Unlimited scans',
+      enterprise: 'Unlimited scans',
+    };
+
+    // ==================== Preferences ====================
+    function loadPrefs() {
+      const prefs = JSON.parse(localStorage.getItem('halo-prefs') || '{}');
+      // Notifications default to on
+      const notifToggle = document.getElementById('toggle-notifications');
+      if (prefs.notifications !== false) {
+        notifToggle.classList.add('active');
+      }
+      // Auto-upload
+      const uploadToggle = document.getElementById('toggle-autoupload');
+      if (prefs.autoupload) {
+        uploadToggle.classList.add('active');
+      }
+      // Severity
+      const severitySelect = document.getElementById('severity-filter');
+      if (prefs.severity) {
+        severitySelect.value = prefs.severity;
+      }
+    }
+
+    function togglePref(key) {
+      const prefs = JSON.parse(localStorage.getItem('halo-prefs') || '{}');
+      const toggle = document.getElementById(`toggle-${key}`);
+
+      if (key === 'notifications') {
+        prefs.notifications = !toggle.classList.contains('active');
+      } else if (key === 'autoupload') {
+        prefs.autoupload = !toggle.classList.contains('active');
+      }
+
+      toggle.classList.toggle('active');
+      localStorage.setItem('halo-prefs', JSON.stringify(prefs));
+      showToast('Preference saved', 'success');
+    }
+
+    function savePref(key, value) {
+      const prefs = JSON.parse(localStorage.getItem('halo-prefs') || '{}');
+      prefs[key] = value;
+      localStorage.setItem('halo-prefs', JSON.stringify(prefs));
+      showToast('Preference saved', 'success');
+    }
+
+    // ==================== Password Change ====================
+    function showPasswordChange() {
+      document.getElementById('password-form').classList.remove('hidden');
+    }
+
+    function hidePasswordChange() {
+      document.getElementById('password-form').classList.add('hidden');
+      document.getElementById('new-password').value = '';
+      document.getElementById('confirm-password').value = '';
+    }
+
+    async function changePassword() {
+      const newPwd = document.getElementById('new-password').value;
+      const confirmPwd = document.getElementById('confirm-password').value;
+
+      if (!newPwd || newPwd.length < 8) {
+        showToast('Password must be at least 8 characters', 'error');
+        return;
+      }
+      if (newPwd !== confirmPwd) {
+        showToast('Passwords do not match', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('password-btn');
+      btn.disabled = true;
+      btn.textContent = 'Updating...';
+
+      try {
+        const { error } = await supabaseClient.auth.updateUser({ password: newPwd });
+        if (error) throw error;
+
+        showToast('Password updated successfully', 'success');
+        hidePasswordChange();
+      } catch (err) {
+        console.error('Password update error:', err);
+        showToast(err.message || 'Failed to update password', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Update Password';
+      }
+    }
+
+    // ==================== Billing ====================
+    async function openBilling() {
+      if (currentTier === 'free') {
+        window.location.href = '/#pricing';
+        return;
+      }
+
+      // Check if stripe_customer_id is valid (not a fake/placeholder)
+      if (!stripeCustomerId || stripeCustomerId.startsWith('fake_') || stripeCustomerId.startsWith('test_') || stripeCustomerId === 'none') {
+        showToast('Billing portal is not available for your account. Please contact support.', 'error');
+        return;
+      }
+
+      try {
+        const resp = await fetch(`${SUPABASE_URL}/functions/v1/create-portal-session`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ customer_id: stripeCustomerId }),
+        });
+
+        const result = await resp.json();
+        if (result.url) {
+          window.location.href = result.url;
+        } else {
+          showToast('Unable to open billing portal. Please try again.', 'error');
+        }
+      } catch (err) {
+        console.error('Billing portal error:', err);
+        showToast('Failed to open billing portal', 'error');
+      }
+    }
+
+    // ==================== License Key ====================
+    function copyLicenseKey() {
+      if (!currentLicenseKey) {
+        showToast('No license key available', 'error');
+        return;
+      }
+      navigator.clipboard.writeText(currentLicenseKey).then(() => {
+        showToast('License key copied to clipboard', 'success');
+      }).catch(() => {
+        showToast('Failed to copy. Please select and copy manually.', 'error');
+      });
+    }
+
+    // ==================== Delete Account ====================
+    async function deleteAccount() {
+      const confirmed = confirm('Are you sure you want to delete your account? This will permanently remove all your data including scan history, support tickets, and preferences. This action cannot be undone.');
+      if (!confirmed) return;
+
+      const doubleConfirm = confirm('This is your final warning. Are you absolutely sure you want to permanently delete your account and all data?');
+      if (!doubleConfirm) return;
+
+      try {
+        // Mark account for deletion (actual deletion handled server-side)
+        await supabaseClient.from('halo_events').insert({
+          event_type: 'account_deletion_requested',
+          actor_email: currentUser.email,
+          metadata: { user_id: currentUser.id, requested_at: new Date().toISOString() },
+        });
+
+        showToast('Account deletion requested. You will receive a confirmation email.', 'info');
+
+        // Sign out after a brief delay
+        setTimeout(async () => {
+          await supabaseClient.auth.signOut();
+          window.location.href = '/';
+        }, 2000);
+      } catch (err) {
+        console.error('Delete account error:', err);
+        showToast('Failed to request account deletion. Please contact support.', 'error');
+      }
+    }
+
+    // ==================== Sign Out ====================
+    async function signOut() {
+      await supabaseClient.auth.signOut();
+      window.location.href = '/app/';
+    }
 
     // ==================== Init ====================
     async function init() {
@@ -293,26 +578,17 @@
         return;
       }
 
-      const user = session.user;
-      currentUserEmail = user.email;
+      currentUser = session.user;
 
-      // Show user info
-      document.getElementById('account-email').textContent = user.email;
+      // Display email
+      document.getElementById('account-email').textContent = currentUser.email;
 
       // Check license/tier
-      await checkTier(user.email);
-
-      // Show settings
-      document.getElementById('loading-state').classList.add('hidden');
-      document.getElementById('settings-content').classList.remove('hidden');
-    }
-
-    async function checkTier(email) {
       try {
         const { data: licenses } = await supabaseClient
           .from('halo_licenses')
-          .select('license_key, tier, status')
-          .eq('email', email)
+          .select('license_key, tier, status, stripe_customer_id')
+          .eq('email', currentUser.email)
           .in('status', ['active', 'trialing'])
           .limit(1);
 
@@ -320,92 +596,28 @@
           const license = licenses[0];
           currentLicenseKey = license.license_key;
           currentTier = license.tier;
-          const tierLabel = license.tier.charAt(0).toUpperCase() + license.tier.slice(1);
-          document.getElementById('account-tier').textContent = `${tierLabel} (${license.status})`;
+          stripeCustomerId = license.stripe_customer_id;
 
-          if (['pro', 'business', 'enterprise'].includes(license.tier)) {
-            document.getElementById('upgrade-btn').classList.add('hidden');
-            document.getElementById('scan-limit-text').textContent = 'Unlimited scans';
-            // Show billing button
-            document.getElementById('billing-btn').classList.remove('hidden');
-            // Show license key section
-            document.getElementById('license-key-section').classList.remove('hidden');
-            const keyEl = document.getElementById('settings-license-key');
-            if (keyEl) keyEl.textContent = license.license_key;
+          const tierLabel = license.tier.charAt(0).toUpperCase() + license.tier.slice(1);
+          document.getElementById('account-plan').textContent = tierLabel;
+          document.getElementById('account-scans').textContent = SCAN_ALLOWANCES[currentTier] || '3 scans / month';
+
+          // Show license key for Pro+
+          if (['pro', 'business', 'enterprise'].includes(currentTier)) {
+            document.getElementById('license-section').classList.remove('hidden');
+            document.getElementById('license-key-display').textContent = currentLicenseKey;
           }
-        } else {
-          // Free tier
-          document.getElementById('scan-limit-text').textContent = '5 scans per day on Free tier';
         }
       } catch (err) {
         console.warn('License check error:', err);
       }
-    }
 
-    // ==================== Actions ====================
-    async function openBillingPortal() {
-      const msgEl = document.getElementById('billing-message');
-      msgEl.classList.remove('hidden');
-      msgEl.innerHTML = 'Billing is managed through Stripe. Check your email for invoice links, or contact <a href="mailto:support@runhalo.dev" class="text-halo-accent hover:underline">support@runhalo.dev</a>.';
-    }
+      // Load preferences
+      loadPrefs();
 
-    async function changePassword() {
-      const email = currentUserEmail;
-      if (!email || email === '--') return;
-
-      const msgEl = document.getElementById('password-message');
-      msgEl.classList.remove('hidden');
-
-      // Check for test email
-      if (email.endsWith('@halo-qa.test')) {
-        msgEl.style.color = 'var(--halo-red)';
-        msgEl.textContent = 'Password reset is not available for test accounts. Use a real email address.';
-        return;
-      }
-
-      try {
-        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin + '/app/settings.html',
-        });
-        if (error) {
-          msgEl.style.color = 'var(--halo-red)';
-          msgEl.textContent = 'Error sending password reset: ' + error.message;
-        } else {
-          msgEl.style.color = 'var(--halo-green)';
-          msgEl.textContent = 'Password reset email sent to ' + email + '. Check your inbox.';
-        }
-      } catch (err) {
-        msgEl.style.color = 'var(--halo-red)';
-        msgEl.textContent = 'Failed to send password reset email. Please try again.';
-      }
-    }
-
-    async function signOut() {
-      await supabaseClient.auth.signOut();
-      window.location.href = '/app/';
-    }
-
-    function updatePreference(key, value) {
-      const prefs = JSON.parse(localStorage.getItem('halo_preferences') || '{}');
-      prefs[key] = value;
-      localStorage.setItem('halo_preferences', JSON.stringify(prefs));
-    }
-
-    function copyLicenseKey() {
-      const el = document.getElementById('settings-license-key');
-      if (el && el.textContent !== 'Loading...') {
-        navigator.clipboard.writeText(el.textContent).then(() => {
-          const btn = event.currentTarget;
-          btn.textContent = 'Copied!';
-          setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
-        });
-      }
-    }
-
-    function confirmDeleteAccount() {
-      if (confirm('Are you sure you want to delete your account? This will permanently remove all your scan data. This action cannot be undone.')) {
-        alert('Account deletion request received. Please contact support@runhalo.dev to confirm.');
-      }
+      // Show content
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('settings-content').classList.remove('hidden');
     }
 
     // ==================== Start ====================
