@@ -674,10 +674,24 @@
 
       // Show AI Review CTA for ALL authenticated users with violations
       // AI Review is free for all tiers (Sprint 34 business model shift)
+      // But respect rate limiting: if scan was flagged as not eligible, show upgrade prompt
       if (isAuthenticated && allViolations.length > 0 && scan.ai_review_status !== 'complete') {
         document.getElementById('ai-review-cta').classList.remove('hidden');
         const planNote = document.getElementById('ai-review-plan-note');
-        if (planNote) {
+        const btn = document.getElementById('ai-review-btn');
+
+        // Check if rate-limited (ai_review_status === 'skipped' means rate limit hit)
+        if (scan.ai_review_status === 'skipped' && currentTier === 'free') {
+          // Rate limited — disable button, show upgrade prompt
+          if (btn) {
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btn.innerHTML = 'Daily AI Review Limit Reached';
+          }
+          if (planNote) {
+            planNote.innerHTML = 'Free tier: 2 AI-reviewed scans/day. <a href="/#pricing" class="text-halo-accent hover:underline">Upgrade to Pro</a> for unlimited AI Reviews.';
+          }
+        } else if (planNote) {
           const tierLabel = currentTier.charAt(0).toUpperCase() + currentTier.slice(1);
           const agentType = currentTier === 'free' ? 'single AI agent' : '3-agent tribunal';
           planNote.textContent = `Included with your ${tierLabel} plan · ${agentType} · ~10 seconds`;
@@ -944,6 +958,20 @@
 
           if (!res.ok) {
             const err = await res.json().catch(() => ({}));
+            // Handle rate limiting specifically
+            if (res.status === 429 || err.rate_limited) {
+              if (btn) {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.innerHTML = 'Daily AI Review Limit Reached';
+              }
+              const planNote = document.getElementById('ai-review-plan-note');
+              if (planNote) {
+                planNote.innerHTML = 'Free tier: 2 AI-reviewed scans/day. <a href="/#pricing" class="text-halo-accent hover:underline">Upgrade to Pro</a> for unlimited AI Reviews.';
+              }
+              showToast('Daily AI Review limit reached. Upgrade to Pro for unlimited reviews.', 'info');
+              return; // Don't throw — graceful rate limit handling
+            }
             throw new Error(err.error || `AI Review batch ${batchNum} failed (${res.status})`);
           }
 
