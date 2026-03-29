@@ -273,11 +273,11 @@
     <!-- AI Review CTA (shown for scans with 10+ violations) -->
     <div id="ai-review-cta" class="hidden mb-8 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-xl p-6 text-center animate-slide-up">
       <h3 class="text-lg font-bold mb-2" style="color: var(--halo-text);">Remove False Positives with AI</h3>
-      <p class="text-sm text-halo-muted mb-4">The AI Review Board can analyze these findings and remove false positives — typically reducing violations by 85%.</p>
+      <p class="text-sm text-halo-muted mb-4">The AI Review Board analyzes findings and removes false positives — typically reducing violations by 85%.</p>
       <button onclick="runAIReview()" id="ai-review-btn" class="px-6 py-2.5 bg-halo-accent text-white text-sm font-medium rounded-lg hover:bg-halo-accent-light transition-colors">
         Run AI Review Board
       </button>
-      <p class="text-xs text-halo-muted mt-2" id="ai-review-plan-note">Requires Pro plan ($29/mo) · ~10 seconds</p>
+      <p class="text-xs text-halo-muted mt-2" id="ai-review-plan-note">Included with your plan · ~10 seconds</p>
     </div>
 
     <!-- Full Violations (authenticated users only) -->
@@ -539,6 +539,33 @@
         allViolations = scan.scan_json?.violations || [];
         renderResults(scan);
 
+        // Auto-trigger AI Review if status is 'pending' (client-initiated async pattern)
+        if (scan.ai_review_status === 'pending' && allViolations.length > 0) {
+          console.log('[ai-review] Auto-triggering AI Review (status: pending)');
+          runAIReview(true);
+        } else if (scan.ai_review_status === 'complete' && scan.ai_review_json) {
+          // Re-apply stored AI Review verdicts
+          console.log('[ai-review] Applying stored AI Review verdicts');
+          applyAIVerdicts(scan.ai_review_json);
+          // Update CTA to show stored results
+          const ctaEl = document.getElementById('ai-review-cta');
+          const s = scan.ai_review_summary || {};
+          if (ctaEl && s.total) {
+            const agentLabel = currentTier === 'free' ? 'single AI agent' : '3-agent tribunal';
+            ctaEl.innerHTML = `
+              <h3 class="text-lg font-bold mb-3" style="color: var(--halo-text);">AI Review Complete</h3>
+              <div class="flex items-center justify-center gap-6 mb-3">
+                <div class="text-center"><div class="text-2xl font-bold text-green-400">${s.confirmed || 0}</div><div class="text-xs text-halo-muted">Confirmed</div></div>
+                <div class="text-center"><div class="text-2xl font-bold text-red-400">${s.dismissed || 0}</div><div class="text-xs text-halo-muted">False Positives</div></div>
+                <div class="text-center"><div class="text-2xl font-bold text-yellow-400">${s.downgraded || 0}</div><div class="text-xs text-halo-muted">Downgraded</div></div>
+                <div class="text-center"><div class="text-2xl font-bold text-orange-400">${s.escalated || 0}</div><div class="text-xs text-halo-muted">Escalated</div></div>
+              </div>
+              <p class="text-xs text-halo-subtle mt-2">Reviewed by ${agentLabel} · ${s.total} violations</p>
+              <p class="text-xs text-halo-subtle mt-1" style="font-style: italic;">AI Review is in beta. Review all findings independently.</p>
+            `;
+          }
+        }
+
       } catch (err) {
         console.error('Load error:', err);
         showError();
@@ -623,13 +650,6 @@
         document.getElementById('paywall-gate').classList.add('hidden');
         document.getElementById('full-violations').classList.remove('hidden');
         renderAllViolations(allViolations);
-        // Show AI Review CTA for scans with 10+ violations
-        if (allViolations.length >= 10) {
-          document.getElementById('ai-review-cta').classList.remove('hidden');
-          // Update note for paid users
-          const planNote = document.getElementById('ai-review-plan-note');
-          if (planNote) planNote.textContent = 'Included with your ' + currentTier.charAt(0).toUpperCase() + currentTier.slice(1) + ' plan · ~10 seconds';
-        }
         // Sprint 25: Render feedback section (uncertainty-weighted top 5)
         renderFeedbackSection(allViolations);
       } else if (scan.total_violations > 3) {
@@ -638,21 +658,24 @@
         document.getElementById('hidden-count').textContent = scan.total_violations - 3;
 
         if (isAuthenticated) {
-          // Authenticated Free user: show upgrade CTA instead of signup
-          document.getElementById('paywall-title').textContent = 'Unlock All Violations';
+          // Authenticated Free user: show upgrade CTA for full violation details
+          document.getElementById('paywall-title').textContent = 'Unlock All Violation Details';
           document.getElementById('paywall-description').innerHTML =
-            `Upgrade to Pro to view all <span class="font-semibold" style="color: var(--halo-text);">${scan.total_violations - 3}</span> remaining violations with AI-powered false positive removal.`;
+            `Upgrade to Pro to view all <span class="font-semibold" style="color: var(--halo-text);">${scan.total_violations - 3}</span> remaining violations with full code snippets, fix suggestions, and compliance reports.`;
           document.getElementById('signup-cta').classList.add('hidden');
           document.getElementById('upgrade-cta').classList.remove('hidden');
+        }
+      }
 
-          // Show AI Review FOMO for Free users with 10+ violations
-          if (allViolations.length >= 10) {
-            const fomoEl = document.getElementById('ai-review-fomo');
-            if (fomoEl) {
-              fomoEl.innerHTML = `<p class="text-sm text-halo-muted">AI Review Board would analyze <strong class="text-halo-accent">${allViolations.length} violations</strong> and typically removes 20-30% as false positives. <a href="/#pricing" class="text-halo-accent hover:underline font-medium">Upgrade to Pro</a></p>`;
-              fomoEl.classList.remove('hidden');
-            }
-          }
+      // Show AI Review CTA for ALL authenticated users with violations
+      // AI Review is free for all tiers (Sprint 34 business model shift)
+      if (isAuthenticated && allViolations.length > 0 && scan.ai_review_status !== 'complete') {
+        document.getElementById('ai-review-cta').classList.remove('hidden');
+        const planNote = document.getElementById('ai-review-plan-note');
+        if (planNote) {
+          const tierLabel = currentTier.charAt(0).toUpperCase() + currentTier.slice(1);
+          const agentType = currentTier === 'free' ? 'single AI agent' : '3-agent tribunal';
+          planNote.textContent = `Included with your ${tierLabel} plan · ${agentType} · ~10 seconds`;
         }
       }
     }
@@ -837,12 +860,12 @@
     }
 
     // AI Review button handler — calls ai-review edge function
-    async function runAIReview() {
+    async function runAIReview(auto = false) {
       const btn = document.getElementById('ai-review-btn');
       const licenseKey = currentLicenseKey || localStorage.getItem('halo_license_key');
 
-      if (!licenseKey || currentTier === 'free') {
-        showToast('AI Review Board requires a Pro license. Upgrade at runhalo.dev/#pricing', 'info');
+      if (!licenseKey) {
+        showToast('License key required for AI Review. Log in first.', 'info');
         return;
       }
 
@@ -851,7 +874,12 @@
         return;
       }
 
-      // Cap at 50 violations per API limit
+      // Determine agent mode based on tier
+      // Free: single-agent. Pro/Business/Enterprise: 3-agent tribunal.
+      const useMultiAgent = currentTier !== 'free';
+      const agentLabel = useMultiAgent ? '3-agent tribunal' : 'single AI agent';
+
+      // Build violations with fileMetadata (batch-5 chunking)
       const violationsToReview = allViolations.slice(0, 50).map(v => ({
         ruleId: v.ruleId,
         severity: v.severity,
@@ -859,76 +887,140 @@
         message: v.description || v.message || v.name || '',
         filePath: v.file || v.filePath || '',
         codeSnippet: v.codeSnippet || '',
+        surroundingCode: v.surroundingCode || v.codeSnippet || '',
         ruleName: v.name || v.ruleName || '',
         category: v.category || '',
+        fileMetadata: v.fileMetadata || undefined,
       }));
 
-      btn.disabled = true;
-      btn.innerHTML = '<span class="inline-block animate-spin mr-2">&#9696;</span> Running AI Review... (~10s)';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="inline-block animate-spin mr-2">&#9696;</span> AI Review in progress (${agentLabel})...`;
+      }
+
+      // Update scan status to processing
+      try {
+        await supabaseClient.from('halo_scans')
+          .update({ ai_review_status: 'processing', ai_review_started_at: new Date().toISOString() })
+          .eq('id', currentScan.id);
+      } catch (e) { console.warn('Status update failed:', e); }
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-review`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-            'apikey': SUPABASE_ANON_KEY,
-          },
-          body: JSON.stringify({
-            license_key: licenseKey,
-            scan_id: currentScan.id,
-            violations: violationsToReview,
-          }),
-        });
+        // Process in batches of 5 to avoid batch dilution
+        const BATCH_SIZE = 5;
+        const allResults = [];
+        const totalSummary = { total: 0, confirmed: 0, dismissed: 0, downgraded: 0, escalated: 0 };
+        let totalCost = 0;
+        let totalLatency = 0;
 
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          throw new Error(err.error || `AI Review failed (${res.status})`);
+        for (let i = 0; i < violationsToReview.length; i += BATCH_SIZE) {
+          const batch = violationsToReview.slice(i, i + BATCH_SIZE);
+          const batchNum = Math.floor(i / BATCH_SIZE) + 1;
+          const totalBatches = Math.ceil(violationsToReview.length / BATCH_SIZE);
+
+          if (btn) {
+            btn.innerHTML = `<span class="inline-block animate-spin mr-2">&#9696;</span> AI Review batch ${batchNum}/${totalBatches} (${agentLabel})...`;
+          }
+
+          const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-review`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'apikey': SUPABASE_ANON_KEY,
+            },
+            body: JSON.stringify({
+              license_key: licenseKey,
+              scan_id: currentScan.id,
+              violations: batch,
+              multi_agent: useMultiAgent,
+            }),
+          });
+
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || `AI Review batch ${batchNum} failed (${res.status})`);
+          }
+
+          const data = await res.json();
+          if (data.results) allResults.push(...data.results);
+          if (data.summary) {
+            totalSummary.total += data.summary.total || 0;
+            totalSummary.confirmed += data.summary.confirmed || 0;
+            totalSummary.dismissed += data.summary.dismissed || 0;
+            totalSummary.downgraded += data.summary.downgraded || 0;
+            totalSummary.escalated += data.summary.escalated || 0;
+          }
+          if (data.cost) totalCost += data.cost.estimated_usd || 0;
+          if (data.latency_ms) totalLatency += data.latency_ms;
         }
 
-        const data = await res.json();
-        const summary = data.summary;
+        // Store results in halo_scans
+        try {
+          await supabaseClient.from('halo_scans')
+            .update({
+              ai_review_status: 'complete',
+              ai_review_completed_at: new Date().toISOString(),
+              ai_review_json: allResults,
+              ai_review_summary: totalSummary,
+              ai_review_cost_usd: totalCost,
+              ai_review_latency_ms: totalLatency,
+            })
+            .eq('id', currentScan.id);
+        } catch (e) { console.warn('AI Review results save failed:', e); }
 
         // Update CTA with results summary
         const ctaEl = document.getElementById('ai-review-cta');
-        ctaEl.innerHTML = `
-          <h3 class="text-lg font-bold mb-3" style="color: var(--halo-text);">AI Review Complete</h3>
-          <div class="flex items-center justify-center gap-6 mb-3">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-green-400">${summary.confirmed}</div>
-              <div class="text-xs text-halo-muted">Confirmed</div>
+        if (ctaEl) {
+          ctaEl.innerHTML = `
+            <h3 class="text-lg font-bold mb-3" style="color: var(--halo-text);">AI Review Complete</h3>
+            <div class="flex items-center justify-center gap-6 mb-3">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-400">${totalSummary.confirmed}</div>
+                <div class="text-xs text-halo-muted">Confirmed</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-red-400">${totalSummary.dismissed}</div>
+                <div class="text-xs text-halo-muted">False Positives</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-yellow-400">${totalSummary.downgraded}</div>
+                <div class="text-xs text-halo-muted">Downgraded</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-orange-400">${totalSummary.escalated}</div>
+                <div class="text-xs text-halo-muted">Escalated</div>
+              </div>
             </div>
-            <div class="text-center">
-              <div class="text-2xl font-bold text-red-400">${summary.dismissed}</div>
-              <div class="text-xs text-halo-muted">False Positives</div>
-            </div>
-            <div class="text-center">
-              <div class="text-2xl font-bold text-yellow-400">${summary.downgraded || 0}</div>
-              <div class="text-xs text-halo-muted">Downgraded</div>
-            </div>
-            <div class="text-center">
-              <div class="text-2xl font-bold text-orange-400">${summary.escalated || 0}</div>
-              <div class="text-xs text-halo-muted">Escalated</div>
-            </div>
-          </div>
-          ${data.risk_summary ? `<p class="text-sm text-halo-muted">Estimated regulatory exposure: <strong class="text-red-400">$${data.risk_summary.total_exposure_usd.toLocaleString()}</strong></p>` : ''}
-          <p class="text-xs text-halo-subtle mt-2">Reviewed ${summary.total} violations in ${(data.latency_ms / 1000).toFixed(1)}s · Cost: $${data.cost.estimated_usd.toFixed(3)}</p>
-        `;
-
-        // Apply verdicts to violation cards
-        if (data.results && data.results.length > 0) {
-          applyAIVerdicts(data.results);
+            <p class="text-xs text-halo-subtle mt-2">Reviewed by ${agentLabel} · ${totalSummary.total} violations in ${(totalLatency / 1000).toFixed(1)}s</p>
+            <p class="text-xs text-halo-subtle mt-1" style="font-style: italic;">AI Review is in beta. Review all findings independently.</p>
+          `;
         }
 
-        showToast(`AI Review complete: ${summary.dismissed} false positives removed`, 'success');
+        // Apply verdicts to violation cards
+        if (allResults.length > 0) {
+          applyAIVerdicts(allResults);
+        }
+
+        showToast(`AI Review complete: ${totalSummary.dismissed} false positives removed`, 'success');
 
       } catch (err) {
         console.error('[ai-review] Error:', err);
-        btn.disabled = false;
-        btn.innerHTML = `
-          Run AI Review Board
-          <span class="block text-xs text-red-400 mt-1">${err.message} — click to retry</span>
-        `;
+
+        // Update status to failed
+        try {
+          await supabaseClient.from('halo_scans')
+            .update({ ai_review_status: 'failed', ai_review_error: err.message })
+            .eq('id', currentScan.id);
+        } catch (e) { /* silent */ }
+
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `
+            Run AI Review Board
+            <span class="block text-xs text-red-400 mt-1">${err.message} — click to retry</span>
+          `;
+        }
         showToast(`AI Review failed: ${err.message}`, 'error');
       }
     }
