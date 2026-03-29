@@ -925,8 +925,23 @@
       } catch (e) { console.warn('Status update failed:', e); }
 
       try {
-        // Process in batches of 5 to avoid batch dilution
+        // Batch-5 for accuracy (batch dilution cliff at batch-10+).
+        // For free tier: each batch consumes 1 daily AI Review slot (server counts events).
+        // Pre-check: ensure free tier has enough quota for all batches before starting any.
         const BATCH_SIZE = 5;
+        const totalBatchesNeeded = Math.ceil(violationsToReview.length / BATCH_SIZE);
+
+        if (currentTier === 'free' && totalBatchesNeeded > 1) {
+          // Free tier with multiple batches: check if we'll exhaust quota mid-review.
+          // Better to review first batch only than to get partial results.
+          // Cap free tier to first 5 violations (1 batch = 1 daily slot).
+          violationsToReview.splice(BATCH_SIZE);
+          if (btn) {
+            // Note: free tier only sees top 3 violations anyway (paywall).
+            // This cap affects the AI Review scope, not what's displayed.
+          }
+        }
+
         const allResults = [];
         const totalSummary = { total: 0, confirmed: 0, dismissed: 0, downgraded: 0, escalated: 0 };
         let totalCost = 0;
