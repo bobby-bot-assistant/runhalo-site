@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scan Results | Halo COPPA Scanner</title>
-  <meta name="description" content="Your COPPA compliance scan results from Halo.">
+  <title>Scan Results | Halo Compliance Scanner</title>
+  <meta name="description" content="Your children's privacy compliance scan results from Halo.">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -263,7 +263,7 @@
               Upgrade to Pro
             </a>
             <p class="text-halo-subtle text-xs">
-              Pro includes AI Review Board, full violation access, PDF reports, and priority support.
+              Pro includes unlimited 3-agent AI Review tribunal, full violation access, PDF reports, and priority support.
             </p>
           </div>
         </div>
@@ -366,7 +366,7 @@
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <h3 class="font-semibold text-sm">Share This Scorecard</h3>
-          <p class="text-halo-muted text-xs">Share your COPPA compliance score publicly</p>
+          <p class="text-halo-muted text-xs">Share your compliance score publicly</p>
         </div>
         <button id="share-btn" onclick="copyShareLink()" class="flex items-center gap-2 px-4 py-2 bg-halo-surface border border-halo-border rounded-lg text-sm hover:border-halo-accent/50 transition-colors">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1107,9 +1107,14 @@
           }
         }
 
-        // Dim dismissed cards
+        // Mark dismissed cards — strikethrough on paid tiers, dim on free
         if (result.verdict === 'dismissed') {
-          card.style.opacity = '0.5';
+          if (currentTier === 'free') {
+            card.style.opacity = '0.5';
+          } else {
+            card.style.opacity = '0.7';
+            card.style.borderLeft = '3px solid rgba(239, 68, 68, 0.3)';
+          }
           card.insertAdjacentHTML('beforeend',
             `<div class="mt-2 p-2 bg-red-500/5 border border-red-500/20 rounded text-xs text-halo-muted">
               <span class="text-red-400 font-medium">Dismissed:</span> ${result.fpReason || result.clinicalContext || 'Identified as false positive by AI Review Board'}
