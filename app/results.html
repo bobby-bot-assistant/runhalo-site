@@ -1015,7 +1015,7 @@
               ai_review_latency_ms: totalLatency,
             })
             .eq('id', currentScan.id);
-        } catch (e) { console.warn('AI Review results save failed:', e); }
+        } catch (e) { console.error('[ai-review] Results save to halo_scans FAILED:', e); }
 
         // Update CTA with results summary
         const ctaEl = document.getElementById('ai-review-cta');
